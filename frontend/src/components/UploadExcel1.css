@@ -1,0 +1,146 @@
+.upload-container {
+    padding: 40px;
+    text-align: center;
+    background-color: #f9f9f9; /* Lighter background for a modern look */
+    border-radius: 15px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1); /* Larger shadow for depth */
+    margin-top: 50px;
+    max-height: 80vh; /* Limiting the container's height */
+    overflow: hidden; /* Preventing the entire container from scrolling */
+    width: 80%; /* Responsive width */
+    max-width: 1200px; /* Limiting max width */
+}
+  
+.upload-content {
+    padding: 20px;
+    max-height: 60vh; /* Set max height for the content area to make it scrollable */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    margin-bottom: 20px;
+}
+  
+h1 {
+    color: #333;
+    font-size: 28px; /* Increased font size for emphasis */
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: 1px; /* Slight letter spacing for modern style */
+}
+  
+.upload-input {
+    padding: 14px 22px;
+    margin: 20px 0;
+    border: 2px solid #4CAF50;
+    border-radius: 8px; /* Increased border-radius for smoother corners */
+    background-color: #fff;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Smooth transition */
+    width: 100%; /* Full width for a cleaner look */
+    max-width: 400px; /* Limiting max width */
+}
+  
+.upload-input:hover,
+.upload-input:focus {
+    border-color: #45a049;
+    background-color: #e9f7ec; /* Light green background on hover */
+    box-shadow: 0 4px 10px rgba(72, 182, 52, 0.3); /* Soft shadow effect */
+}
+  
+.file-table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    max-height: 400px; /* Set a max height for the table */
+    overflow-y: auto; /* Enable scroll on table if needed */
+    display: block; /* Makes the table a block element, allowing scrolling */
+    border-radius: 8px; /* Round corners for the table */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for the table */
+}
+  
+.file-table th,
+.file-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+}
+  
+.file-table th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: 600;
+}
+  
+.file-table tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+  
+.file-table tr:hover {
+    background-color: #f1f1f1;
+}
+  
+/* Updated Button Styles */
+.notify-btn, .send-all-btn {
+    padding: 8px 8px;  /* Uniform padding for both buttons */
+    border: none;
+    border-radius: 8px; /* Same rounded corners for both buttons */
+    cursor: pointer;
+    font-size: 18px; /* Same font size for both buttons */
+    font-weight: 600;
+    margin: 10px 20px; /* Spacing between buttons */
+    transition: all 0.3s ease, transform 0.2s ease; /* Consistent transition */
+    display: inline-block;
+}
+
+/* Green button style */
+.notify-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.notify-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-2px); /* Slight movement effect */
+}
+
+/* Blue button style */
+.send-all-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.send-all-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Slight movement effect */
+}
+
+.loading {
+    color: #777;
+    font-size: 18px;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .upload-container {
+        width: 90%; /* Make it responsive on smaller screens */
+    }
+
+    .file-table th,
+    .file-table td {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 24px; /* Smaller heading on mobile */
+    }
+
+    /* Adjust button sizes for smaller screens */
+    .notify-btn,
+    .send-all-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
