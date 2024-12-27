@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './login2.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
 const Login2 = () => {
   const navigate = useNavigate();
+
   const handleLogin = async (username, password, role) => {
     try {
       const response = await axios.post('http://localhost:5000/api/login', {
@@ -17,7 +17,9 @@ const Login2 = () => {
         // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
-        else if (response.data.role === 'taluk') navigate('/taluk');
+        else if (response.data.role === 'talik') navigate('/taluk'); // Corrected role name
+      } else {
+        alert('Invalid role or login credentials.');
       }
     } catch (err) {
       console.error('Login failed:', err);
@@ -59,6 +61,7 @@ const LoginForm = ({ onLogin }) => {
         placeholder="Enter Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        required
       />
       <label htmlFor="password">Password</label>
       <div className="password-wrapper">
@@ -68,6 +71,7 @@ const LoginForm = ({ onLogin }) => {
           placeholder="Enter Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
         />
         <i
           className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
@@ -76,7 +80,12 @@ const LoginForm = ({ onLogin }) => {
         />
       </div>
       <label htmlFor="role">Role</label>
-      <select id="role" onChange={(e) => setRole(e.target.value)} value={role}>
+      <select
+        id="role"
+        onChange={(e) => setRole(e.target.value)}
+        value={role}
+        required
+      >
         <option value="">Select Role</option>
         <option value="state">State</option>
         <option value="district">District</option>
@@ -84,7 +93,7 @@ const LoginForm = ({ onLogin }) => {
       </select>
       <button type="submit">Login</button>
       <div className="forgot-password">
-        <a href="/forgot-password">Forgot Password?</a>
+        <Link to="/forgot-password">Forgot Password?</Link>
       </div>
     </form>
   );
@@ -93,7 +102,7 @@ const LoginForm = ({ onLogin }) => {
 const Header = () => (
   <header className="header">
     <img
-      src={require('./tnpds.png')} // Update this to the correct path
+      src={require('./tnpds.png')}
       alt="Logo"
     />
     <div className="header-text">
