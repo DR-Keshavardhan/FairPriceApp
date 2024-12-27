@@ -1,77 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import ButtonPage from './buttonPage'; // Ensure this is the correct path
-import Login from './components/login1'; // Ensure this is the correct path
-import Login2 from './components/login2'; // Ensure this is the correct path
-import UploadExcel from './components/UploadExcel'; // Ensure this is the correct path
-import MainApp from './App'; // Ensure this is the correct path
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import ButtonPage from './buttonPage'; // Import the ButtonPage component
+import Login from './components/login1'; // Import your Login1 component
+import Login2 from './components/login2'; // Import your Login2 component
+import UploadExcel from './components/UploadExcel'; // Import UploadExcel component
+import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
+import TalukPage from './components/TalukPage'; // Import TalukPage
+import DistrictPage from './components/DistrictPage'; // Import DistrictPage
+import StatePage from './components/StatePage'; // Import StatePage
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Load authentication state from localStorage on mount
-  useEffect(() => {
-    const authState = localStorage.getItem('isAuthenticated') === 'true';
-    setIsAuthenticated(authState);
-  }, []);
-
-  // Handle login logic and persist to localStorage
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    localStorage.setItem('isAuthenticated', 'true');
-  };
-
-  // Handle logout logic and clear from localStorage
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem('isAuthenticated');
-  };
-
-  // Higher-order component for protected routes
-  const ProtectedRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/login2" />;
-  };
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication state
 
   return (
     <Router>
       <Routes>
-        {/* Default route */}
+        {/* Default route to ButtonPage */}
         <Route path="/" element={<ButtonPage />} />
 
-        {/* Login routes */}
+        {/* Route for Login1 page */}
         <Route
           path="/login1"
-          element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={handleLogin} />}
+          element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
         />
+
+        {/* Route for Login2 page */}
         <Route
           path="/login2"
-          element={isAuthenticated ? <Navigate to="/upload" /> : <Login2 onLogin={handleLogin} />}
+          element={isAuthenticated ? <Navigate to="/upload" /> : <Login2 />}
         />
 
-        {/* Protected routes */}
+        {/* Authentication-based route for Upload Excel */}
         <Route
           path="/upload"
-          element={
-            <ProtectedRoute>
-              <UploadExcel />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/app"
-          element={
-            <ProtectedRoute>
-              <MainApp onLogout={handleLogout} />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
         />
 
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* Main app route that will render the logic component */}
+        <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
+
+        {/* Role-based routes */}
+        <Route path="/state" element={<StatePage />} />
+        <Route path="/district" element={<DistrictPage />} />
+        <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
       </Routes>
     </Router>
   );
 }
 
 export default App;
-
