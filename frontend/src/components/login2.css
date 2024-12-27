@@ -1,5 +1,7 @@
+<<<<<<< HEAD
 /* General Styles */
 body {
+<<<<<<< HEAD
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
@@ -135,3 +137,156 @@ body {
     background-color: #d32f2f; /* Darker red on hover */
   }
   
+=======
+  font-family: 'Poppins', sans-serif;
+=======
+* {
+>>>>>>> 4b293fc5d9775b6eb5ada5893b35f0ae6af275c9
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body, html {
+  height: 100%;
+  background-color: #f4f4f4; /* Light background color for the page */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* App container to take full height */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the app container takes full height */
+  justify-content: center; /* Vertically center the content */
+  align-items: center;     /* Horizontally center the content */
+}
+
+/* Header Styles */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header img {
+  width: 100px;
+  height: auto;
+}
+
+.header-text h1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0056b3;
+  margin-top: 10px;
+}
+
+/* Login Form Styles */
+.login-form {
+  background-color: white;
+  padding: 50px;
+  border-radius: 8px;
+  border-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 150%;
+  height: auto;
+  max-width: 400px; /* Limit the width of the form */
+}
+
+.login-form h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.login-form input,
+.login-form select {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+  background-color: #003d7a;
+}
+
+.login-form .forgot-password {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.login-form .forgot-password a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.login-form .forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Password Visibility Styles */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px; /* Space for the eye icon */
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}
+
+.footer-content {
+  font-size: 14px;
+}
+
+.footer p {
+  margin: 0;
+}
+>>>>>>> 05355a2996e8d3c383aea220135056b2225bae8d

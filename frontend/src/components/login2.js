@@ -1,40 +1,35 @@
 import React, { useState } from 'react';
 import './login2.css';
 import axios from 'axios';
-import UploadExcel from './UploadExcel';
-import StatePage from './StatePage';
-import DistrictPage from './DistrictPage';
+import { useNavigate } from 'react-router-dom';
 
 const Login2 = () => {
-  const [role, setRole] = useState('');
-  const [excelData, setExcelData] = useState([]);
-
+  const navigate = useNavigate();
   const handleLogin = async (username, password, role) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { username, password, role });
-      setRole(response.data.role);
+      const response = await axios.post('http://localhost:5000/api/login', {
+        username,
+        password,
+        role,
+      });
+
+      if (response.data.role) {
+        // Navigate to the page based on the role
+        if (response.data.role === 'state') navigate('/state');
+        else if (response.data.role === 'district') navigate('/district');
+        else if (response.data.role === 'taluk') navigate('/taluk');
+      }
     } catch (err) {
       console.error('Login failed:', err);
+      alert('Login failed. Please check your credentials.');
     }
-  };
-
-  const renderPageByRole = () => {
-    if (role === 'state') return <StatePage />;
-    if (role === 'district') return <DistrictPage />;
-    if (role === 'talik') {
-      return <UploadExcel setExcelData={setExcelData} excelData={excelData} />;
-    }
-    return <p>Please log in to access your page.</p>;
   };
 
   return (
-    <div className="App">
-      <h1>Fair Price Tracker</h1>
-      {!role ? (
-        <LoginForm onLogin={handleLogin} />
-      ) : (
-        renderPageByRole()
-      )}
+    <div className="app">
+      <Header />
+      <LoginForm onLogin={handleLogin} />
+      <Footer />
     </div>
   );
 };
@@ -43,6 +38,7 @@ const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,26 +50,64 @@ const LoginForm = ({ onLogin }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="login-form" onSubmit={handleSubmit}>
+      <h2>Login</h2>
+      <label htmlFor="username">Username</label>
       <input
         type="text"
-        placeholder="Username"
+        id="username"
+        placeholder="Enter Username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <select onChange={(e) => setRole(e.target.value)} value={role}>
+      <label htmlFor="password">Password</label>
+      <div className="password-wrapper">
+        <input
+          type={showPassword ? 'text' : 'password'}
+          id="password"
+          placeholder="Enter Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <i
+          className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+          onClick={() => setShowPassword(!showPassword)}
+          aria-hidden="true"
+        />
+      </div>
+      <label htmlFor="role">Role</label>
+      <select id="role" onChange={(e) => setRole(e.target.value)} value={role}>
         <option value="">Select Role</option>
         <option value="state">State</option>
         <option value="district">District</option>
         <option value="taluk">Taluk</option>
       </select>
       <button type="submit">Login</button>
+      <div className="forgot-password">
+        <a href="/forgot-password">Forgot Password?</a>
+      </div>
     </form>
   );
 };
+
+const Header = () => (
+  <header className="header">
+    <img
+      src={require('./tnpds.png')} // Update this to the correct path
+      alt="Logo"
+    />
+    <div className="header-text">
+      <h1>Civil Supplies and Consumer Protection Department</h1>
+    </div>
+  </header>
+);
+
+const Footer = () => (
+  <footer className="footer">
+    <div className="footer-content">
+      <p>&copy; 2024 Civil Supplies and Consumer Protection Department. All Rights Reserved.</p>
+    </div>
+  </footer>
+);
 
 export default Login2;
