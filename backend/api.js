@@ -72,9 +72,11 @@ function mockGenerateToken(user) {
   return `${user.username}-mock-token`; 
 }
 
+
+
 // Login API
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role  } = req.body;
 
   // Check if username and password are provided
   if (!username || !password) {
