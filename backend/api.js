@@ -12,26 +12,27 @@ const pdfkit = require('pdfkit');
 const fs = require('fs');
 require('dotenv').config({ path: '../id.env' });
 
+// ________________________________________________________________________________________________________________
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const twilioClient = twilio(accountSid, authToken);
 
+// Your Twilio phone number
+const twilioPhoneNumber = process.env.PHONE_NO;
 
-
-// Multer configuration for file upload
-const upload = multer({ dest: 'uploads/' }).single('file');
-
-
-// Update shop status
-app.post("/api/updateShopStatus", (req, res) => {
-  const { shopId, status, remarks } = req.body;
-
-  db.query(
-    "UPDATE Shops SET status = ?, remarks = ? WHERE shop_id = ?",
-    [status, remarks, shopId],
-    (err) => {
-      if (err) return res.status(500).send(err.message);
-      res.send("Shop status updated.");
-    }
-  );
+// Nodemailer setup for sending emails
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
+  }
 });
+// ________________________________________________________________________________________________________________
+
+const upload = multer({ dest: 'uploads/' }).single('file');
 
 // Function to convert "10:00 AM" format to "HH:MM:SS" format
 function convertTo24HourFormat(time) {
@@ -72,13 +73,37 @@ function mockGenerateToken(user) {
   return `${user.username}-mock-token`; 
 }
 
+const calculatePoints = (status, remarks) => {
+  let points = 0;
 
+  // Example logic to calculate points based on status and remarks
+  if (status.toLowerCase() === 'open') points += 10;
+  if (status.toLowerCase() === 'closed') {
+        if (remarks ==='NIL' || remarks ==='' || remarks ==='-') points -=3;
+        else points += 3;
+  }
 
+  return points;
+};
+// ____________________________________________________________________________________________________________
 // Login API
+
+
+app.post("/api/updateShopStatus", (req, res) => {
+  const { shopId, status, remarks } = req.body;
+
+  db.query(
+    "UPDATE Shops SET status = ?, remarks = ? WHERE shop_id = ?",
+    [status, remarks, shopId],
+    (err) => {
+      if (err) return res.status(500).send(err.message);
+      res.send("Shop status updated.");
+    }
+  );
+});
+
 router.post('/login', async (req, res) => {
   const { username, password, role  } = req.body;
-
-  // Check if username and password are provided
   if (!username || !password) {
     return res.status(400).json({ message: 'Username and password are required' });
   }
@@ -99,21 +124,19 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
-const calculatePoints = (status, remarks) => {
-  let points = 0;
-
-  // Example logic to calculate points based on status and remarks
-  if (status.toLowerCase() === 'open') points += 10;
-  if (status.toLowerCase() === 'closed') {
-        if (remarks ==='NIL' || remarks ==='' || remarks ==='-') points -=3;
-        else points += 3;
-  }
-
-  return points;
-};
 
 
-// Route to handle file upload for taluk role
+router.post('/register',(req,res)=>{
+  const {email,username,password,role}=req.body;
+  db.query("INSERT INTO Users (email,username,password,role) VALUES (?,?,?)",
+  [email,username,password,role],
+  (err)=>{
+    if(err) return res.status(500).send(err.message);
+    res.send("User registered successfully");
+  });
+})
+
+
 router.post('/upload', (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
@@ -148,7 +171,7 @@ router.post('/upload', (req, res) => {
         const formattedOpeningTime = convertTo24HourFormat(opening_time);
         const formattedUploadBatch = convertTo24HourFormat(upload_batch);
         
-        // Insert the shop data into the shops table
+       
         await db.promise().query(
           'INSERT INTO shops (shop_code, shop_name, shop_incharge, incharge_number, email, opening_time, status, remarks, upload_batch,taluk,district) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)',
           [
@@ -212,23 +235,7 @@ router.post('/upload', (req, res) => {
   });
 });
 
-const accountSid = process.env.ACCOUNT_SID;
-const authToken = process.env.AUTH_TOKEN;
-const twilioClient = twilio(accountSid, authToken);
 
-// Your Twilio phone number
-const twilioPhoneNumber = process.env.PHONE_NO;
-
-// Nodemailer setup for sending emails
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
-  }
-});
 
 // Endpoint to send notifications (SMS and Email)
 router.post('/notify-shop/:shopId', async (req, res) => {

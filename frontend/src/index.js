@@ -11,5 +11,4 @@ root.render(
   </React.StrictMode>
 );
 
-// Optional: Performance measuring
 reportWebVitals();

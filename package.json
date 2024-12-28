@@ -24,10 +24,6 @@
     "jwt-simple": "^0.5.6",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.4",
-<<<<<<< HEAD
-=======
-    "new-fair-price": "file:",
->>>>>>> dd1f89b27b7cdfa5c5609be53f21f2bac96fc9d3
     "nodemailer": "^6.9.16",
     "pdfkit": "^0.15.1",
     "twilio": "^5.3.6",

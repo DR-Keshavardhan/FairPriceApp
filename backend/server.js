@@ -24,7 +24,6 @@ app.use(bodyParser.json());
 const csvFilePath = path.resolve('C:/SeleniumApp/Data/data.csv');
 
 function writeToCsv(contact, message) {
-    // Check if the CSV file exists
     const fileExists = fs.existsSync(csvFilePath);
 
     const csvWriter = createCsvWriter({
