@@ -1,7 +1,6 @@
-<<<<<<< HEAD
-/* General Styles */
+
 body {
-<<<<<<< HEAD
+
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
@@ -137,11 +136,10 @@ body {
     background-color: #d32f2f; /* Darker red on hover */
   }
   
-=======
-  font-family: 'Poppins', sans-serif;
-=======
+
+
 * {
->>>>>>> 4b293fc5d9775b6eb5ada5893b35f0ae6af275c9
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -289,4 +287,4 @@ body, html {
 .footer p {
   margin: 0;
 }
->>>>>>> 05355a2996e8d3c383aea220135056b2225bae8d
+

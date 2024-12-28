@@ -17,11 +17,8 @@ body, html {
     align-items: center;
     width: 100%;
     height: 100vh; /* Full viewport height */
-<<<<<<< HEAD
+
     background-image: url('bg.png'); /* Image from the public folder */
-=======
-     /* Image from the public folder */
->>>>>>> 05355a2996e8d3c383aea220135056b2225bae8d
     background-size: contain; /* Image covers the entire container */
     background-position: center center; /* Center the image */
     background-repeat: no-repeat; /* Prevent repeating the image */
