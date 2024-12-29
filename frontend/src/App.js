@@ -8,7 +8,6 @@ import Login2 from './components/login2'; // Import your Login2 component
 import UploadExcel from './components/UploadExcel1.js'; // Import UploadExcel component
 import TalukPage from './components/TalukPage'; // Import TalukPage
 import StatePage from './components/StatePage'; // Import StatePage
-         
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
