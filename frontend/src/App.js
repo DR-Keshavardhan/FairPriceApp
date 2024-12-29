@@ -5,22 +5,23 @@ import ButtonPage from './buttonPage'; // Import the ButtonPage component
 import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import Login from './components/login1'; // Import your Login1 component
 import Login2 from './components/login2'; // Import your Login2 component
-import StatePage from './components/StatePage'; // Import StatePage
+import UploadExcel from './components/UploadExcel1.js'; // Import UploadExcel component
 import TalukPage from './components/TalukPage'; // Import TalukPage
-import UploadExcel from './components/UploadExcel'; // Import UploadExcel component
+import StatePage from './components/StatePage'; // Import StatePage
+
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(true); 
 
   return (
     <Router>
       <Routes>
-        {/* Default route to ButtonPage */}
+        
         <Route path="/" element={<ButtonPage />} />
+        <Route path="/test" elemet={<UploadExcel/>}></Route>
 
         {/* Route for Login1 page */}
-        <Route
-          path="/login1"
+        <Route path="/login1"
           element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
         />
 
@@ -43,7 +44,6 @@ function App() {
           path="/upload"
           element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
         />
-
         {/* Main app route that will render the logic component */}
         <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
 
