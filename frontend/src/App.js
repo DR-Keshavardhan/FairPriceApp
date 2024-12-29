@@ -8,7 +8,7 @@ import MainApp from './App'; // Import the MainApp or app logic component (ensur
 import TalukPage from './components/TalukPage'; // Import TalukPage
 import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import StatePage from './components/StatePage'; // Import StatePage
-
+         
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
 
