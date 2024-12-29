@@ -10,12 +10,12 @@ import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import StatePage from './components/StatePage'; // Import StatePage
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(true); 
 
   return (
     <Router>
       <Routes>
-        {/* Default route to ButtonPage */}
+        
         <Route path="/" element={<ButtonPage />} />
         <Route path="/test" elemet={<UploadExcel/>}></Route>
 
@@ -35,7 +35,6 @@ function App() {
           path="/upload"
           element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
         />
-
         {/* Main app route that will render the logic component */}
         <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
 
