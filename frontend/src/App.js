@@ -17,10 +17,10 @@ function App() {
       <Routes>
         {/* Default route to ButtonPage */}
         <Route path="/" element={<ButtonPage />} />
+        <Route path="/test" elemet={<UploadExcel/>}></Route>
 
         {/* Route for Login1 page */}
-        <Route
-          path="/login1"
+        <Route path="/login1"
           element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
         />
 
