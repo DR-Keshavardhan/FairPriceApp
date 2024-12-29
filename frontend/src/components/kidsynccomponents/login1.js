@@ -1,95 +1,120 @@
 import React, { useState } from 'react';
-import UploadExcel1 from './UploadExcel1';
 import './login1.css';
+import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 
-function Login({ onLogin }) {
+function Login1() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userIdentifier, setUserIdentifier] = useState('');
-  const [userType, setUserType] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = () => {
-    const credentials = {
-      'Shop Incharge': [
-        { username: '02FA001NT', password: 'shop123', identifier: '02FA001NT' },
-        { username: '02FB017NT', password: 'shop123', identifier: '02FB017NT' },
-        { username: '02CA044NC', password: 'shop123', identifier: '02CA044NC' },
-        { username: '02CA009NC', password: 'shop123', identifier: '02CA009NC' },
-      ],
-      'Taluk Officer': [
-        { username: 'Perambur', password: 'Per123', identifier: 'Perambur' },
-        { username: 'Avadi', password: 'Av123', identifier: 'Avadi' },
-        { username: 'Ponneri', password: 'Po123', identifier: 'Ponneri' },
-        { username: 'RK Pettai', password: 'RK123', identifier: 'RK Pettai' },
-      ],
-      'District Officer': [
-        { username: 'Chennai', password: 'Chen123', identifier: 'Chennai' },
-        { username: 'Thiruvallur', password: 'Thi123', identifier: 'Thiruvallur' },
-      ],
-    };
+  const handleLogin = async () => {
+    try {
+      if (!role) {
+        setErrorMessage('Please select a role.');
+        return;
+      }
 
-    setErrorMessage('');
+      const response = await axios.post('http://localhost:5000/api/login', {
+        username,
+        password,
+        role,
+      });
 
-    const user = credentials[role]?.find(
-      (cred) => cred.username === username && cred.password === password
-    );
-
-    if (user) {
-      // Set user data for UploadExcel1 component
-      setUserIdentifier(user.identifier);
-      setUserType(role.toLowerCase()); // Store role as userType (lowercased)
-      setIsLoggedIn(true); // Set login state to true
-    } else {
-      setErrorMessage('Invalid username, password, or role');
+      if (response.data.role) {
+        // Navigate to the page based on the role
+        if (response.data.role === 'state') navigate('/state');
+        else if (response.data.role === 'district') navigate('/district');
+        else if (response.data.role === 'taluk') navigate('/taluk');
+      } else {
+        setErrorMessage('Invalid role or login credentials.');
+      }
+    } catch (err) {
+      console.error('Login failed:', err);
+      setErrorMessage('Login failed. Please check your credentials.');
     }
   };
 
   return (
     <div className="login-container">
-      {!isLoggedIn ? (
-        <div className="login-box">
-          <h2>KIDSYNC</h2>
-          <h2>Login</h2>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="role-dropdown"
-            aria-label="Select Role"
-          >
-            <option value="">Select Role</option>
-            <option value="Shop Incharge">Shop Incharge</option>
-            <option value="Taluk Officer">Taluk Officer</option>
-            <option value="District Officer">District Officer</option>
-          </select>
+      <Header />
+      <form className="login-box" onSubmit={(e) => e.preventDefault()}>
+        <h2>KIDSYNC</h2>
+        <h2>Login</h2>
+        <label htmlFor="role">Role</label>
+        <select
+          id="role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="role-dropdown"
+          aria-label="Select Role"
+          required
+        >
+          <option value="">Select Role</option>
+          <option value="state">State</option>
+          <option value="district">District</option>
+          <option value="taluk">Taluk</option>
+        </select>
+        <label htmlFor="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          placeholder="Enter Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="input-field"
+          aria-label="Username"
+          required
+        />
+        <label htmlFor="password">Password</label>
+        <div className="password-wrapper">
           <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="input-field"
-            aria-label="Username"
-          />
-          <input
-            type="password"
-            placeholder="Password"
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="input-field"
             aria-label="Password"
+            required
           />
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
-          <button onClick={handleLogin} className="login-btn">
-            Login
-          </button>
+          <i
+            className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
+            onClick={() => setShowPassword(!showPassword)}
+            aria-hidden="true"
+          />
         </div>
-      ) : (
-        <UploadExcel1 userIdentifier={userIdentifier} userType={userType} />
-      )}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <button onClick={handleLogin} className="login-btn">
+          Login
+        </button>
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </div>
+      </form>
+      <Footer />
     </div>
   );
 }
 
-export default Login;
+const Header = () => (
+  <header className="header">
+    <img src={require('./tnpds.png')} alt="Logo" />
+    <div className="header-text">
+      <h1>Civil Supplies and Consumer Protection Department</h1>
+    </div>
+  </header>
+);
+
+const Footer = () => (
+  <footer className="footer">
+    <div className="footer-content">
+      <p>&copy; 2024 Civil Supplies and Consumer Protection Department. All Rights Reserved.</p>
+    </div>
+  </footer>
+);
+
+export default Login1;

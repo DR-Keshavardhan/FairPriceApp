@@ -1,59 +1,78 @@
-/* General container styling */
+/* General Styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f7fc;
+}
+
+/* Container */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  margin: 0;
-  padding: 0;
+  height: 100vh;
+  width: 100%;
+  opacity: 0.9;
 }
 
-/* Login box styling */
+/* Login Box */
 .login-box {
   background-color: #ffffff;
-  padding: 30px 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 100%;
   max-width: 400px;
+  width: 100%;
 }
 
 .login-box h2 {
-  font-size: 24px;
-  color: #333;
+  font-size: 28px;
+  color: #0056b3;
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
-/* Dropdown (Role selector) styling */
-.role-dropdown {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-  background-color: #f9f9f9;
-}
-
-/* Input field styling */
-.input-field {
+/* Dropdown & Input Fields */
+.role-dropdown, .input-field {
   width: 100%;
   padding: 12px;
   margin-bottom: 20px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
+  background-color: #fafafa;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.role-dropdown:focus, .input-field:focus {
+  border-color: #0056b3;
+}
+
+/* Password Wrapper */
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 40px;
+}
+
+.password-wrapper i {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 20px;
   color: #333;
 }
 
-.input-field:focus {
-  border-color: #4a90e2;
-  outline: none;
-}
-
-/* Error message styling */
+/* Error Message */
 .error-message {
   color: red;
   font-size: 14px;
@@ -61,23 +80,86 @@
   text-align: left;
 }
 
-/* Login button styling */
+/* Button Styling */
 .login-btn {
   width: 100%;
   padding: 12px;
-  background-color: #4a90e2;
+  background-color: #0056b3;
   color: white;
   font-size: 16px;
   font-weight: bold;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .login-btn:hover {
-  background-color: #357ab8;
+  background-color: #003d7a;
 }
 
 .login-btn:active {
   background-color: #285a8e;
+}
+
+/* Forgot Password */
+.forgot-password {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.forgot-password a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .login-box {
+    padding: 30px;
+    max-width: 90%;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 20px; /* Adjust the position if necessary */
+    width: 100%;
+    z-index: 3; /* Ensure header stays on top of other content */
+  }
+  
+  .header img {
+    width: 100px;
+    height: auto;
+  }
+  
+  .header-text h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #0056b3;
+    margin-top: 10px;
+    z-index: 4; /* Ensure header text is visible */
+  }
+  .role-dropdown, .input-field, .login-btn {
+    font-size: 14px;
+  }
+
+  .footer {
+    font-size: 12px;
+  }
 }

@@ -10,7 +10,7 @@ import StatePage from './components/storemonitorcomponents/StatePage.js'; // Imp
 import TalukPage from './components/storemonitorcomponents/TalukPage.js'; // Import TalukPage
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
   return (
     <Router>
