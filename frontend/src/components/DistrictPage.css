@@ -1,67 +1,161 @@
-
+/* General Body Styling */
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f7f7f7;
   margin: 0;
   padding: 0;
-  height: 100%; /* Ensure the body takes full height */
-  overflow: hidden; /* Hide overflow of the body, handle scrolling in containers */
-}
-.district-page {
-  max-width: 90%;
-  margin: 20px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 40px); /* Position for content alignment */
+  height: 100%;
+  overflow: hidden;
 }
 
-/* Title Styling */
-.d {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #222;
-  font-size: 28px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #ddd;
+/* Top Panel */
+.top-panel {
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.panel-text {
+  font-size: 16px;
+}
+
+.panel-button {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.panel-button:hover {
+  background-color: #45a049;
+}
+
+/* Page Header */
+.page-header {
+  background-color: #f8f8f8;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left img {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.header-left p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.header-left h1 {
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.header-right {
+  display: flex;
+  gap: 15px;
+}
+
+/* Dropdown Styles */
+.dropdown {
+  position: relative;
   display: inline-block;
 }
 
-/* Dropdown Container */
-.dropdown-container {
-  margin-bottom: 20px;
+.dropdown-button {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
   gap: 10px;
 }
 
-label {
-  font-size: 16px;
-  font-weight: bold;
-  color: #555;
+.dropdown-button:hover {
+  background-color: #45a049;
 }
 
-select {
-  padding: 12px;
-  font-size: 16px;
-  border: 2px solid #ddd;
-  border-radius: 6px;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-select:hover, select:focus {
-  border-color: #007bff;
-  outline: none;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+.button-content .material-icons {
+  font-size: 20px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Main Content */
+.main-content {
+  padding: 20px;
+  margin-top: 160px;
+}
+
+h2 {
+  font-size: 22px;
+  color: #333;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
 }
 
 /* Table Container with Scrolling */
@@ -71,132 +165,10 @@ select:hover, select:focus {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin: auto;
-  max-height: 400px; /* Restrict table height for internal scrolling */
-  overflow-y: auto; /* Enable vertical scrolling for the table */
-  overflow-x: auto; /* Enable horizontal scrolling for wide tables */
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
   border: 1px solid #ddd;
-}
-
-/* Table Styles */
-.district-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 8px;
-}
-
-.district-table th, 
-.district-table td {
-  padding: 14px 16px;
-  text-align: left;
-  font-size: 15px;
-  color: #555;
-  border-bottom: 1px solid #f1f1f1;
-  border-right: 1px solid #ddd;
-}
-
-.district-table th {
-  background-color: #4CAF50;
-  color: white;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-align: center;
-}
-
-.district-table td {
-  background-color: #fafafa;
-}
-
-.district-table tr:hover {
-  background-color: #f1f1f1;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-/* Rounded Corners for Table */
-.district-table th:first-child {
-  border-top-left-radius: 8px;
-}
-
-.district-table th:last-child {
-  border-top-right-radius: 8px;
-}
-
-.district-table tr:last-child td:first-child {
-  border-bottom-left-radius: 8px;
-}
-
-.district-table tr:last-child td:last-child {
-  border-bottom-right-radius: 8px;
-}
-
-/* Action Buttons */
-button {
-  padding: 10px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  text-transform: uppercase;
-}
-
-button:active {
-  transform: scale(0.97);
-}
-
-.message-button {
-  background-color: #4CAF50;
-  color: #fff;
-}
-
-.message-button:hover {
-  background-color: #088d29;
-}
-
-.call-button {
-  background-color: #ffaf04;
-  color: #fff;
-}
-
-.call-button:hover {
-  background-color: #7a5f12;
-}
-.notify-all-button {
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  background-color: #4CAF50;
-  color: white;
-  margin-top: 20px;
-  display: block;
-  text-align: center;
-}
-.call-all-button{
-  padding: 10px 10px;
-  font-size: 1rem;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  background-color: #ffaf04;
-  color: white;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  display: block;
-  text-align: center;
-}
-.notify-all-button:hover
- {
-  background-color: #088d29;
-}
-.call-all-button:hover{
-  background-color: #7a5f12;
-
 }
 
 /* Responsive Design */

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import ButtonPage from './buttonPage'; // Import the ButtonPage component
+import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import Login from './components/login1'; // Import your Login1 component
 import Login2 from './components/login2'; // Import your Login2 component
-import UploadExcel from './components/UploadExcel'; // Import UploadExcel component
-import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
-import TalukPage from './components/TalukPage'; // Import TalukPage
-import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import StatePage from './components/StatePage'; // Import StatePage
+import TalukPage from './components/TalukPage'; // Import TalukPage
+import UploadExcel from './components/UploadExcel'; // Import UploadExcel component
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication state
@@ -27,8 +27,16 @@ function App() {
         {/* Route for Login2 page */}
         <Route
           path="/login2"
-          element={isAuthenticated ? <Navigate to="/upload" /> : <Login2 />}
+          element={isAuthenticated ? <Navigate to="/taluk" /> : <Login2 />}
         />
+          <Route
+          path="/state"
+          element={isAuthenticated ? <Navigate to="/statepage" /> : <StatePage />}
+        />      
+          <Route
+          path="/district"
+          element={isAuthenticated ? <Navigate to="/districtpage" /> : <DistrictPage />}
+        />      
 
         {/* Authentication-based route for Upload Excel */}
         <Route
