@@ -10,7 +10,7 @@ import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import StatePage from './components/StatePage'; // Import StatePage
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Track authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track authentication state
 
   return (
     <Router>
