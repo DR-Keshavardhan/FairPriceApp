@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import ButtonPage from './buttonPage'; // Import the ButtonPage component
-import DistrictPage from './components/DistrictPage'; // Import DistrictPage
-import Login from './components/login1'; // Import your Login1 component
-import Login2 from './components/login2'; // Import your Login2 component
-import UploadExcel from './components/UploadExcel1.js'; // Import UploadExcel component
-import TalukPage from './components/TalukPage'; // Import TalukPage
-import StatePage from './components/StatePage'; // Import StatePage
+import Login from './components/kidsynccomponents/login1.js'; // Import your Login1 component
+import UploadExcel from './components/kidsynccomponents/UploadExcel1.js'; // Import UploadExcel component
+import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; // Import DistrictPage
+import Login2 from './components/storemonitorcomponents/login2.js'; // Import your Login2 component
+import StatePage from './components/storemonitorcomponents/StatePage.js'; // Import StatePage
+import TalukPage from './components/storemonitorcomponents/TalukPage.js'; // Import TalukPage
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
@@ -30,7 +30,7 @@ function App() {
           element={isAuthenticated ? <Navigate to="/taluk" /> : <Login2 />}
         />
           <Route
-          path="/state"
+          path="/login"
           element={isAuthenticated ? <Navigate to="/statepage" /> : <StatePage />}
         />      
           <Route
@@ -47,8 +47,8 @@ function App() {
         <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
 
         {/* Role-based routes */}
-        <Route path="/state" element={<StatePage />} />
-        <Route path="/district" element={<DistrictPage />} />
+        <Route path="/statepage" element={<StatePage />} />
+        <Route path="/districtpage" element={<DistrictPage />} />
         <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
       </Routes>
     </Router>
