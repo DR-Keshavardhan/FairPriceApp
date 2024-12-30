@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './login2.css';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
+
 const Login2 = () => {
   const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ const Login2 = () => {
         // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
-        else if (response.data.role === 'talik') navigate('/taluk'); // Corrected role name
+        else if (response.data.role === 'taluk') navigate('/taluk'); // Corrected role name
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -28,7 +29,7 @@ const Login2 = () => {
   };
 
   return (
-    <div className="app">
+    <div id="login2" className="App">
       <Header />
       <LoginForm onLogin={handleLogin} />
       <Footer />

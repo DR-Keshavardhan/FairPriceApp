@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
-import TalukPage from './components/TalukPage'; // Import TalukPage
-import DistrictPage from './components/DistrictPage'; // Import DistrictPage
-import StatePage from './components/StatePage'; // Import StatePage
+import ButtonPage from './buttonPage'; // Import the ButtonPage component
+import Login from './components/kidsynccomponents/login1.js'; // Import your Login1 component
+import UploadExcel from './components/kidsynccomponents/UploadExcel1.js'; // Import UploadExcel component
+import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; // Import DistrictPage
+import Login2 from './components/storemonitorcomponents/login2.js'; // Import your Login2 component
+import StatePage from './components/storemonitorcomponents/StatePage.js'; // Import StatePage
+import TalukPage from './components/storemonitorcomponents/TalukPage.js'; // Import TalukPage
+import ShopPage from './components/storemonitorcomponents/ShopPage.js'; // Import new ShopPage component
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
 
   return (
     <Router>
@@ -26,10 +31,22 @@ function App() {
         {/* Route for Login2 page */}
         <Route
           path="/login2"
-          element={isAuthenticated ? <Navigate to="/upload" /> : <Login2 />}
+          element={isAuthenticated ? <Navigate to="/taluk" /> : <Login2 />}
+        />
+        
+        {/* Route for StatePage */}
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/statepage" /> : <StatePage />}
+        />      
+        
+        {/* Route for DistrictPage */}
+        <Route
+          path="/district"
+          element={isAuthenticated ? <Navigate to="/districtpage" /> : <DistrictPage />}
         />
 
-        {/* Authentication-based route for Upload Excel */}
+        {/* Route for Upload Excel, Authentication-based route */}
         <Route
           path="/upload"
           element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
@@ -42,9 +59,12 @@ function App() {
         />
 
         {/* Role-based routes */}
-        <Route path="/state" element={<StatePage />} />
-        <Route path="/district" element={<DistrictPage />} />
-        <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
+        <Route path="/statepage" element={<StatePage />} />
+        <Route path="/districtpage" element={<DistrictPage />} />
+        <Route path="/taluk" element={<TalukPage />} />
+        
+        {/* New ShopPage route */}
+        <Route path="/shop" element={<ShopPage />} /> {/* New page for shop */}
       </Routes>
     </Router>
   );
