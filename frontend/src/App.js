@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import ButtonPage from './buttonPage'; // Import the ButtonPage component
-import Login from './components/login1'; // Import your Login1 component
-import Login2 from './components/login2'; // Import your Login2 component
-import UploadExcel from './components/UploadExcel1.js'; // Import UploadExcel component
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import TalukPage from './components/TalukPage'; // Import TalukPage
 import DistrictPage from './components/DistrictPage'; // Import DistrictPage
 import StatePage from './components/StatePage'; // Import StatePage
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Track authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(true); 
 
   return (
     <Router>
       <Routes>
-        
+        {/* Route for ButtonPage as the landing page */}
         <Route path="/" element={<ButtonPage />} />
-        <Route path="/test" elemet={<UploadExcel/>}></Route>
+        
+        {/* Test Route for Upload Excel */}
+        <Route path="/test" element={<UploadExcel />} />
 
         {/* Route for Login1 page */}
-        <Route path="/login1"
+        <Route 
+          path="/login1"
           element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
         />
 
@@ -35,8 +34,12 @@ function App() {
           path="/upload"
           element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
         />
-        {/* Main app route that will render the logic component */}
-        <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
+        
+        {/* Main app route */}
+        <Route 
+          path="/app" 
+          element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} 
+        />
 
         {/* Role-based routes */}
         <Route path="/state" element={<StatePage />} />

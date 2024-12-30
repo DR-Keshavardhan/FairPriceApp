@@ -1,0 +1,153 @@
+/* Top Panel */
+.top-panel {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.panel-text {
+    font-size: 16px;
+}
+
+.panel-button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.panel-button:hover {
+    background-color: #45a049;
+}
+
+/* Page Header */
+.page-header {
+    background-color: #f8f8f8;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    z-index: 900;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left img {
+    width: 100px;
+    height: auto;
+    margin-right: 20px;
+}
+
+.header-left p {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+}
+
+.header-left h1 {
+    font-size: 24px;
+    margin-top: 10px;
+}
+
+.header-right {
+    display: flex;
+    gap: 15px;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    display: flex;
+    align-items: center; /* Vertically centers the content */
+    justify-content: flex-start; /* Aligns items to the left within the button */
+    padding: 10px 20px; /* Adjust spacing inside the button */
+    font-size: 16px; /* Adjust text size */
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px; /* Add rounded corners for better design */
+    gap: 10px; /* Space between icon and text */
+}
+
+.dropdown-button:hover {
+    background-color: #45a049;
+}
+
+.button-content {
+    display: flex; /* Ensure flex container for icon and text */
+    align-items: center; /* Align icon and text vertically */
+    gap: 8px; /* Space between icon and text */
+}
+
+.button-content .material-icons {
+    font-size: 20px; /* Adjust icon size */
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 150px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 4px; /* Rounded corners */
+    overflow: hidden; /* Prevent content overflow */
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Main Content */
+.main-content {
+    padding: 20px;
+    margin-top: 160px;
+}
+
+h2 {
+    font-size: 22px;
+    color: #333;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Utility Classes */
+.button-text {
+    margin: 0;
+    text-align: left;
+}
