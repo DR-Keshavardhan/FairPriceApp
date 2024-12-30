@@ -1,74 +1,203 @@
-
 body {
-
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f7fc;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     height: 100vh;
     position: fixed;
-    top: 0;  /* or any other position based on your needs */
-    left: 0;
     width: 100%;
     opacity: 0.9;
-  }
-  
-  /* Container for the App */
-  .App {
-    width: 100%;
-    min-width: 500px;
-    padding: 20px;
-    
-    box-sizing: border-box; /* Include padding in the total width */
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  /* Header */
-  h1 {
-    color: #333;
-    font-size: 28px;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
-  /* Login Form */
-  form {
+    overflow-y: auto;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body, html {
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* App container to take full height */
+.app {
     display: flex;
     flex-direction: column;
+    flex: 1;
+    justify-content: flex-start;
     align-items: center;
-    gap: 20px;
-  }
-  
-  input[type="text"],
-  input[type="password"],
-  select {
+    overflow-y: auto;
+}
+
+/* Header Styles */
+.header {
+    color: white;
+    width: auto;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header img {
+    width: 100px;
+    height: auto;
+}
+
+.header-text h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #0056b3;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+
+/* Login Form */
+.login-form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    z-index: 0;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.login-form h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+}
+
+.login-form input,
+.login-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.login-form button {
     width: 100%;
     padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     font-size: 16px;
-    outline: none;
+    transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #003d7a;
+}
+
+.login-form .forgot-password {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.login-form .forgot-password a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.login-form .forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Password Visibility Styles */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 10px 40px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
     box-sizing: border-box;
-  }
-  
-  input[type="text"]:focus,
-  input[type="password"]:focus,
-  select:focus {
-    border-color: #0056b3;
-  }
-  
-  select {
-    background-color: #fafafa;
-  }
-  
-  /* Button */
-  button {
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .login-form {
+        padding: 20px;
+        width: 90%;
+        overflow-y: auto;
+    }
+
+    .login-form h2 {
+        font-size: 20px;
+    }
+
+    .login-form input,
+    .login-form button {
+        font-size: 14px;
+    }
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    position: relative;
+    margin-top: 20px;
+}
+
+.footer-content {
+    font-size: 14px;
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* Button Styles */
+button {
     padding: 12px 20px;
     background-color: #0056b3;
     color: white;
@@ -77,214 +206,35 @@ body {
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #f5a209;
-  }
-  
-  button:focus {
+}
+
+button:focus {
     outline: none;
-  }
-  
-  /* Select Dropdown */
-  select {
-    background-color: #fafafa;
-  }
-  
-  /* Responsive Styles */
-  @media (max-width: 480px) {
-    .App {
-      padding: 30px;
-      width: 90%;
-    }
-  
-    h1 {
-      font-size: 24px;
-    }
-  
-    input[type="text"],
-    input[type="password"],
-    select {
-      font-size: 14px;
-    }
-  
-    button {
-      font-size: 14px;
-    }
-  }
-  
-  .logout-btn {
-    background-color: #f44336; /* Red background for logout */
-    color: white;  /* White text */
-    border: none;  /* Remove border */
-    padding: 10px 20px; /* Padding */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Logout Button */
+.logout-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
     display: flex;
-    align-items: center; /* Align icon and text */
+    align-items: center;
     justify-content: center;
-    border-radius: 5px; /* Rounded corners */
-    margin-top: 20px; /* Space above the button */
-  }
-  
-  .logout-btn i {
-    margin-right: 8px; /* Space between icon and text */
-  }
-  
-  .logout-btn:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-  }
-  
-
-
-* {
-
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+    border-radius: 5px;
+    margin-top: 20px;
 }
 
-body, html {
-  height: 100%;
-  background-color: #f4f4f4; /* Light background color for the page */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.logout-btn i {
+    margin-right: 8px;
 }
 
-/* App container to take full height */
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Ensure the app container takes full height */
-  justify-content: center; /* Vertically center the content */
-  align-items: center;     /* Horizontally center the content */
+.logout-btn:hover {
+    background-color: #d32f2f;
 }
-
-/* Header Styles */
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.header img {
-  width: 100px;
-  height: auto;
-}
-
-.header-text h1 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #0056b3;
-  margin-top: 10px;
-}
-
-/* Login Form Styles */
-.login-form {
-  background-color: white;
-  padding: 50px;
-  border-radius: 8px;
-  border-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 150%;
-  height: auto;
-  max-width: 400px; /* Limit the width of the form */
-}
-
-.login-form h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-.login-form label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: #333;
-}
-
-.login-form input,
-.login-form select {
-  width: 100%;
-  padding: 20px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-.login-form button {
-  width: 100%;
-  padding: 12px;
-  background-color: #0056b3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.login-form button:hover {
-  background-color: #003d7a;
-}
-
-.login-form .forgot-password {
-  text-align: center;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.login-form .forgot-password a {
-  color: #0056b3;
-  text-decoration: none;
-}
-
-.login-form .forgot-password a:hover {
-  text-decoration: underline;
-}
-
-/* Password Visibility Styles */
-.password-wrapper {
-  position: relative;
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 40px; /* Space for the eye icon */
-}
-
-.password-wrapper i {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 20px;
-  color: #333;
-}
-
-/* Footer Styles */
-.footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 10px;
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-}
-
-.footer-content {
-  font-size: 14px;
-}
-
-.footer p {
-  margin: 0;
-}
-
