@@ -29,7 +29,7 @@ const Login2 = () => {
   };
 
   return (
-    <div id="login2" className="App">
+    <div className="app">
       <Header />
       <LoginForm onLogin={handleLogin} />
       <Footer />
@@ -105,6 +105,7 @@ const Header = () => (
     <img
       src={require('./tnpds.png')}
       alt="Logo"
+      className="logo"
     />
     <div className="header-text">
       <h1>Civil Supplies and Consumer Protection Department</h1>
