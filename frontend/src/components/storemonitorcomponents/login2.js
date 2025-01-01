@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import './login2.css';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
+import { useNavigate, Link } from 'react-router-dom';
+
 const Login2 = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (username, password, role) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('http://localhost:5000/login', {
         username,
         password,
         role,
@@ -17,7 +18,7 @@ const Login2 = () => {
         // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
-        else if (response.data.role === 'talik') navigate('/taluk'); // Corrected role name
+        else if (response.data.role === 'taluk') navigate('/taluk');
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -63,6 +64,7 @@ const LoginForm = ({ onLogin }) => {
         onChange={(e) => setUsername(e.target.value)}
         required
       />
+
       <label htmlFor="password">Password</label>
       <div className="password-wrapper">
         <input
@@ -77,8 +79,10 @@ const LoginForm = ({ onLogin }) => {
           className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
           onClick={() => setShowPassword(!showPassword)}
           aria-hidden="true"
+          title="Toggle Password Visibility"
         />
       </div>
+
       <label htmlFor="role">Role</label>
       <select
         id="role"
@@ -91,6 +95,7 @@ const LoginForm = ({ onLogin }) => {
         <option value="district">District</option>
         <option value="taluk">Taluk</option>
       </select>
+
       <button type="submit">Login</button>
       <div className="forgot-password">
         <Link to="/forgot-password">Forgot Password?</Link>
@@ -102,8 +107,9 @@ const LoginForm = ({ onLogin }) => {
 const Header = () => (
   <header className="header">
     <img
-      src={require('./tnpds.png')}
-      alt="Logo"
+      src={require('./tnpds.png').default} // Updated for modern React setups
+      alt="TNPDS Logo"
+      className="logo"
     />
     <div className="header-text">
       <h1>Civil Supplies and Consumer Protection Department</h1>

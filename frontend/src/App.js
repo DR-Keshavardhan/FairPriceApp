@@ -17,7 +17,6 @@ function App() {
       <Routes>
         
         <Route path="/" element={<ButtonPage />} />
-        <Route path="/test" elemet={<UploadExcel/>}></Route>
 
         {/* Route for Login1 page */}
         <Route path="/login1"
@@ -47,8 +46,8 @@ function App() {
         <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
 
         {/* Role-based routes */}
-        <Route path="/statepage" element={<StatePage />} />
-        <Route path="/districtpage" element={<DistrictPage />} />
+        <Route path="/state" element={<StatePage />} />
+        <Route path="/district" element={<DistrictPage />} />
         <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
       </Routes>
     </Router>

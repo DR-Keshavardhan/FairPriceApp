@@ -12,7 +12,6 @@ const pdfkit = require('pdfkit');
 const fs = require('fs');
 require('dotenv').config({ path: '../id.env' });
 
-
 // ________________________________________________________________________________________________________________
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
@@ -103,27 +102,28 @@ app.post("/api/updateShopStatus", (req, res) => {
   );
 });
 
-router.post('/login', async (req, res) => {
-  const { username, password, role  } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' });
-  }
+app.post('/login', (req, res) => {
+  console.log('Received login request:', req.body);
+    const { username, password, role } = req.body;
 
-  try {
-    const [rows] = await db.promise().query('SELECT * FROM Users WHERE userId = ?', [username]);
-    if (rows.length === 0) return res.status(401).json({ message: 'User not found' });
+    if (!username || !password || !role) {
+        return res.status(400).json({ message: 'All fields are required' });
+    }
 
-    const user = rows[0];
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) return res.status(401).json({ message: 'Incorrect password' });
+    // Check if the user exists in the database
+    const query = 'SELECT * FROM users WHERE username = ? AND role = ? and password =?';
+    db.query(query, [username, role,password], async (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
 
-    // Generate a mock token
-    const token = mockGenerateToken(user);
-    res.json({ token, role: user.role });
-  } catch (err) {
-    console.error('Error during login:', err.message);
-    res.status(500).json({ message: 'Server error', error: err.message });
-  }
+        if (results.length === 0) {
+            return res.status(401).json({ message: 'Invalid username, role, or password' });
+        }
+
+        res.json({ role: user.role });
+    });
 });
 
 
@@ -256,7 +256,7 @@ router.post('/notify-shop/:shopId', async (req, res) => {
 
     const shopDetails = shop[0];
     const formattedNumber = `+91${shopDetails.incharge_number}`;
-    console.log('Shop Details:', shopDetails); // Debugging shop details
+    console.log('Shop Details:', shopDetails);s
     console.log('Formatted phone number:', formattedNumber); // Debugging formatted phone number
 
     // Sending WhatsApp message using Twilio

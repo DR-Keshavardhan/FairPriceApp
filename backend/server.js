@@ -7,6 +7,8 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 const path = require('path');
 const apiRoutes = require('./api');
+const db = require('./db.js');
+const sql = require('mysql2');
 
 const PORT = process.env.PORT || 5000;
 const accountSid = 'AC3ef333278f3108e82ddc4b925ed4a22d';
@@ -145,6 +147,32 @@ app.post('/send-whatsapp-notification', (req, res) => {
     writeToCsv(phone, message);
     res.status(200).send('Notification request received.');
 });
+
+app.post('/login', (req, res) => {
+    console.log('Received login request:', req.body);
+      const { username, password, role } = req.body;
+  
+      if (!username || !password || !role) {
+          return res.status(400).json({ message: 'All fields are required' });
+      }
+  
+      // Check if the user exists in the database
+      const query = 'SELECT * FROM users WHERE username = ? AND role = ? and password =?';
+      db.query(query, [username, role,password], async (err, results) => {
+          if (err) {
+              console.error('Database query error:', err);
+              return res.status(500).json({ message: 'Internal server error' });
+          }
+  
+          if (results.length === 0) {
+              return res.status(401).json({ message: 'Invalid username, role, or password' });
+          }
+  
+          res.json({ role: role });
+      });
+  });
+  
+  
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
