@@ -1,65 +1,141 @@
-/* General Styling */
-body, html {
+body {
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: 'Poppins', sans-serif;
   background-color: #f4f7fc;
+  display: flex;
+  flex-direction: column; /* Set body as a column flex container */
+  height: 100vh; /* Full viewport height */
 }
 
-/* Container */
-.login-container {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+header, footer {
+  width: 100%; /* Ensure they stretch across the page */
+}
+
+.app {
   display: flex;
+  flex-direction: column;
+  flex: 1; /* Allow content to grow and fill available space */
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  opacity: 0.9;
 }
 
-/* Login Box */
-.login-box {
-  background-color: #ffffff;
-  padding: 50px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 400px;
+/* Header Styles */
+.header {
+  position: fixed; /* Fix header at the top */
+  top: 0;
+  left: 0;
   width: 100%;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 10px 20px;
 }
 
-.login-box h2 {
-  font-size: 28px;
-  color: #0056b3;
-  margin-bottom: 20px;
+.header img {
+  width: 100px;
+  height: auto;
+}
+
+.header-text h1 {
+  font-size: 24px;
   font-weight: bold;
+  color: #0056b3;
+  margin: 10px 0;
 }
 
-/* Dropdown & Input Fields */
-.role-dropdown, .input-field {
+/* Login1 Form */
+.login1-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto;
+  z-index: 0;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.login1-form h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.login1-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+  text-align: left;
+}
+
+.login1-form input,
+.login1-form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login1-form button {
   width: 100%;
   padding: 12px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   font-size: 16px;
-  background-color: #fafafa;
-  outline: none;
-  transition: border-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.role-dropdown:focus, .input-field:focus {
-  border-color: #0056b3;
+.login1-form button:hover {
+  background-color: #003d7a;
 }
 
-/* Password Wrapper */
+.login1-form .forgot-password {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.login1-form .forgot-password a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.login1-form .forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Password Visibility Styles */
 .password-wrapper {
   position: relative;
 }
 
 .password-wrapper input {
-  padding-right: 40px;
+  width: 100%;
+  padding: 10px 40px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 .password-wrapper i {
@@ -72,94 +148,51 @@ body, html {
   color: #333;
 }
 
-/* Error Message */
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-bottom: 15px;
-  text-align: left;
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .login1-form {
+      padding: 20px;
+      width: 90%;
+      overflow-y: auto;
+  }
+
+  .login1-form h2 {
+      font-size: 20px;
+  }
+
+  .login1-form input,
+  .login1-form button {
+      font-size: 14px;
+  }
 }
 
-/* Button Styling */
-.login-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #0056b3;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
-.login-btn:hover {
-  background-color: #003d7a;
-}
-
-.login-btn:active {
-  background-color: #285a8e;
-}
-
-/* Forgot Password */
-.forgot-password {
-  font-size: 14px;
-  margin-top: 10px;
-}
-
-.forgot-password a {
-  color: #0056b3;
-  text-decoration: none;
-}
-
-.forgot-password a:hover {
-  text-decoration: underline;
-}
-
-/* Footer */
+/* Footer Styles */
 .footer {
+  position: fixed; /* Fix footer at the bottom */
+  bottom: 0;
+  left: 0;
+  width: 100%;
   background-color: #333;
   color: white;
   text-align: center;
-  padding: 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
+  padding: 10px 0;
+}
+
+.footer-content {
   font-size: 14px;
 }
 
-@media (max-width: 768px) {
-  .login-box {
-    padding: 30px;
-    max-width: 90%;
-  }
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-    position: absolute;
-    top: 20px; /* Adjust the position if necessary */
-    width: 100%;
-    z-index: 3; /* Ensure header stays on top of other content */
-  }
-  
-  .header img {
-    width: 100px;
-    height: auto;
-  }
-  
-  .header-text h1 {
-    font-size: 28px;
-    font-weight: bold;
-    color: #0056b3;
-    margin-top: 10px;
-    z-index: 4; /* Ensure header text is visible */
-  }
-  .role-dropdown, .input-field, .login-btn {
-    font-size: 14px;
-  }
+/* Adjust margin for content to avoid overlapping */
+.app {
+  margin-top: 80px; /* Adjust for header height */
+  margin-bottom: 50px; /* Adjust for footer height */
+}
 
-  .footer {
-    font-size: 12px;
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .login1 {
+      width: 90%;
+      margin-top: 120px; /* Ensure space for the fixed header */
   }
 }

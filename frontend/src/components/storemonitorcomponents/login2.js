@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './login2.css';
 import axios from 'axios';
+<<<<<<< HEAD
 import { useNavigate, Link } from 'react-router-dom';
+=======
+import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
+>>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
 
 const Login2 = () => {
   const navigate = useNavigate();
@@ -18,7 +22,11 @@ const Login2 = () => {
         // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
+<<<<<<< HEAD
         else if (response.data.role === 'taluk') navigate('/taluk');
+=======
+        else if (response.data.role === 'taluk') navigate('/taluk'); // Corrected role name
+>>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -107,8 +115,13 @@ const LoginForm = ({ onLogin }) => {
 const Header = () => (
   <header className="header">
     <img
+<<<<<<< HEAD
       src={require('./tnpds.png').default} // Updated for modern React setups
       alt="TNPDS Logo"
+=======
+      src={require('./tnpds.png')}
+      alt="Logo"
+>>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
       className="logo"
     />
     <div className="header-text">

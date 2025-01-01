@@ -8,6 +8,7 @@ import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; 
 import Login2 from './components/storemonitorcomponents/login2.js'; // Import your Login2 component
 import StatePage from './components/storemonitorcomponents/StatePage.js'; // Import StatePage
 import TalukPage from './components/storemonitorcomponents/TalukPage.js'; // Import TalukPage
+import ShopPage from './components/storemonitorcomponents/ShopPage.js'; // Import new ShopPage component
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
@@ -15,11 +16,18 @@ function App() {
   return (
     <Router>
       <Routes>
-        
+        {/* Route for ButtonPage as the landing page */}
         <Route path="/" element={<ButtonPage />} />
+<<<<<<< HEAD
+=======
+        
+        {/* Test Route for Upload Excel */}
+        <Route path="/test" element={<UploadExcel />} />
+>>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
 
         {/* Route for Login1 page */}
-        <Route path="/login1"
+        <Route 
+          path="/login1"
           element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
         />
 
@@ -28,27 +36,44 @@ function App() {
           path="/login2"
           element={isAuthenticated ? <Navigate to="/taluk" /> : <Login2 />}
         />
-          <Route
+        
+        {/* Route for StatePage */}
+        <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/statepage" /> : <StatePage />}
         />      
-          <Route
+        
+        {/* Route for DistrictPage */}
+        <Route
           path="/district"
           element={isAuthenticated ? <Navigate to="/districtpage" /> : <DistrictPage />}
-        />      
+        />
 
-        {/* Authentication-based route for Upload Excel */}
+        {/* Route for Upload Excel, Authentication-based route */}
         <Route
           path="/upload"
           element={isAuthenticated ? <UploadExcel /> : <Navigate to="/login2" />}
         />
-        {/* Main app route that will render the logic component */}
-        <Route path="/app" element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} />
+        
+        {/* Main app route */}
+        <Route 
+          path="/app" 
+          element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} 
+        />
 
         {/* Role-based routes */}
+<<<<<<< HEAD
         <Route path="/state" element={<StatePage />} />
         <Route path="/district" element={<DistrictPage />} />
         <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
+=======
+        <Route path="/statepage" element={<StatePage />} />
+        <Route path="/districtpage" element={<DistrictPage />} />
+        <Route path="/taluk" element={<TalukPage />} />
+        
+        {/* New ShopPage route */}
+        <Route path="/shop" element={<ShopPage />} /> {/* New page for shop */}
+>>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
       </Routes>
     </Router>
   );

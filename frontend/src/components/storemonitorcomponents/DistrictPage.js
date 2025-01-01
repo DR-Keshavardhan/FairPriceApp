@@ -63,16 +63,16 @@ const DistrictPage = () => {
   };
 
   return (
-    <div>
+    <main>
       {/* Top Panel */}
-      <div className="top-panel">
-        <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
-        <button className="panel-button">Translate</button>
-      </div>
+      <section className="district-top-panel">
+        <span className="district-panel-text">📞 1967 (or) 1800-425-5901</span>
+        <button className="district-panel-button">Translate</button>
+      </section>
 
       {/* Header Section */}
-      <header className="page-header">
-        <div className="header-left">
+      <header className="district-page-header">
+        <div className="district-header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
@@ -84,58 +84,57 @@ const DistrictPage = () => {
         </div>
 
         {/* Header Dropdown Menus */}
-        <div className="header-right">
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
+        <nav className="district-header-right">
+          <div className="district-dropdown">
+            <button className="district-dropdown-button">
+              <div className="district-button-content">
                 <span className="material-icons">home</span>
-                <span className="button-text">Home</span>
+                <span className="district-button-text">Home</span>
               </div>
             </button>
-            <div className="dropdown-content">
+            <div className="district-dropdown-content">
               <a href="#">Option 1</a>
               <a href="#">Option 2</a>
               <a href="#">Option 3</a>
             </div>
           </div>
 
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
+          <div className="district-dropdown">
+            <button className="district-dropdown-button">
+              <div className="district-button-content">
                 <span className="material-icons">cloud_upload</span>
-                <span className="button-text">Data Upload</span>
+                <span className="district-button-text">Data Upload</span>
               </div>
             </button>
-            <div className="dropdown-content">
+            <div className="district-dropdown-content">
               <a href="#">Feature X</a>
               <a href="#">Feature Y</a>
               <a href="#">Feature Z</a>
             </div>
           </div>
 
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
+          <div className="district-dropdown">
+            <button className="district-dropdown-button">
+              <div className="district-button-content">
                 <span className="material-icons">help_outline</span>
-                <span className="button-text">FAQ</span>
+                <span className="district-button-text">FAQ</span>
               </div>
             </button>
-            <div className="dropdown-content">
+            <div className="district-dropdown-content">
               <a href="#">Option A</a>
               <a href="#">Option B</a>
               <a href="#">Option C</a>
             </div>
           </div>
-        </div>
+        </nav>
       </header>
 
       {/* Main Content */}
-      <div className="district-page">
-        <h2 className="d">District Page</h2>
+      <section className="district-page-content">
+        <h2 className="district-page-title">District Page</h2>
 
         {/* Dropdown for District */}
-        
-        <div className="dropdown-container">
+        <div className="district-dropdown-container">
           <label htmlFor="district-select">Select District:</label>
           <select
             id="district-select"
@@ -156,10 +155,10 @@ const DistrictPage = () => {
 
         {/* Dropdown for Batch */}
         {selectedDistrict && (
-          <div className="dropdown-container">
-            <label htmlFor="batch-select">Select Batch:</label>
+          <div className="district-batch-container">
+            <label htmlFor="district-batch-select">Select Batch:</label>
             <select
-              id="batch-select"
+              id="district-batch-select"
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
             >
@@ -173,13 +172,19 @@ const DistrictPage = () => {
           </div>
         )}
 
+        {selectedDistrict && (
+          <div className="district-upload-button-container">
+            <button className="district-upload-button">Data Upload</button>
+          </div>
+        )}
+
         {/* "Notify All" and "Call All" Buttons */}
         {selectedBatch && (
-          <div className="button-container">
-            <button className="notify-all-button" onClick={handleNotifyAll}>
+          <div className="district-action-buttons">
+            <button className="district-notify-all-button" onClick={handleNotifyAll}>
               Notify All
             </button>
-            <button className="call-all-button" onClick={handleCallAll}>
+            <button className="district-call-all-button" onClick={handleCallAll}>
               Call All
             </button>
           </div>
@@ -187,8 +192,8 @@ const DistrictPage = () => {
 
         {/* Table Display */}
         {selectedBatch && tableData.length > 0 && (
-          <div className="table-container">
-            <table className="district-table">
+          <div className="district-table-container">
+            <table className="district-data-table">
               <thead>
                 <tr>
                   <th>Shop Code</th>
@@ -221,16 +226,10 @@ const DistrictPage = () => {
                       {shop.status === "Closed" &&
                       (shop.remarks === "NIL" || shop.remarks === "-") ? (
                         <>
-                          <button
-                            className="message-button"
-                            /*OnCLick to send message*/
-                          >
+                          <button className="district-message-button">
                             Send Message
                           </button>
-                          <button
-                            className="call-button"
-                            /*on click to all the customers*/
-                          >
+                          <button className="district-call-button">
                             Call Incharge
                           </button>
                         </>
@@ -249,10 +248,10 @@ const DistrictPage = () => {
 
         {/* No data message */}
         {selectedBatch && tableData.length === 0 && (
-          <p>No data available for the selected district and batch.</p>
+          <p className="district-no-data">No data available for the selected district and batch.</p>
         )}
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

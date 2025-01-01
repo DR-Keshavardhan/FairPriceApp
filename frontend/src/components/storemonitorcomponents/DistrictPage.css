@@ -5,11 +5,23 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow: hidden;
+  overflow: hidden; /* Prevent body overflow */
+  display: flex;
+  flex-direction: column; /* Flexbox layout to allow scrolling */
+}
+
+/* Container Box around Entire Content */
+.district-content-container {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Top Panel */
-.top-panel {
+.district-top-panel {
   background-color: #333;
   color: white;
   padding: 10px 20px;
@@ -23,11 +35,11 @@ body {
   z-index: 1000;
 }
 
-.panel-text {
+.district-panel-text {
   font-size: 16px;
 }
 
-.panel-button {
+.district-panel-button {
   padding: 8px 15px;
   background-color: #4CAF50;
   color: white;
@@ -36,12 +48,12 @@ body {
   border-radius: 4px;
 }
 
-.panel-button:hover {
+.district-panel-button:hover {
   background-color: #45a049;
 }
 
 /* Page Header */
-.page-header {
+.district-page-header {
   background-color: #f8f8f8;
   padding: 20px;
   display: flex;
@@ -55,40 +67,40 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.header-left {
+.district-header-left {
   display: flex;
   align-items: center;
 }
 
-.header-left img {
+.district-header-left img {
   width: 100px;
   height: auto;
   margin-right: 20px;
 }
 
-.header-left p {
+.district-header-left p {
   font-size: 14px;
   color: #555;
   margin: 0;
 }
 
-.header-left h1 {
+.district-header-left h1 {
   font-size: 24px;
   margin-top: 10px;
 }
 
-.header-right {
+.district-header-right {
   display: flex;
   gap: 15px;
 }
 
 /* Dropdown Styles */
-.dropdown {
+.district-dropdown {
   position: relative;
   display: inline-block;
 }
 
-.dropdown-button {
+.district-dropdown-button {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -102,21 +114,21 @@ body {
   gap: 10px;
 }
 
-.dropdown-button:hover {
+.district-dropdown-button:hover {
   background-color: #45a049;
 }
 
-.button-content {
+.district-button-content {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.button-content .material-icons {
+.district-button-content .material-icons {
   font-size: 20px;
 }
 
-.dropdown-content {
+.district-dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
@@ -125,41 +137,249 @@ body {
   z-index: 1;
   border-radius: 4px;
   overflow: hidden;
+  border: 1px solid #ddd;
+  margin-top: 5px;
 }
 
-.dropdown-content a {
+.district-dropdown-content a {
   color: black;
   padding: 10px 15px;
   text-decoration: none;
   display: block;
 }
 
-.dropdown-content a:hover {
+.district-dropdown-content a:hover {
   background-color: #ddd;
 }
 
-.dropdown:hover .dropdown-content {
+.district-dropdown:hover .dropdown-content {
   display: block;
 }
 
 /* Main Content */
-.main-content {
+.district-district-page {
+  background-color: white;
   padding: 20px;
-  margin-top: 160px;
+  margin-top: 120px; /* Adjust to avoid overlap with fixed top panel */
+  flex: 1; /* Allow this section to take remaining space */
+  overflow-y: auto; /* Ensure it scrolls if the content exceeds viewport height */
 }
 
-h2 {
-  font-size: 22px;
-  color: #333;
+.district-district-page h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
-p {
+/* Dropdown Container */
+.district-dropdown-container {
+  margin-bottom: 20px;
+}
+
+/* Button Styling */
+.district-button-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+.district-action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 15px;
+}
+.district-notify-all-button,
+.district-call-all-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.district-notify-all-button:hover,
+.district-call-all-button:hover {
+  background-color: #45a049;
+}
+
+.district-upload-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+/* Style for the District Page Content */
+.district-page-content {
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 1200px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.district-page-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #343a40;
+  margin-bottom: 20px;
+}
+
+.district-dropdown-container,
+.district-batch-container {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+label {
   font-size: 16px;
-  color: #666;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #ffffff;
+  color: #495057;
+}
+
+.district-upload-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.district-upload-button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.district-upload-button:hover {
+  background: #0056b3;
+}
+
+.district-action-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.district-notify-all-button,
+.district-call-all-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.district-notify-all-button {
+  background: #28a745;
+}
+
+.district-notify-all-button:hover {
+  background: #218838;
+}
+
+.district-call-all-button {
+  background: #ffc107;
+}
+
+.district-call-all-button:hover {
+  background: #e0a800;
+}
+
+.district-table-container {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.district-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.district-data-table th,
+.district-data-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #dee2e6;
+}
+
+.district-data-table th {
+  background: #343a40;
+  color: #ffffff;
+}
+
+.district-data-table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.district-message-button,
+.district-call-button {
+  margin: 0 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #ffffff;
+  transition: background-color 0.3s;
+}
+
+.district-message-button {
+  background: #17a2b8;
+}
+
+.district-message-button:hover {
+  background: #138496;
+}
+
+.district-call-button {
+  background: #ffc107;
+}
+
+.district-call-button:hover {
+  background: #e0a800;
+}
+
+.district-no-data {
+  text-align: center;
+  color: #6c757d;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.district-upload-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.district-upload-button:hover {
+  background-color: #0056b3;
 }
 
 /* Table Container with Scrolling */
-.table-container {
+.district-table-container {
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -171,9 +391,38 @@ p {
   border: 1px solid #ddd;
 }
 
+.district-table th, .district-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.district-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+/* Footer Styles */
+.district-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  position: relative; /* Keep relative to stay at the bottom of the content */
+  margin-top: auto;
+}
+
+.district-footer-content {
+  font-size: 14px;
+}
+
+.district-footer p {
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .dropdown-container {
+  .district-dropdown-container {
     flex-direction: column;
     align-items: flex-start;
   }
@@ -185,5 +434,25 @@ p {
   button {
     padding: 8px 12px;
     font-size: 12px;
+  }
+
+  .district-page-header {
+    position: relative;
+    top: auto; /* Change to relative for smaller screens */
+    margin-top: 80px; /* Ensure no overlap */
+  }
+
+  .district-page {
+    margin-top: 140px; /* Adjust for mobile layout */
+  }
+  
+  .district-dropdown-button {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+  
+  .district-panel-button {
+    padding: 6px 12px;
+    font-size: 14px;
   }
 }

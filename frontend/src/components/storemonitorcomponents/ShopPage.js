@@ -1,23 +1,23 @@
 import axios from "axios";
 import "material-icons/iconfont/material-icons.css"; // Material icons for styling
 import React, { useEffect, useState } from "react";
-import "./talukpage.css";
+import "./shop.css"; // Import the corresponding CSS file
 import logo from "./tnpds.png"; // Logo for header
 
-const TalukPage = () => {
-  const [taluks] = useState(["Ambattur", "Madhavaram"]); // Static dropdown for taluks
+const ShopPage = () => {
+  const [shops] = useState(["Shop A", "Shop B"]); // Static dropdown for shops
   const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); // Static dropdown for batches
-  const [selectedTaluk, setSelectedTaluk] = useState("");
+  const [selectedShop, setSelectedShop] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
-  // Fetch data based on taluk and batch
+  // Fetch data based on shop and batch
   const fetchTableData = async () => {
-    if (!selectedTaluk || !selectedBatch) return; // Ensure both are selected
+    if (!selectedShop || !selectedBatch) return; // Ensure both are selected
     try {
-      const response = await axios.get(`http://localhost:5000/api/taluk-data`, {
+      const response = await axios.get(`http://localhost:5000/api/shop-data`, {
         params: {
-          taluk: selectedTaluk,
+          shop: selectedShop,
           batch: selectedBatch,
         },
       });
@@ -27,22 +27,22 @@ const TalukPage = () => {
     }
   };
 
-  // Trigger fetch when taluk or batch changes
+  // Trigger fetch when shop or batch changes
   useEffect(() => {
     fetchTableData();
-  }, [selectedTaluk, selectedBatch]);
+  }, [selectedShop, selectedBatch]);
 
   return (
     <main>
       {/* Top Panel */}
-      <section className="taluk-top-panel">
-        <span className="taluk-panel-text">📞 1967 (or) 1800-425-5901</span>
-        <button className="taluk-panel-button">Translate</button>
+      <section className="shop-top-panel">
+        <span className="shop-panel-text">📞 1967 (or) 1800-425-5901</span>
+        <button className="shop-panel-button">Translate</button>
       </section>
 
       {/* Header Section */}
-      <header className="taluk-page-header">
-        <div className="taluk-header-left">
+      <header className="shop-page-header">
+        <div className="shop-header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
@@ -54,21 +54,21 @@ const TalukPage = () => {
         </div>
 
         {/* Header Dropdown Menus */}
-        <nav className="taluk-header-right">
-          <div className="taluk-dropdown">
-            <button className="taluk-dropdown-button">
-              <div className="taluk-button-content">
+        <nav className="shop-header-right">
+          <div className="shop-dropdown">
+            <button className="shop-dropdown-button">
+              <div className="shop-button-content">
                 <span className="material-icons">home</span>
-                <span className="taluk-button-text">Home</span>
+                <span className="shop-button-text">Home</span>
               </div>
             </button>
           </div>
 
-          <div className="taluk-dropdown">
-            <button className="taluk-dropdown-button">
-              <div className="taluk-button-content">
+          <div className="shop-dropdown">
+            <button className="shop-dropdown-button">
+              <div className="shop-button-content">
                 <span className="material-icons">help_outline</span>
-                <span className="taluk-button-text">FAQ</span>
+                <span className="shop-button-text">FAQ</span>
               </div>
             </button>
           </div>
@@ -76,44 +76,35 @@ const TalukPage = () => {
       </header>
 
       {/* Main Content */}
-      <section className="taluk-page-content">
-        <h2 className="taluk-page-title">Taluk Page</h2>
+      <section className="shop-page-content">
+        <h2 className="shop-page-title">Shop Page</h2>
 
-        {/* Dropdown for Taluk */}
-        <div className="taluk-dropdown-container">
-          <label htmlFor="taluk-select">Select Taluk:</label>
+        {/* Dropdown for Shop */}
+        <div className="shop-dropdown-container">
+          <label htmlFor="shop-select">Select Shop:</label>
           <select
-            id="taluk-select"
-            value={selectedTaluk}
+            id="shop-select"
+            value={selectedShop}
             onChange={(e) => {
-              setSelectedTaluk(e.target.value);
-              setSelectedBatch(""); // Reset batch when taluk changes
+              setSelectedShop(e.target.value);
+              setSelectedBatch(""); // Reset batch when shop changes
             }}
           >
-            <option value="">-- Select Taluk --</option>
-            {taluks.map((taluk, index) => (
-              <option key={index} value={taluk}>
-                {taluk}
+            <option value="">-- Select Shop --</option>
+            {shops.map((shop, index) => (
+              <option key={index} value={shop}>
+                {shop}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Upload Button (appears after selecting Taluk) */}
-        {selectedTaluk && (
-          <div className="taluk-button-container">
-            <button className="taluk-upload-button">
-              Upload Data
-            </button>
-          </div>
-        )}
-
         {/* Dropdown for Batch */}
-        {selectedTaluk && (
-          <div className="taluk-batch-container">
-            <label htmlFor="taluk-batch-select">Select Batch:</label>
+        {selectedShop && (
+          <div className="shop-batch-container">
+            <label htmlFor="shop-batch-select">Select Batch:</label>
             <select
-              id="taluk-batch-select"
+              id="shop-batch-select"
               value={selectedBatch}
               onChange={(e) => setSelectedBatch(e.target.value)}
             >
@@ -127,24 +118,21 @@ const TalukPage = () => {
           </div>
         )}
 
-        {/* Button Container (only shows after selecting Batch) */}
-        <div className="taluk-button-container">
+        {/* Button Container */}
+        <div className="shop-button-container">
           {selectedBatch && (
             <>
-              <button className="taluk-message-button">
-                Send Message
-              </button>
-              <button className="taluk-call-button">
-                Call Incharge
-              </button>
+              <button className="shop-message-button">Send Message</button>
+              <button className="shop-call-button">Call Incharge</button>
+              <button className="shop-upload-button">Upload Data</button>
             </>
           )}
         </div>
 
         {/* Table Display */}
         {selectedBatch && tableData.length > 0 && (
-          <div className="taluk-table-container">
-            <table className="taluk-data-table">
+          <div className="shop-table-container">
+            <table className="shop-data-table">
               <thead>
                 <tr>
                   <th>Shop Code</th>
@@ -152,8 +140,7 @@ const TalukPage = () => {
                   <th>Incharge</th>
                   <th>Email</th>
                   <th>Opening Time</th>
-                  <th>Taluk</th>
-                  <th>District</th>
+                  <th>Shop</th>
                   <th>Status</th>
                   <th>Remarks</th>
                   <th>Batch</th>
@@ -168,27 +155,22 @@ const TalukPage = () => {
                     <td>{shop.shop_incharge}</td>
                     <td>{shop.email}</td>
                     <td>{shop.opening_time}</td>
-                    <td>{shop.taluk}</td>
-                    <td>{shop.district}</td>
+                    <td>{shop.shop}</td>
                     <td>{shop.status}</td>
                     <td>{shop.remarks}</td>
                     <td>{shop.upload_batch}</td>
                     <td>
-                      {shop.status === "Closed" &&
-                      (shop.remarks === "NIL" || shop.remarks === "-") ? (
+                      {shop.status === "Closed" && (
                         <>
-                          <button className="taluk-message-button">
+                          <button className="shop-message-button">
                             Send Message
                           </button>
-                          <button className="taluk-call-button">
+                          <button className="shop-call-button">
                             Call Incharge
                           </button>
                         </>
-                      ) : shop.status === "Open" ? (
-                        <span>Opened</span>
-                      ) : (
-                        <span>{shop.remarks}</span>
                       )}
+                      {shop.status === "Open" && <span>Opened</span>}
                     </td>
                   </tr>
                 ))}
@@ -199,11 +181,11 @@ const TalukPage = () => {
 
         {/* No data message */}
         {selectedBatch && tableData.length === 0 && (
-          <p className="taluk-no-data">No data available for the selected taluk and batch.</p>
+          <p className="shop-no-data">No data available for the selected shop and batch.</p>
         )}
       </section>
     </main>
   );
 };
 
-export default TalukPage;
+export default ShopPage;
