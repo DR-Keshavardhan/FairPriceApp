@@ -8,16 +8,7 @@ const Login1 = () => {
 
   const handleLogin = async (username, password, role) => {
     try {
-<<<<<<< HEAD
-      if (!role) {
-        setErrorMessage('Please select a role.');
-        return;
-      }
-
-      const response = await axios.post('http://localhost:5000/login', {
-=======
       const response = await axios.post('http://localhost:5000/api/login', {
->>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
         username,
         password,
         role,

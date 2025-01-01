@@ -16,6 +16,20 @@ const createSchema = () => {
     });
 };
 
+const createSchemaforFPtableAuth = () => {
+    const query = `CREATE TABLE IF NOT EXISTS FPusers (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        username VARCHAR(55) NOT NULL,
+        password VARCHAR(55) NOT NULL,
+        role VARCHAR(55) NOT NULL
+    )`;
+    db.query(query, (err, result) => {
+        if (err) throw err;
+        console.log("Table created successfully");
+    });
+};
+
 const deleteEntireTable = (tablename) => {
     const query = `DROP TABLE ${tablename}`;
     db.query(query, (err, result) => {
@@ -79,6 +93,18 @@ const insertdatatookidsync = () => {
   });
 };
 
+const insertDataTOFPUser = () => {
+    const query = `INSERT INTO users (email, username, password, role) VALUES
+    ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
+    ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
+    ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
+    ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
+    ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
+    db.query(query, (err, result) => {
+        if (err) throw err;
+        console.log("Inserted successfully");
+    });
+};
 
 
 const insertData = () => {
@@ -124,8 +150,9 @@ const createtableformonitor=()=>{
 
 // createtableforkidsync();
 // insertdatatookidsync();
-// Uncomment the functions as needed
 // createSchema();
 // createSchemaforFPtable();
 // insertData();
 // deleteEntireTable('ShopDetails');
+// createSchemaforFPtableAuth();
+// insertDataTOFPUser();

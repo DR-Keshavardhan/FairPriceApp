@@ -18,12 +18,9 @@ function App() {
       <Routes>
         {/* Route for ButtonPage as the landing page */}
         <Route path="/" element={<ButtonPage />} />
-<<<<<<< HEAD
-=======
         
         {/* Test Route for Upload Excel */}
         <Route path="/test" element={<UploadExcel />} />
->>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
 
         {/* Route for Login1 page */}
         <Route 
@@ -62,18 +59,12 @@ function App() {
         />
 
         {/* Role-based routes */}
-<<<<<<< HEAD
         <Route path="/state" element={<StatePage />} />
         <Route path="/district" element={<DistrictPage />} />
-        <Route path="/taluk" element={<TalukPage />} /> {/* Ensure this path matches */}
-=======
-        <Route path="/statepage" element={<StatePage />} />
-        <Route path="/districtpage" element={<DistrictPage />} />
         <Route path="/taluk" element={<TalukPage />} />
         
         {/* New ShopPage route */}
         <Route path="/shop" element={<ShopPage />} /> {/* New page for shop */}
->>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
       </Routes>
     </Router>
   );

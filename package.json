@@ -25,12 +25,7 @@
     "jwt-simple": "^0.5.6",
     "material-icons": "^1.13.12",
     "multer": "^1.4.5-lts.1",
-<<<<<<< HEAD
     "mysql2": "^3.12.0",
-=======
-    "mysql2": "^3.11.4",
-    "new-fair-price": "file:",
->>>>>>> dad4dcf4dab46c08f6a4e357362df78c15f63340
     "nodemailer": "^6.9.16",
     "npm": "^10.9.2",
     "pdfkit": "^0.15.1",

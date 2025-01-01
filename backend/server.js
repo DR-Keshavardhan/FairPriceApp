@@ -1,179 +1,34 @@
+// Import required modules
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const twilio = require('twilio');
-const { exec } = require('child_process');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
-const fs = require('fs');
-const path = require('path');
-const apiRoutes = require('./api');
-const db = require('./db.js');
-const sql = require('mysql2');
+const cors = require('cors'); // Ensure CORS is imported
+const KSapiRoutes = require('./KSapi');
+const SMapiRoutes = require('./SMapi');
 
-const PORT = process.env.PORT || 5000;
-const accountSid = 'AC3ef333278f3108e82ddc4b925ed4a22d';
-const authToken = '3fd0b085da326e009668653b7ec0064e';
-const twilioPhoneNumber = '+12184844803';
-
+// Initialize Express app
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
-
-// Path to the CSV file
-const csvFilePath = path.resolve('C:/SeleniumApp/Data/data.csv');
-
-function writeToCsv(contact, message) {
-    const fileExists = fs.existsSync(csvFilePath);
-
-    const csvWriter = createCsvWriter({
-        path: csvFilePath,
-        header: [
-            { id: 'contact', title: 'CONTACT' },
-            { id: 'message', title: 'MESSAGE' },
-        ],
-        append: fileExists,
-    });
-
-    const data = [{ contact: contact, message: message }];
-
-    csvWriter
-        .writeRecords(data)
-        .then(() => {
-            console.log('Data written to CSV successfully.');
-            callApplication();
-        })
-        .catch((error) => {
-            console.error('Error writing to CSV:', error);
-        });
-}
-
-// Function to call the application
-function callApplication() {
-    const appCommand = '/resources/SeleniumApp.exe';
-
-    exec(appCommand, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error executing command: ${error.message}`);
-            return;
-        }
-
-        if (stderr) {
-            console.error(`Error output: ${stderr}`);
-            return;
-        }
-
-        console.log(`Application output: ${stdout}`);
-    });
-}
-
-// Twilio client
-const client = twilio(accountSid, authToken);
+app.use(express.json()); // Parse JSON bodies
+app.use(cors()); // Enable CORS for all routes
 
 // Routes
-app.use('/api', apiRoutes);
+app.use('/KSapi', KSapiRoutes); // Mount KSapi routes on /KSapi
+app.use('/SMapi', SMapiRoutes); // Mount SMapi routes on /SMapi
 
-// Endpoint for sending SMS and call notifications
-app.post('/send-notifications', async (req, res) => {
-    const { phone, message } = req.body;
-
-    try {
-        // Send SMS
-        await client.messages.create({
-            body: message,
-            from: twilioPhoneNumber,
-            to: phone,
-        });
-
-        // Make Call
-        await client.calls.create({
-            twiml: `<Response><Say>Your response here</Say></Response>`,
-            to: phone,
-            from: twilioPhoneNumber,
-        });
-
-        res.status(200).send('Notification sent (SMS and Call)!');
-    } catch (error) {
-        console.error('Error sending notifications:', error);
-        res.status(500).send(`Error sending notifications: ${error.message}`);
-    }
+// Default route
+app.get('/', (req, res) => {
+    res.send('Welcome to the API backend!');
 });
 
-app.post('/send-notifications-shopdealer', async (req, res) => {
-    const { phone, message } = req.body;
-
-    try {
-        // Send SMS
-        await client.messages.create({
-            body: message,
-            from: twilioPhoneNumber,
-            to: phone,
-        });
-
-        res.status(200).send('Notification sent (SMS)!');
-    } catch (error) {
-        console.error('Error sending notifications:', error);
-        res.status(500).send(`Error sending notifications: ${error.message}`);
-    }
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
 });
 
-app.post('/send-calls-shopdealer', async (req, res) => {
-    const { phone, message } = req.body;
-
-    try {
-        await client.calls.create({
-            twiml: `<Response><Say>Kindly report as early as possible</Say></Response>`,
-            to: phone,
-            from: twilioPhoneNumber,
-        });
-
-        res.status(200).send('Notification sent (Call)!');
-    } catch (error) {
-        console.error('Error sending notifications:', error);
-        res.status(500).send(`Error sending notifications: ${error.message}`);
-    }
-});
-
-app.post('/send-whatsapp-notification', (req, res) => {
-    const { phone, message } = req.body;
-
-
-    if (!phone || !message) {
-        return res.status(400).send('Contact and message are required.');
-    }
-
-    writeToCsv(phone, message);
-    res.status(200).send('Notification request received.');
-});
-
-app.post('/login', (req, res) => {
-    console.log('Received login request:', req.body);
-      const { username, password, role } = req.body;
-  
-      if (!username || !password || !role) {
-          return res.status(400).json({ message: 'All fields are required' });
-      }
-  
-      // Check if the user exists in the database
-      const query = 'SELECT * FROM users WHERE username = ? AND role = ? and password =?';
-      db.query(query, [username, role,password], async (err, results) => {
-          if (err) {
-              console.error('Database query error:', err);
-              return res.status(500).json({ message: 'Internal server error' });
-          }
-  
-          if (results.length === 0) {
-              return res.status(401).json({ message: 'Invalid username, role, or password' });
-          }
-  
-          res.json({ role: role });
-      });
-  });
-  
-  
-
+// Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
+
