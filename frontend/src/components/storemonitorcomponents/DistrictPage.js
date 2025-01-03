@@ -1,38 +1,34 @@
 import axios from "axios";
-import "material-icons/iconfont/material-icons.css"; // Material icons for styling
+import "material-icons/iconfont/material-icons.css"; 
 import React, { useEffect, useState } from "react";
 import "./DistrictPage.css";
-import logo from "./tnpds.png"; // Logo for header
+import logo from "./tnpds.png"; 
 
 const DistrictPage = () => {
-  const [districts] = useState(["Thiruvallur", "Chennai"]); // Static dropdown for districts
-  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); // Static dropdown for batches
+  const [districts] = useState(["Thiruvallur", "Chennai"]); 
+  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
-  // Fetch data based on district and batch
   const fetchTableData = async () => {
-    if (!selectedDistrict || !selectedBatch) return; // Ensure both are selected
+    console.log("Fetching table data for:",selectedDistrict, selectedBatch);
+    
     try {
-      const response = await axios.get(`http://localhost:5000/api/district-data`, {
-        params: {
-          district: selectedDistrict,
-          batch: selectedBatch,
-        },
-      });
+      const response = await axios.post('http://localhost:5000/SMapi/fetchdata', {
+        taluk:sessionStorage.getItem('username').split('_')[0], selectedBatch});
       setTableData(response.data);
+    
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
 
-  // Trigger fetch when district or batch changes
-  useEffect(() => {
-    fetchTableData();
-  }, [selectedDistrict, selectedBatch]);
 
-  // Handle Notify All functionality
+  // useEffect(() => {
+  //   fetchTableData();
+  // }, [selectedDistrict, selectedBatch]);
+
   const handleNotifyAll = async () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/notify-all`, {
@@ -134,7 +130,7 @@ const DistrictPage = () => {
         <h2 className="district-page-title">District Page</h2>
 
         {/* Dropdown for District */}
-        <div className="district-dropdown-container">
+        {/* <div className="district-dropdown-container">
           <label htmlFor="district-select">Select District:</label>
           <select
             id="district-select"
@@ -151,16 +147,20 @@ const DistrictPage = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Dropdown for Batch */}
-        {selectedDistrict && (
+        
           <div className="district-batch-container">
             <label htmlFor="district-batch-select">Select Batch:</label>
             <select
               id="district-batch-select"
               value={selectedBatch}
-              onChange={(e) => setSelectedBatch(e.target.value)}
+              onChange={(e) =>{
+                 setSelectedBatch(e.target.value)
+                 fetchTableData();
+              }
+            }
             >
               <option value="">-- Select Batch --</option>
               {batches.map((batch, index) => (
@@ -170,7 +170,7 @@ const DistrictPage = () => {
               ))}
             </select>
           </div>
-        )}
+        
 
         {selectedDistrict && (
           <div className="district-upload-button-container">

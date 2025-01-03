@@ -77,19 +77,18 @@ const insertdatatoSMTable = (filepath ) => {
   
     data.forEach((row) => {
       const values = [
-        row['shop_id'],      // shop_code
-        row['shop_name'],      // shop_name
-        row['shop_incharge'],  // shop_incharge
-        row['incharge_number'],// incharge_number
-        row['email'],          // email
-        row['opening_time'],   // opening_time
-        row['district'],        // state
-        row['status'],         // status
-        row['remarks'],        // remarks
-        row['upload_batch'],   // upload_batch
-        row['taluk']           // taluk
+        row['shop_id'],      
+        row['shop_name'],
+        row['shop_incharge'],
+        row['incharge_number'],
+        row['email'],
+        row['opening_time'],
+        row['district'],
+        row['status'],
+        row['remarks'],        
+        row['upload_batch'],   
+        row['taluk']           
       ];
-  
       db.query(query, values, (err, result) => {
         if (err) {
           console.error('Error inserting data:', err);
@@ -178,7 +177,6 @@ const createtableforkidsync=()=>{
 
 const createtableformonitor=()=>{
     const query=`create table shopmonitorstates
-
     )`
 }
 

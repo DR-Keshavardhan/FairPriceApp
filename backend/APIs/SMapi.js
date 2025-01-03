@@ -84,6 +84,24 @@ router.post('/fetchdata', async (req, res) => {
   });
 });
 
+router.post('/fetchtalukdata', async (req, res) => {
+  console.log('Fetch data request received:', req.body);
+  const {taluk, batch } = req.body;
+  console.log('taluk', taluk);
+  const query = 'SELECT * FROM SMdata WHERE taluk = ?';
+  db.query(query, [ taluk], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }else{
+    console.log('Results:', results);
+    return res.json(results);
+    }
+  });
+});
+
+
+
 router.post('/api/updateShopStatus', (req, res) => {
   const { shopId, status, remarks } = req.body;
   db.query(
@@ -95,6 +113,9 @@ router.post('/api/updateShopStatus', (req, res) => {
     }
   );
 });
+
+
+
 
 // ---------------------------
 // File Upload & Processing Route

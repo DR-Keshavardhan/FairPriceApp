@@ -13,11 +13,12 @@ const TalukPage = () => {
 
   // Fetch data based on taluk and batch
   const fetchTableData = async () => {
-    if (!selectedTaluk || !selectedBatch) return; // Ensure both are selected
+    console.log("Fetching table data for taluk:", sessionStorage.getItem('username').split('_')[0], "and batch:", selectedBatch);
+    
     try {
-      const response = await axios.get(`http://localhost:5000/api/taluk-data`, {
+      const response = await axios.post(`http://localhost:5000/SMapi/fetchtalukdata`, {
         params: {
-          taluk: selectedTaluk,
+          taluk:sessionStorage.getItem('username').split('_')[0],
           batch: selectedBatch,
         },
       });
@@ -74,13 +75,10 @@ const TalukPage = () => {
           </div>
         </nav>
       </header>
-
-      {/* Main Content */}
       <section className="taluk-page-content">
         <h2 className="taluk-page-title">Taluk Page</h2>
 
-        {/* Dropdown for Taluk */}
-        <div className="taluk-dropdown-container">
+        {/* <div className="taluk-dropdown-container">
           <label htmlFor="taluk-select">Select Taluk:</label>
           <select
             id="taluk-select"
@@ -97,7 +95,7 @@ const TalukPage = () => {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Upload Button (appears after selecting Taluk) */}
         {selectedTaluk && (
@@ -109,13 +107,17 @@ const TalukPage = () => {
         )}
 
         {/* Dropdown for Batch */}
-        {selectedTaluk && (
+       
           <div className="taluk-batch-container">
             <label htmlFor="taluk-batch-select">Select Batch:</label>
             <select
               id="taluk-batch-select"
               value={selectedBatch}
-              onChange={(e) => setSelectedBatch(e.target.value)}
+              onChange={(e) =>{
+                 setSelectedBatch(e.target.value)
+                 fetchTableData();}
+
+              }
             >
               <option value="">-- Select Batch --</option>
               {batches.map((batch, index) => (
@@ -125,7 +127,7 @@ const TalukPage = () => {
               ))}
             </select>
           </div>
-        )}
+        
 
         {/* Button Container (only shows after selecting Batch) */}
         <div className="taluk-button-container">
