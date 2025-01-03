@@ -1,14 +1,18 @@
+
 import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import ButtonPage from './buttonPage'; // Import the ButtonPage component
-import Login from './components/kidsynccomponents/login1.js'; // Import your Login1 component
-import UploadExcel from './components/kidsynccomponents/UploadExcel1.js'; // Import UploadExcel component
+import Login from 'frontend/src/components/kidsynccomponents/jsfiles/login1.js'; // Import your Login1 component
+import UploadExcel from './components/kidsynccomponents/jsfiles/UploadExcel1.js'; // Import UploadExcel component
 import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; // Import DistrictPage
 import Login2 from './components/storemonitorcomponents/login2.js'; // Import your Login2 component
-import StatePage from './components/storemonitorcomponents/StatePage.js'; // Import StatePage
-import TalukPage from './components/storemonitorcomponents/TalukPage.js'; // Import TalukPage
-import ShopPage from './components/storemonitorcomponents/ShopPage.js'; // Import new ShopPage component
+
+import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js'; 
+
+import SMStatePage from './components/storemonitorcomponents/StatePage.js'; 
+import SMTalukPage from './components/storemonitorcomponents/TalukPage.js'; 
+import SMShopPage from './components/storemonitorcomponents/ShopPage.js'; 
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
@@ -37,7 +41,7 @@ function App() {
         {/* Route for StatePage */}
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/statepage" /> : <StatePage />}
+          element={isAuthenticated ? <Navigate to="/statepage" /> : <KSStatePage />}
         />      
         
         {/* Route for DistrictPage */}
@@ -57,14 +61,15 @@ function App() {
           path="/app" 
           element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} 
         />
-
+        <Route path="/KSstate" element={<KSStatePage />} />
+        
         {/* Role-based routes */}
-        <Route path="/state" element={<StatePage />} />
+        <Route path="/state" element={<SMStatePage />} />
         <Route path="/district" element={<DistrictPage />} />
-        <Route path="/taluk" element={<TalukPage />} />
+        <Route path="/taluk" element={<SMTalukPage />} />
         
         {/* New ShopPage route */}
-        <Route path="/shop" element={<ShopPage />} /> {/* New page for shop */}
+        {/* <Route path="/shop" element={<ShopPage />} /> New page for shop */}
       </Routes>
     </Router>
   );

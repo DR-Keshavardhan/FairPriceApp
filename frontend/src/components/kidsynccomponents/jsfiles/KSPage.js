@@ -1,31 +1,45 @@
 import axios from "axios";
-import "material-icons/iconfont/material-icons.css"; // Material icons for styling
+import "material-icons/iconfont/material-icons.css"; 
 import React, { useEffect, useState } from "react";
-import "./StatePage.css";
-import logo from "./tnpds.png"; // Logo for header
+import "frontend/src/components/kidsynccomponents/cssfiles/KSPage.css"
+import logo from "frontend/src/components/kidsynccomponents/tnpds.png"; 
 
 const StatePage = () => {
-  const [states] = useState(["Tamil Nadu","Kerala"]); // Static states
-  const [districts] = useState(["Chennai","Tiruvannamalai","Vellore","Thiruvallur"  ]); // Dynamic districts
-  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); // Static batches
-  const [selectedState, setSelectedState] = useState("Tamil Nadu");
+  const [states] = useState(["Tamil Nadu", "Kerala", "Karnataka"]); 
+  const [districts, setDistricts] = useState(["Chenn"]);
+  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); 
+  const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
-  
+  // Fetch districts based on state selection
+  const fetchDistricts = async (state) => {
+    if (!state) {
+      setDistricts([]);
+      return;
+    }
+    try {
+      const response = await axios.get(`http://localhost:5000/api/districts`, {
+        params: { state },
+      });
+      setDistricts(response.data);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
 
   // Fetch data based on state, district, and batch
   const fetchTableData = async () => {
-    console.log("Fetching table data for:",selectedDistrict, selectedBatch);
-    
+    if (!selectedState || !selectedDistrict || !selectedBatch) return; // Ensure all are selected
     try {
-      const response = await axios.post('http://localhost:5000/SMapi/fetchdata', {
-        selectedDistrict,
-        selectedBatch
+      const response = await axios.get(`http://localhost:5000/api/state-data`, {
+        params: {
+          state: selectedState,
+          district: selectedDistrict,
+          batch: selectedBatch,
+        },
       });
-     
-      console.log("Response:", response.data);
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);
@@ -48,7 +62,7 @@ const StatePage = () => {
     }
   };
 
- 
+  // Handle Call All functionality
   const handleCallAll = async () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/call-all`, {
@@ -65,9 +79,17 @@ const StatePage = () => {
   };
 
   // Update districts when state changes
- 
+  useEffect(() => {
+    fetchDistricts(selectedState);
+    setSelectedDistrict("");
+    setSelectedBatch("");
+  }, [selectedState]);
+
   // Update table data when selection changes
- 
+  useEffect(() => {
+    fetchTableData();
+  }, [selectedState, selectedDistrict, selectedBatch]);
+
   return (
     <div>
       {/* Top Panel */}
@@ -94,7 +116,30 @@ const StatePage = () => {
       <div className="state-page">
         <h2 className="page-title">State Page</h2>
 
-       
+        {/* Dropdown for State */}
+        <div className="dropdown-container">
+          <label htmlFor="state-select" className="dropdown-label">
+            Select State:
+          </label>
+          <div className="dropdown-wrapper">
+            <select
+              id="state-select"
+              className="custom-dropdown"
+              value={selectedState}
+              onChange={(e) => setSelectedState(e.target.value)}
+            >
+              <option value="">-- Select State --</option>
+              {states.map((state, index) => (
+                <option key={index} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+            <span className="dropdown-icon material-icons">arrow_drop_down</span>
+          </div>
+        </div>
+
+        {/* Dropdown for District */}
         {selectedState && (
           <div className="dropdown-container">
             <label htmlFor="district-select" className="dropdown-label">
@@ -107,7 +152,7 @@ const StatePage = () => {
                 value={selectedDistrict}
                 onChange={(e) => {
                   setSelectedDistrict(e.target.value);
-                  setSelectedBatch("");
+                  setSelectedBatch(""); // Reset batch when district changes
                 }}
               >
                 <option value="">-- Select District --</option>
@@ -131,10 +176,7 @@ const StatePage = () => {
             <select
               id="batch-select"
               value={selectedBatch}
-              onChange={(e) => {
-                setSelectedBatch(e.target.value);
-                fetchTableData();
-              }}
+              onChange={(e) => setSelectedBatch(e.target.value)}
             >
               <option value="">-- Select Batch --</option>
               {batches.map((batch, index) => (

@@ -8,17 +8,16 @@ const Login2 = () => {
 
   const handleLogin = async (username, password, role) => {
     try {
-      const response = await axios.post('http://localhost:5000/login', {
+      const response = await axios.post('http://localhost:5000/SMapi/login', {
         username,
         password,
         role,
       });
 
       if (response.data.role) {
-        // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
-        else if (response.data.role === 'taluk') navigate('/taluk'); // Corrected role name
+        else if (response.data.role === 'taluk') navigate('/taluk'); 
       } else {
         alert('Invalid role or login credentials.');
       }

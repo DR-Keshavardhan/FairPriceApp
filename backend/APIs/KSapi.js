@@ -14,16 +14,13 @@ const fs = require('fs');
 const { exec } = require('child_process');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
-// Middleware
 router.use(bodyParser.json());
 
-// Twilio Configuration
 const accountSid = 'AC3ef333278f3108e82ddc4b925ed4a22d';
 const authToken = '3fd0b085da326e009668653b7ec0064e';
 const twilioPhoneNumber = '+12184844803';
 const client = twilio(accountSid, authToken);
 
-// CSV File Path
 const csvFilePath = path.resolve('C:/SeleniumApp/Data/data.csv');
 
 // ✅ Utility Function: Write to CSV
@@ -71,17 +68,15 @@ function callApplication() {
     });
 }
 
-// ✅ Endpoint: User Login
 router.post('/login', async (req, res) => {
+    console.log('Login request received:', req.body);
     const { username, password, role } = req.body;
-
     if (!username || !password || !role) {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    // Check if the user exists in the database
-    const query = 'SELECT * FROM users WHERE username = ? AND role = ?';
-    db.query(query, [username, role], async (err, results) => {
+    const query = 'SELECT * FROM KSadmin WHERE username = ? AND role = ? and password = ?'; ;
+    db.query(query, [username, role,password], async (err, results) => {
         if (err) {
             console.error('Database query error:', err);
             return res.status(500).json({ message: 'Internal server error' });
@@ -91,19 +86,10 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or role' });
         }
 
-        // Compare password using bcrypt
-        const user = results[0];
-        const passwordMatch = await bcrypt.compare(password, user.password);
-
-        if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid password' });
-        }
-
-        res.json({ role: role });
+        return res.json({ role: role });
     });
 });
 
-// ✅ Endpoint: Send Notifications (SMS and Call)
 router.post('/send-notifications', async (req, res) => {
     const { phone, message } = req.body;
 

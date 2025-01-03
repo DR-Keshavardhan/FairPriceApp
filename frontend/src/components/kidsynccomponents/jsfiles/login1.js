@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
-import './login1.css'; 
+import 'frontend/src/components/kidsynccomponents/cssfiles/login1.css'; 
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
+import { useNavigate, Link } from 'react-router-dom'; 
 
 const Login1 = () => { 
   const navigate = useNavigate();
 
   const handleLogin = async (username, password, role) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/login', {
+      const response = await axios.post('http://localhost:5000/KSapi/login', {
         username,
         password,
         role,
       });
 
       if (response.data.role) {
-        // Navigate to the page based on the role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
-        else if (response.data.role === 'taluk') navigate('/taluk'); // Corrected role name
+        else if (response.data.role === 'taluk') navigate('/taluk'); 
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -103,7 +102,7 @@ const Login1Form = ({ onLogin }) => {
 const Header = () => (
   <header className="header">
     <img
-      src={require('./tnpds.png')}
+      src={require('frontend/src/components/kidsynccomponents/tnpds.png')}
       alt="Logo"
       className="logo"
     />

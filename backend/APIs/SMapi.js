@@ -44,31 +44,46 @@ const calculatePoints = (status, remarks) => {
   return points;
 };
 
-// ---------------------------
-// Authentication Routes
-// ---------------------------
+
 router.post('/login', async (req, res) => {
+  console.log('Login request received:', req.body);
   const { username, password, role } = req.body;
   if (!username || !password || !role) {
-    return res.status(400).json({ message: 'Username, password, and role are required' });
+      return res.status(400).json({ message: 'All fields are required' });
   }
+  const query = 'SELECT * FROM SMadmin WHERE username = ? AND role = ? and password = ?'; 
+  db.query(query, [username, role,password], async (err, results) => {
+      if (err) {
+          console.error('Database query error:', err);
+          return res.status(500).json({ message: 'Internal server error' });
+      }
 
-  try {
-    const query = 'SELECT * FROM users WHERE username = ? AND role = ? AND password = ?';
-    const [results] = await db.promise().query(query, [username, role, password]);
-    if (results.length === 0) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      if (results.length === 0) {
+          return res.status(401).json({ message: 'Invalid username or role' });
+      }
+
+      return res.json({ role: role });
+    });
+  });
+
+
+
+router.post('/fetchdata', async (req, res) => {
+  console.log('Fetch data request received:', req.body);
+  const {selectedDistrict, batch } = req.body;
+  console.log('District:', selectedDistrict);
+  const query = 'SELECT * FROM SMdata WHERE district = ? ';
+  db.query(query, [ selectedDistrict], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }else{
+    console.log('Results:', results);
+    return res.json(results);
     }
-    res.json({ role });
-  } catch (err) {
-    console.error('Database query error:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  });
 });
 
-// ---------------------------
-// Shop Status Update Route
-// ---------------------------
 router.post('/api/updateShopStatus', (req, res) => {
   const { shopId, status, remarks } = req.body;
   db.query(

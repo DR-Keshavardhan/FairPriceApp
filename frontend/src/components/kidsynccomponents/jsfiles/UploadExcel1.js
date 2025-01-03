@@ -1,5 +1,5 @@
 import React, { useState } from 'react'; 
-import './UploadExcel1.css';
+import 'frontend/src/components/kidsynccomponents/cssfiles/UploadExcel1.css';
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf'; 
 import 'jspdf-autotable'; 

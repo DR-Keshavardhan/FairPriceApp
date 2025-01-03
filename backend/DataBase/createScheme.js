@@ -1,9 +1,18 @@
-const db = require('./db.js');
+const db = require('./db');
 const sql = require('mysql2');
+const { file } = require('pdfkit');
 const xlsx = require('xlsx');
 
-const createSchema = () => {
-    const query = `CREATE TABLE IF NOT EXISTS users (
+const extract_data=(file) => {
+    const workbook = xlsx.readFile(file); 
+    const sheetName = workbook.SheetNames[0]; 
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    return data;
+}
+
+const createSchemaforSM = () => {
+    const query = `CREATE TABLE IF NOT EXISTS SMadmin (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
         username VARCHAR(55) NOT NULL,
@@ -16,8 +25,8 @@ const createSchema = () => {
     });
 };
 
-const createSchemaforFPtableAuth = () => {
-    const query = `CREATE TABLE IF NOT EXISTS FPusers (
+const createSchemaforKS = () => {
+    const query = `CREATE TABLE IF NOT EXISTS KSadmin (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
         username VARCHAR(55) NOT NULL,
@@ -37,18 +46,17 @@ const deleteEntireTable = (tablename) => {
         console.log("Table deleted successfully");
     });
 };
-
-const createSchemaforFPtable = () => {
-    const query = `CREATE TABLE Shop (
-        shop_id INT AUTO_INCREMENT PRIMARY KEY,
+const createSchemaforSMtable = () => {
+    const query = `CREATE TABLE SMdata (
+        shop_id INT PRIMARY KEY,
         shop_name VARCHAR(255) NOT NULL,
         shop_incharge VARCHAR(255) NOT NULL,
         incharge_number VARCHAR(15) NOT NULL,
         email VARCHAR(255),
-        formattedOpeningTime TIME NOT NULL,
-        status ENUM('active', 'inactive', 'closed') DEFAULT 'active',
+        opening_time varchar(55) NOT NULL,
+        status varchar(110) NOT NULL,
         remarks TEXT,
-        formattedUploadBatch DATETIME NOT NULL,
+        upload_batch VARCHAR(255),
         taluk VARCHAR(255),
         district VARCHAR(255)
     )`;
@@ -59,14 +67,42 @@ const createSchemaforFPtable = () => {
 };
 
 
+const insertdatatoSMTable = (filepath ) => {
+    const data = extract_data(filepath);
+    const query = `
+      INSERT INTO SMdata 
+      (shop_id, shop_name, shop_incharge, incharge_number,email, opening_time, district, status, remarks, upload_batch,taluk)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)
+    `;
+  
+    data.forEach((row) => {
+      const values = [
+        row['shop_id'],      // shop_code
+        row['shop_name'],      // shop_name
+        row['shop_incharge'],  // shop_incharge
+        row['incharge_number'],// incharge_number
+        row['email'],          // email
+        row['opening_time'],   // opening_time
+        row['district'],        // state
+        row['status'],         // status
+        row['remarks'],        // remarks
+        row['upload_batch'],   // upload_batch
+        row['taluk']           // taluk
+      ];
+  
+      db.query(query, values, (err, result) => {
+        if (err) {
+          console.error('Error inserting data:', err);
+          return;
+        }
+        console.log('Data inserted:', result.insertId);
+      });
+    });
+  };
+  
 
-const workbook = xlsx.readFile('KidSync_data.xlsx'); 
-const sheetName = workbook.SheetNames[0]; 
-const worksheet = workbook.Sheets[sheetName];
-
-const data = xlsx.utils.sheet_to_json(worksheet);
-
-const insertdatatookidsync = () => {
+const insertdatatookidsync = (filepath) => {
+    data=extract_data(filepath);
   const query = `INSERT INTO kidsync 
     (shop_no, taluk, district, name, gender, dob, family_head, mobile_number)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -92,9 +128,8 @@ const insertdatatookidsync = () => {
     });
   });
 };
-
-const insertDataTOFPUser = () => {
-    const query = `INSERT INTO users (email, username, password, role) VALUES
+const insertDatatoKSAuth = () => {
+    const query = `INSERT INTO KSadmin (email, username, password, role) VALUES
     ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
     ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
     ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
@@ -106,9 +141,8 @@ const insertDataTOFPUser = () => {
     });
 };
 
-
-const insertData = () => {
-    const query = `INSERT INTO users (email, username, password, role) VALUES
+const insertDatatoSMAuth = () => {
+    const query = `INSERT INTO SMadmin (email, username, password, role) VALUES
     ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
     ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
     ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
@@ -143,16 +177,22 @@ const createtableforkidsync=()=>{
 }
 
 const createtableformonitor=()=>{
-    const query=`create table shopmonitorstates(
+    const query=`create table shopmonitorstates
 
     )`
 }
 
 // createtableforkidsync();
 // insertdatatookidsync();
+
+// createSchemaforSMtable();
+// insertdatatoSMTable('shops2_11am.xlsx');
+
 // createSchema();
-// createSchemaforFPtable();
-// insertData();
-// deleteEntireTable('ShopDetails');
+// createSchemaforKS();
+// createSchemaforSM();
+// insertDatatoKSAuth();
+// insertDatatoSMAuth();
+// deleteEntireTable('SMdata');
 // createSchemaforFPtableAuth();
 // insertDataTOFPUser();
