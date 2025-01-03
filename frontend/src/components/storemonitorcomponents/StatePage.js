@@ -16,13 +16,17 @@ const StatePage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
   const fetchTableData = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/SMapi/fetchdata", {
-        selectedDistrict,
-        selectedBatch,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/fetchdata",
+        {
+          selectedDistrict,
+          selectedBatch,
+        }
+      );
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);
@@ -31,10 +35,13 @@ const StatePage = () => {
 
   const handleNotifyAll = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/notify-all", {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/notify-all",
+        {
+          district: selectedDistrict,
+          batch: selectedBatch,
+        }
+      );
       if (response.status === 200) {
         alert("Notifications sent to all shops successfully.");
       }
@@ -45,16 +52,26 @@ const StatePage = () => {
 
   const handleCallAll = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/call-all", {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/call-all",
+        {
+          district: selectedDistrict,
+          batch: selectedBatch,
+        }
+      );
       if (response.status === 200) {
         alert("Calls initiated to all shops successfully.");
       }
     } catch (error) {
       console.error("Error calling all shops:", error);
     }
+  };
+
+  const handleCheckboxChange = (shopCode) => {
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      [shopCode]: !prevSelectedRows[shopCode], // Toggle the selection
+    }));
   };
 
   return (
@@ -77,7 +94,6 @@ const StatePage = () => {
         </div>
       </header>
 
-      {/* Scrollable container */}
       <div className="state-page">
         <h2 className="page-title">State Page</h2>
 
@@ -147,6 +163,7 @@ const StatePage = () => {
             <table className="state-table">
               <thead>
                 <tr>
+                  <th>Select</th>
                   <th>Shop Code</th>
                   <th>Shop Name</th>
                   <th>Incharge</th>
@@ -162,6 +179,13 @@ const StatePage = () => {
               <tbody>
                 {tableData.map((shop, index) => (
                   <tr key={index}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={!!selectedRows[shop.shop_code]}
+                        onChange={() => handleCheckboxChange(shop.shop_code)}
+                      />
+                    </td>
                     <td>{shop.shop_code}</td>
                     <td>{shop.shop_name}</td>
                     <td>{shop.shop_incharge}</td>
