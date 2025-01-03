@@ -15,6 +15,11 @@ const Login2 = () => {
       });
 
       if (response.data.role) {
+        // Store user details in session storage
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('role', response.data.role);
+
+        // Navigate based on role
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
         else if (response.data.role === 'taluk') navigate('/taluk'); 
