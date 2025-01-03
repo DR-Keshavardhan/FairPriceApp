@@ -1,82 +1,69 @@
-import axios from "axios";
-import "material-icons/iconfont/material-icons.css"; // Material icons for styling
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./StatePage.css";
+import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header
 
 const StatePage = () => {
-  const [states] = useState(["Tamil Nadu","Kerala"]); // Static states
-  const [districts] = useState(["Chennai","Tiruvannamalai","Vellore","Thiruvallur"  ]); // Dynamic districts
-  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); // Static batches
-  const [selectedState, setSelectedState] = useState("Tamil Nadu");
+  const [states] = useState(["Tamil Nadu", "Kerala"]);
+  const [districts] = useState([
+    "Chennai",
+    "Tiruvannamalai",
+    "Vellore",
+    "Thiruvallur",
+  ]);
+  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
-  
-
-  // Fetch data based on state, district, and batch
   const fetchTableData = async () => {
-    console.log("Fetching table data for:",selectedDistrict, selectedBatch);
-    
     try {
-      const response = await axios.post('http://localhost:5000/SMapi/fetchdata', {
+      const response = await axios.post("http://localhost:5000/SMapi/fetchdata", {
         selectedDistrict,
-        selectedBatch
+        selectedBatch,
       });
-     
-      console.log("Response:", response.data);
       setTableData(response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
 
-  // Handle Notify All functionality
   const handleNotifyAll = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/notify-all`, {
-        state: selectedState,
+      const response = await axios.post("http://localhost:5000/api/notify-all", {
         district: selectedDistrict,
         batch: selectedBatch,
       });
       if (response.status === 200) {
-        console.log("Notifications sent to all shops successfully");
+        alert("Notifications sent to all shops successfully.");
       }
     } catch (error) {
-      console.error("Error in notifying all shops:", error);
+      console.error("Error notifying all shops:", error);
     }
   };
 
- 
   const handleCallAll = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/call-all`, {
-        state: selectedState,
+      const response = await axios.post("http://localhost:5000/api/call-all", {
         district: selectedDistrict,
         batch: selectedBatch,
       });
       if (response.status === 200) {
-        console.log("Calls initiated to all shops successfully");
+        alert("Calls initiated to all shops successfully.");
       }
     } catch (error) {
-      console.error("Error in calling all shops:", error);
+      console.error("Error calling all shops:", error);
     }
   };
 
-  // Update districts when state changes
- 
-  // Update table data when selection changes
- 
   return (
     <div>
-      {/* Top Panel */}
       <div className="top-panel">
         <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
         <button className="panel-button">Translate</button>
       </div>
 
-      {/* Header Section */}
       <header className="page-header">
         <div className="header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
@@ -90,39 +77,36 @@ const StatePage = () => {
         </div>
       </header>
 
-      {/* Main Content */}
+      {/* Scrollable container */}
       <div className="state-page">
         <h2 className="page-title">State Page</h2>
 
-       
-        {selectedState && (
-          <div className="dropdown-container">
-            <label htmlFor="district-select" className="dropdown-label">
-              Select District:
-            </label>
-            <div className="dropdown-wrapper">
-              <select
-                id="district-select"
-                className="custom-dropdown"
-                value={selectedDistrict}
-                onChange={(e) => {
-                  setSelectedDistrict(e.target.value);
-                  setSelectedBatch("");
-                }}
-              >
-                <option value="">-- Select District --</option>
-                {districts.map((district, index) => (
-                  <option key={index} value={district}>
-                    {district}
-                  </option>
-                ))}
-              </select>
-              <span className="dropdown-icon material-icons">arrow_drop_down</span>
-            </div>
+        <div className="dropdown-container">
+          <label htmlFor="district-select" className="dropdown-label">
+            Select District:
+          </label>
+          <div className="dropdown-wrapper">
+            <select
+              id="district-select"
+              className="custom-dropdown"
+              value={selectedDistrict}
+              onChange={(e) => {
+                setSelectedDistrict(e.target.value);
+                setSelectedBatch("");
+                setTableData([]);
+              }}
+            >
+              <option value="">-- Select District --</option>
+              {districts.map((district, index) => (
+                <option key={index} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
+            <span className="dropdown-icon material-icons">arrow_drop_down</span>
           </div>
-        )}
+        </div>
 
-        {/* Dropdown for Batch */}
         {selectedDistrict && (
           <div className="dropdown-container">
             <label htmlFor="batch-select" className="dropdown-label">
@@ -130,6 +114,7 @@ const StatePage = () => {
             </label>
             <select
               id="batch-select"
+              className="custom-dropdown"
               value={selectedBatch}
               onChange={(e) => {
                 setSelectedBatch(e.target.value);
@@ -146,7 +131,6 @@ const StatePage = () => {
           </div>
         )}
 
-        {/* "Notify All" and "Call All" Buttons */}
         {selectedBatch && (
           <div className="button-container">
             <button className="notify-all-button" onClick={handleNotifyAll}>
@@ -158,7 +142,6 @@ const StatePage = () => {
           </div>
         )}
 
-        {/* Table Display */}
         {selectedBatch && tableData.length > 0 && (
           <div className="table-container">
             <table className="state-table">
@@ -170,7 +153,6 @@ const StatePage = () => {
                   <th>Email</th>
                   <th>Opening Time</th>
                   <th>District</th>
-                  <th>State</th>
                   <th>Status</th>
                   <th>Remarks</th>
                   <th>Batch</th>
@@ -186,7 +168,6 @@ const StatePage = () => {
                     <td>{shop.email}</td>
                     <td>{shop.opening_time}</td>
                     <td>{shop.district}</td>
-                    <td>{shop.state}</td>
                     <td>{shop.status}</td>
                     <td>{shop.remarks}</td>
                     <td>{shop.upload_batch}</td>
@@ -194,10 +175,8 @@ const StatePage = () => {
                       {shop.status === "Closed" &&
                       (shop.remarks === "NIL" || shop.remarks === "-") ? (
                         <button className="action-button">Take Action</button>
-                      ) : shop.status === "Open" ? (
-                        <span>Opened</span>
                       ) : (
-                        <span>{shop.remarks}</span>
+                        <span>{shop.status}</span>
                       )}
                     </td>
                   </tr>
@@ -207,9 +186,8 @@ const StatePage = () => {
           </div>
         )}
 
-        {/* No data message */}
         {selectedBatch && tableData.length === 0 && (
-          <p>No data available for the selected state, district, and batch.</p>
+          <p>No data available for the selected district and batch.</p>
         )}
       </div>
     </div>
