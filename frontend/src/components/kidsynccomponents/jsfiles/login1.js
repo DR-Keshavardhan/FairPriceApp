@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './src/components/kidsynccomponents/cssfiles/login1.css';
+import 'frontend/src/components/kidsynccomponents/cssfiles/login1.css';
 
 const Login1 = () => { 
   const navigate = useNavigate();

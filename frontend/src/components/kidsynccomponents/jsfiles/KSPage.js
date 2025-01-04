@@ -1,9 +1,8 @@
 import axios from "axios";
 import "material-icons/iconfont/material-icons.css"; 
 import React, { useEffect, useState } from "react";
-import "./src/components/kidsynccomponents/cssfiles/KSPage.css"
-import logo from "frontend\\src\\components\\kidsynccomponents\\jsfiles\\KSPage.js"; 
-
+import "frontend/src/components/kidsynccomponents/cssfiles/KSPage.css"
+const logo="frontend/src/components/kidsynccomponents/tnpds.png" 
 const StatePage = () => {
   const [states] = useState(["Tamil Nadu", "Kerala", "Karnataka"]); 
   const [districts, setDistricts] = useState(["Chenn"]);
@@ -13,7 +12,6 @@ const StatePage = () => {
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
-  // Fetch districts based on state selection
   const fetchDistricts = async (state) => {
     if (!state) {
       setDistricts([]);
