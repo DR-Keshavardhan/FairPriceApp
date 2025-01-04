@@ -1,8 +1,8 @@
 import axios from "axios";
 import "material-icons/iconfont/material-icons.css"; 
 import React, { useEffect, useState } from "react";
-import "frontend/src/components/kidsynccomponents/cssfiles/KSPage.css"
-import logo from "frontend/src/components/kidsynccomponents/tnpds.png"; 
+import "./src/components/kidsynccomponents/cssfiles/KSPage.css"
+import logo from "frontend\\src\\components\\kidsynccomponents\\jsfiles\\KSPage.js"; 
 
 const StatePage = () => {
   const [states] = useState(["Tamil Nadu", "Kerala", "Karnataka"]); 
