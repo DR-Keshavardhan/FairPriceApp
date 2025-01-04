@@ -13,6 +13,7 @@ import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js';
 import SMStatePage from './components/storemonitorcomponents/StatePage.js'; 
 import SMTalukPage from './components/storemonitorcomponents/TalukPage.js'; 
 import SMShopPage from './components/storemonitorcomponents/ShopPage.js'; 
+import ShopPage from './components/storemonitorcomponents/ShopPage.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
@@ -67,6 +68,7 @@ function App() {
         <Route path="/state" element={<SMStatePage />} />
         <Route path="/district" element={<DistrictPage />} />
         <Route path="/taluk" element={<SMTalukPage />} />
+        <Route path="/shop"element={<ShopPage />}/>
         
         {/* New ShopPage route */}
         {/* <Route path="/shop" element={<ShopPage />} /> New page for shop */}

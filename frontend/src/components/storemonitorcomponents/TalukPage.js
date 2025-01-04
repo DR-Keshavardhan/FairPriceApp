@@ -78,7 +78,7 @@ const TalukPage = () => {
       <section className="taluk-page-content">
         <h2 className="taluk-page-title">Taluk Page</h2>
 
-        {/* <div className="taluk-dropdown-container">
+         <div className="taluk-dropdown-container">
           <label htmlFor="taluk-select">Select Taluk:</label>
           <select
             id="taluk-select"
@@ -95,7 +95,7 @@ const TalukPage = () => {
               </option>
             ))}
           </select>
-        </div> */}
+        </div>
 
         {/* Upload Button (appears after selecting Taluk) */}
         {selectedTaluk && (
