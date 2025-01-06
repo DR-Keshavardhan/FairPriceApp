@@ -14,7 +14,7 @@ import SMStatePage from './components/storemonitorcomponents/StatePage.js';
 import SMTalukPage from './components/storemonitorcomponents/TalukPage.js';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const [isAuthenticated, setIsAuthenticated] = useState(fals); 
 
   return (
     <Router>
