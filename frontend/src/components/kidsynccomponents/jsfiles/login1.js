@@ -1,7 +1,7 @@
 import axios from 'axios';
+import './login1.css';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import 'frontend/src/components/kidsynccomponents/cssfiles/login1.css';
 
 const Login1 = () => { 
   const navigate = useNavigate();
@@ -102,7 +102,7 @@ const Login1Form = ({ onLogin }) => {
 const Header = () => (
   <header className="header">
     <img
-      src={require('frontend/src/components/kidsynccomponents/tnpds.png')}
+      src={require('./tnpds.png')}
       alt="Logo"
       className="logo"
     />

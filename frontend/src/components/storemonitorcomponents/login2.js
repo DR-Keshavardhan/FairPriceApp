@@ -23,6 +23,7 @@ const Login2 = () => {
         if (response.data.role === 'state') navigate('/state');
         else if (response.data.role === 'district') navigate('/district');
         else if (response.data.role === 'taluk') navigate('/taluk'); 
+        else if (response.data.role ==='shop') navigate('/shop')
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -98,6 +99,7 @@ const LoginForm = ({ onLogin }) => {
         <option value="state">State</option>
         <option value="district">District</option>
         <option value="taluk">Taluk</option>
+        <option value="shop">Shop</option>
       </select>
 
       <button type="submit">Login</button>

@@ -3,17 +3,15 @@ import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import ButtonPage from './buttonPage'; // Import the ButtonPage component
-import Login from 'frontend/src/components/kidsynccomponents/jsfiles/login1.js'; // Import your Login1 component
+import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js';
+import Login1 from './components/kidsynccomponents/jsfiles/login1.js';
 import UploadExcel from './components/kidsynccomponents/jsfiles/UploadExcel1.js'; // Import UploadExcel component
 import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; // Import DistrictPage
 import Login2 from './components/storemonitorcomponents/login2.js'; // Import your Login2 component
 
-import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js'; 
-
-import SMStatePage from './components/storemonitorcomponents/StatePage.js'; 
-import SMTalukPage from './components/storemonitorcomponents/TalukPage.js'; 
-import SMShopPage from './components/storemonitorcomponents/ShopPage.js'; 
 import ShopPage from './components/storemonitorcomponents/ShopPage.js';
+import SMStatePage from './components/storemonitorcomponents/StatePage.js';
+import SMTalukPage from './components/storemonitorcomponents/TalukPage.js';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
@@ -30,7 +28,7 @@ function App() {
         {/* Route for Login1 page */}
         <Route 
           path="/login1"
-          element={isAuthenticated ? <Navigate to="/upload" /> : <Login onLogin={() => setIsAuthenticated(true)} />}
+          element={isAuthenticated ? <Navigate to="/upload" /> : <Login1 onLogin={() => setIsAuthenticated(true)} />}
         />
 
         {/* Route for Login2 page */}

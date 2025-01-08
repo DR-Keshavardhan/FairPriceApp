@@ -74,11 +74,24 @@ const StatePage = () => {
     }));
   };
 
+  const handleUploadExcel = () => {
+    // Placeholder for Excel upload functionality
+    alert("Upload Excel functionality not implemented yet.");
+  };
+
+  const handleGenerateReport = () => {
+    // Placeholder for report generation functionality
+    alert("Generate Report functionality not implemented yet.");
+  };
+
   return (
     <div>
       <div className="top-panel">
         <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
-        <button className="panel-button">Translate</button>
+        <div className="panel-buttons">
+          <button className="panel-button" onClick={handleUploadExcel}>Upload Excel</button>
+          <button className="panel-button">Translate</button>
+        </div>
       </div>
 
       <header className="page-header">
@@ -95,7 +108,7 @@ const StatePage = () => {
       </header>
 
       <div className="state-page">
-        <h2 className="page-title">State Page</h2>
+        <h2 className="page-title"></h2>
 
         <div className="dropdown-container">
           <label htmlFor="district-select" className="dropdown-label">
@@ -154,6 +167,9 @@ const StatePage = () => {
             </button>
             <button className="call-all-button" onClick={handleCallAll}>
               Call All
+            </button>
+            <button className="generate-report-button" onClick={handleGenerateReport}>
+              Generate Report
             </button>
           </div>
         )}
