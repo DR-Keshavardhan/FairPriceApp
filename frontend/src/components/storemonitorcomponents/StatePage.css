@@ -15,6 +15,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1100;
+  box-sizing: border-box;
 }
 
 .panel-text {
@@ -39,18 +45,17 @@ body {
   background-color: #f8f8f8;
   padding: 20px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: fixed;
-  top: 0;
+  top: 50px; /* Below the top panel */
   left: 0;
   width: 100%;
   z-index: 1000;
-  overflow: hidden; /* Prevents the header from expanding */
   box-sizing: border-box;
 }
 
-/* Header Content */
 .header-left {
   display: flex;
   align-items: center;
@@ -73,13 +78,51 @@ body {
   margin: 5px 0 0;
 }
 
+/* Header Buttons */
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.header-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header-button:hover {
+  background-color: #1976D2;
+}
+
+/* Generate Report Button */
+.generate-report-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #FF5722;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.generate-report-button:hover {
+  background-color: #E64A19;
+}
+
 /* Main Content (Scrollable) */
 .state-page {
-  margin-top: 70px; /* Offset for the fixed header height */
+  margin-top: 140px; /* Offset for the fixed header and top panel */
   padding: 20px;
-  flex-grow: 1;
-  height: calc(100% - 120px); /* Full height minus the header */
-  overflow-y: auto; /* Enable vertical scrolling */
+  height: calc(100% - 190px); /* Full height minus header and panel height */
+  overflow-y: auto;
   box-sizing: border-box;
 }
 
@@ -204,7 +247,7 @@ body {
 /* Media Queries for Responsiveness */
 @media screen and (max-width: 768px) {
   body {
-    overflow: auto; /* Allow scrolling for small devices */
+    overflow: auto;
   }
 
   .header-left {
@@ -214,14 +257,16 @@ body {
 
   .state-page {
     padding: 10px 5px;
-    margin-top: 100px; /* Adjusted to align with fixed header */
+    margin-top: 180px;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    gap: 5px;
   }
 
   .table-container {
-    overflow-x: auto;
-    overflow-y: auto;
-    margin: 10px 0;
-    max-height: 300px; /* Reduce max height for smaller devices */
+    max-height: 300px;
   }
 
   .state-table th,
