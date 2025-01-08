@@ -27,9 +27,8 @@ const StatePage = () => {
     }
   };
 
-  // Fetch data based on state, district, and batch
   const fetchTableData = async () => {
-    if (!selectedState || !selectedDistrict || !selectedBatch) return; // Ensure all are selected
+    if (!selectedState || !selectedDistrict || !selectedBatch) return; 
     try {
       const response = await axios.get(`http://localhost:5000/api/state-data`, {
         params: {
@@ -44,7 +43,6 @@ const StatePage = () => {
     }
   };
 
-  // Handle Notify All functionality
   const handleNotifyAll = async () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/notify-all`, {
@@ -60,7 +58,6 @@ const StatePage = () => {
     }
   };
 
-  // Handle Call All functionality
   const handleCallAll = async () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/call-all`, {
@@ -76,7 +73,6 @@ const StatePage = () => {
     }
   };
 
-  // Update districts when state changes
   useEffect(() => {
     fetchDistricts(selectedState);
     setSelectedDistrict("");
