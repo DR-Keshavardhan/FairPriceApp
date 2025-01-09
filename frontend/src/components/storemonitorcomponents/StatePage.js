@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./StatePage.css";
+import { useNavigate } from "react-router-dom";
+
 import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header
 
 const StatePage = () => {
+  const navigate = useNavigate();
+
   const [states] = useState(["Tamil Nadu", "Kerala"]);
   const [districts] = useState([
     "Chennai",
@@ -18,7 +22,7 @@ const StatePage = () => {
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
-  const calltoone=(number)=>{
+  /*const calltoone=(number)=>{
     if(!number) return;
     try{
       const response=await.get(`http://localhost:5000/SMapi/call`,{
@@ -29,7 +33,7 @@ const StatePage = () => {
     catch(error){
       console.log(error);
     }
-}
+}*/
   const fetchTableData = async () => {
     try {
       const response = await axios.post(
@@ -62,6 +66,18 @@ const StatePage = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Clear user authentication data (localStorage, cookies, etc.)
+    localStorage.removeItem("authToken");
+    sessionStorage.clear(); // Clear session storage if used
+
+    // Optionally, notify the server about the logout (if necessary)
+    // Example: await axios.post('/api/logout');
+
+    // Redirect to login or home page
+    navigate("/login2", {replace: true});
+  };
+  
   const handleCallAll = async () => {
     try {
       const response = await axios.post(
@@ -101,7 +117,6 @@ const StatePage = () => {
       <div className="top-panel">
         <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
         <div className="panel-buttons">
-          <button className="panel-button" onClick={handleUploadExcel}>Upload Excel</button>
           <button className="panel-button">Translate</button>
         </div>
       </div>
@@ -116,6 +131,11 @@ const StatePage = () => {
             </p>
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
+        </div>
+        <div className="header-right">
+        <button className="header-upload" onClick={handleUploadExcel}>Upload Excel</button>
+        <button className="header-logout" onClick={handleLogout}>Log Out</button>
+
         </div>
       </header>
 

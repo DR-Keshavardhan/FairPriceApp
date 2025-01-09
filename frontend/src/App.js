@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App'; // Import the MainApp or app logic component (ensure to rename if necessary)
 import ButtonPage from './buttonPage'; // Import the ButtonPage component
-import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js';
+import KSPage from './components/kidsynccomponents/jsfiles/KSPage.js';
 import Login1 from './components/kidsynccomponents/jsfiles/login1.js';
 import UploadExcel from './components/kidsynccomponents/jsfiles/UploadExcel1.js'; // Import UploadExcel component
 import DistrictPage from './components/storemonitorcomponents/DistrictPage.js'; // Import DistrictPage
@@ -40,7 +40,7 @@ function App() {
         {/* Route for StatePage */}
         <Route
           path="/login"
-          element={isAuthenticated ? <Navigate to="/statepage" /> : <KSStatePage />}
+          element={isAuthenticated ? <Navigate to="/statepage" /> : <KSPage />}
         />      
         
         {/* Route for DistrictPage */}
@@ -60,7 +60,7 @@ function App() {
           path="/app" 
           element={isAuthenticated ? <MainApp /> : <Navigate to="/login2" />} 
         />
-        <Route path="/KSstate" element={<KSStatePage />} />
+        <Route path="/KSPage" element={<KSPage />} />
         
         {/* Role-based routes */}
         <Route path="/state" element={<SMStatePage />} />

@@ -40,6 +40,32 @@ body {
   background-color: #45a049;
 }
 
+.header-upload {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.header-upload:hover {
+  background-color: #45a049;
+}
+
+.header-logout {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.header-logout:hover {
+  background-color: #45a049;
+}
+
 /* Page Header */
 .page-header {
   background-color: #f8f8f8;

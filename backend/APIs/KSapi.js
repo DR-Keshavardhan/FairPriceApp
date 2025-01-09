@@ -89,28 +89,15 @@ router.post('/login', async (req, res) => {
         return res.json({ role: role });
     });
 });
+/*changes made by kesh and ro*/
+
 
 router.post('/send-notifications', async (req, res) => {
-    const { phone, message } = req.body;
+    console.log('State:', req.body);
+    const { state } = req.body;
 
-    try {
-        await client.messages.create({
-            body: message,
-            from: twilioPhoneNumber,
-            to: phone,
-        });
 
-        await client.calls.create({
-            twiml: `<Response><Say>Your response here</Say></Response>`,
-            to: phone,
-            from: twilioPhoneNumber,
-        });
 
-        res.status(200).send('Notification sent (SMS and Call)!');
-    } catch (error) {
-        console.error('Error sending notifications:', error);
-        res.status(500).send(`Error sending notifications: ${error.message}`);
-    }
 });
 
 // ✅ Endpoint: Send SMS Notifications (Shop Dealer)

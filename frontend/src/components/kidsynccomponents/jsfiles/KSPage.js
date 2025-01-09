@@ -3,9 +3,9 @@ import "material-icons/iconfont/material-icons.css";
 import React, { useEffect, useState } from "react";
 import "./KSPage.css"
 const logo="frontend/src/components/kidsynccomponents/tnpds.png" 
-const StatePage = () => {
+const KSPage = () => {
   const [states] = useState(["Tamil Nadu", "Kerala", "Karnataka"]); 
-  const [districts, setDistricts] = useState(["Chenn"]);
+  const [districts, setDistricts] = useState([]);
   const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); 
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
@@ -18,7 +18,7 @@ const StatePage = () => {
       return;
     }
     try {
-      const response = await axios.get(`http://localhost:5000/api/districts`, {
+      const response = await axios.get(`http://localhost:5000/KSapi/districts`, {
         params: { state },
       });
       setDistricts(response.data);
@@ -252,4 +252,4 @@ const StatePage = () => {
   );
 };
 
-export default StatePage;
+export default KSPage;
