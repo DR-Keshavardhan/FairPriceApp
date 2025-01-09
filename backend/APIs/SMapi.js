@@ -10,6 +10,12 @@ const pdfkit = require('pdfkit');
 const fs = require('fs');
 require('dotenv').config({ path: '../id.env' });
 
+
+const accountSid = 'AC3ef333278f3108e82ddc4b925ed4a22d';
+const authToken = '3fd0b085da326e009668653b7ec0064e';
+const twilioPhoneNumber = '+12184844803';
+const client = twilio(accountSid, authToken);
+
 // Middleware for file uploads
 const upload = multer({ dest: 'uploads/' }).single('file');
 
@@ -44,6 +50,62 @@ const calculatePoints = (status, remarks) => {
   return points;
 };
 
+router.post('/send-notifications-shopdealer', async (req, res) => {
+  const { phone, message } = req.body;
+
+  try {
+      await client.messages.create({
+          body: message,
+          from: twilioPhoneNumber,
+          to: phone,
+      });
+
+      res.status(200).send('Notification sent (SMS)!');
+  } catch (error) {
+      console.error('Error sending notifications:', error);
+      res.status(500).send(`Error sending notifications: ${error.message}`);
+  }
+});
+
+
+router.post('/send-calls-shopdealer', async (req, res) => {
+  const { phone } = req.body;
+
+  try {
+      await client.calls.create({
+          twiml: `<Response><Say>Kindly report as early as possible</Say></Response>`,
+          to: phone,
+          from: twilioPhoneNumber,
+      });
+
+      res.status(200).send('Notification sent (Call)!');
+  } catch (error) {
+      console.error('Error sending notifications:', error);
+      res.status(500).send(`Error sending notifications: ${error.message}`);
+  }
+});
+
+router.post('/call' ,async(req,res)=>{
+  console.log("call call entere");
+  try{
+    const { phone } = req.body;
+
+    try {
+        await client.calls.create({
+            twiml: `<Response><Say>Kindly report as early as possible</Say></Response>`,
+            to: phone,
+            from: twilioPhoneNumber,
+        });
+
+        res.status(200).send('Notification sent (Call)!');
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+        res.status(500).send(`Error sending notifications: ${error.message}`);
+    }
+  }catch(error){
+    console.log(error);
+  }
+})
 
 router.post('/login', async (req, res) => {
   console.log('Login request received:', req.body);
