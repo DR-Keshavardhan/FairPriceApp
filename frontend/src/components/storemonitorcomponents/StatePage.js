@@ -18,6 +18,18 @@ const StatePage = () => {
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
+  const calltoone=(number)=>{
+    if(!number) return;
+    try{
+      const response=await.get(`http://localhost:5000/SMapi/call`,{
+          number
+        }
+      )
+    } 
+    catch(error){
+      console.log(error);
+    }
+}
   const fetchTableData = async () => {
     try {
       const response = await axios.post(
