@@ -59,8 +59,8 @@ const ShopPage = () => {
           <div className="shop-dropdown">
             <button className="shop-dropdown-button">
               <div className="shop-button-content">
-                <span className="material-icons">home</span>
-                <span className="shop-button-text">Home</span>
+                
+                <span className="shop-button-text">Upload data</span>
               </div>
             </button>
           </div>
@@ -68,8 +68,7 @@ const ShopPage = () => {
           <div className="shop-dropdown">
             <button className="shop-dropdown-button">
               <div className="shop-button-content">
-                <span className="material-icons">help_outline</span>
-                <span className="shop-button-text">FAQ</span>
+                <span className="shop-button-text">Log Out</span>
               </div>
             </button>
           </div>
@@ -125,7 +124,7 @@ const ShopPage = () => {
             <>
               <button className="shop-message-button">Send Message</button>
               <button className="shop-call-button">Call Incharge</button>
-              <button className="shop-upload-button">Upload Data</button>
+              <button className="shop-upload-button">Generate Report</button>
             </>
           )}
         </div>

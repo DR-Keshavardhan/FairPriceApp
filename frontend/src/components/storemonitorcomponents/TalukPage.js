@@ -59,8 +59,8 @@ const TalukPage = () => {
           <div className="taluk-dropdown">
             <button className="taluk-dropdown-button">
               <div className="taluk-button-content">
-                <span className="material-icons">home</span>
-                <span className="taluk-button-text">Home</span>
+                
+                <span className="taluk-button-text">Upload Excel</span>
               </div>
             </button>
           </div>
@@ -68,8 +68,8 @@ const TalukPage = () => {
           <div className="taluk-dropdown">
             <button className="taluk-dropdown-button">
               <div className="taluk-button-content">
-                <span className="material-icons">help_outline</span>
-                <span className="taluk-button-text">FAQ</span>
+                
+                <span className="taluk-button-text">Log Out</span>
               </div>
             </button>
           </div>
@@ -98,13 +98,7 @@ const TalukPage = () => {
         </div>
 
         {/* Upload Button (appears after selecting Taluk) */}
-        {selectedTaluk && (
-          <div className="taluk-button-container">
-            <button className="taluk-upload-button">
-              Upload Data
-            </button>
-          </div>
-        )}
+        
 
         {/* Dropdown for Batch */}
        
@@ -138,6 +132,9 @@ const TalukPage = () => {
               </button>
               <button className="taluk-call-button">
                 Call Incharge
+              </button>
+              <button className="taluk-call-button">
+                Generate Report
               </button>
             </>
           )}

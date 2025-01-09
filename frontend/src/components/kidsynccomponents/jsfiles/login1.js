@@ -108,7 +108,7 @@ const Header = () => (
       className="logo"
     />
     <div className="header-text">
-      <h1>Information Technology Department</h1>
+      <h1>Civil Supplies and Consumer Protection Department</h1>
     </div>
   </header>
 );
@@ -116,7 +116,7 @@ const Header = () => (
 const Footer = () => (
   <footer className="footer">
     <div className="footer-content">
-      <p>&copy; 2024 Information Technology Department. All Rights Reserved.</p>
+      <p>&copy; 2024 Civil Supplies and Consumer Protection Department. All Rights Reserved.</p>
     </div>
   </footer>
 );
