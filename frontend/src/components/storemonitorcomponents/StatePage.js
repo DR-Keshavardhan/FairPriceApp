@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import "./StatePage.css";
 import { useNavigate } from "react-router-dom";
 
@@ -22,18 +24,6 @@ const StatePage = () => {
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
-  /*const calltoone=(number)=>{
-    if(!number) return;
-    try{
-      const response=await.get(`http://localhost:5000/SMapi/call`,{
-          number
-        }
-      )
-    } 
-    catch(error){
-      console.log(error);
-    }
-}*/
   const fetchTableData = async () => {
     try {
       const response = await axios.post(
@@ -67,17 +57,11 @@ const StatePage = () => {
   };
 
   const handleLogout = () => {
-    // Clear user authentication data (localStorage, cookies, etc.)
     localStorage.removeItem("authToken");
-    sessionStorage.clear(); // Clear session storage if used
-
-    // Optionally, notify the server about the logout (if necessary)
-    // Example: await axios.post('/api/logout');
-
-    // Redirect to login or home page
-    navigate("/login2", {replace: true});
+    sessionStorage.clear();
+    navigate("/login2", { replace: true });
   };
-  
+
   const handleCallAll = async () => {
     try {
       const response = await axios.post(
@@ -98,18 +82,59 @@ const StatePage = () => {
   const handleCheckboxChange = (shopCode) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
-      [shopCode]: !prevSelectedRows[shopCode], // Toggle the selection
+      [shopCode]: !prevSelectedRows[shopCode],
     }));
   };
 
   const handleUploadExcel = () => {
-    // Placeholder for Excel upload functionality
     alert("Upload Excel functionality not implemented yet.");
   };
 
   const handleGenerateReport = () => {
-    // Placeholder for report generation functionality
-    alert("Generate Report functionality not implemented yet.");
+    const filteredData = tableData.filter(
+      (shop) =>
+        shop.status === "Closed" &&
+        (shop.remarks === "NIL" || shop.remarks === "-")
+    );
+
+    if (filteredData.length === 0) {
+      alert("No data available to generate the report.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    // Add title to the PDF
+    doc.setFontSize(18);
+    doc.text("Closed Shops Report", 14, 20);
+    doc.setFontSize(12);
+    doc.text(`District: ${selectedDistrict}`, 14, 30);
+    doc.text(`Batch: ${selectedBatch}`, 14, 37);
+
+    // Table headers and rows
+    const headers = [
+      ["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"],
+    ];
+    const rows = filteredData.map((shop) => [
+      shop.shop_code,
+      shop.shop_name,
+      shop.shop_incharge,
+      shop.email,
+      shop.remarks,
+      shop.status,
+    ]);
+
+    // Add table to PDF
+    doc.autoTable({
+      startY: 45,
+      head: headers,
+      body: rows,
+      theme: "grid",
+      styles: { fontSize: 10 },
+    });
+
+    // Save the PDF
+    doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
   };
 
   return (
@@ -133,9 +158,12 @@ const StatePage = () => {
           </div>
         </div>
         <div className="header-right">
-        <button className="header-upload" onClick={handleUploadExcel}>Upload Excel</button>
-        <button className="header-logout" onClick={handleLogout}>Log Out</button>
-
+          <button className="header-upload" onClick={handleUploadExcel}>
+            Upload Excel
+          </button>
+          <button className="header-logout" onClick={handleLogout}>
+            Log Out
+          </button>
         </div>
       </header>
 
@@ -164,7 +192,9 @@ const StatePage = () => {
                 </option>
               ))}
             </select>
-            <span className="dropdown-icon material-icons">arrow_drop_down</span>
+            <span className="dropdown-icon material-icons">
+              arrow_drop_down
+            </span>
           </div>
         </div>
 
@@ -200,7 +230,10 @@ const StatePage = () => {
             <button className="call-all-button" onClick={handleCallAll}>
               Call All
             </button>
-            <button className="generate-report-button" onClick={handleGenerateReport}>
+            <button
+              className="generate-report-button"
+              onClick={handleGenerateReport}
+            >
               Generate Report
             </button>
           </div>
