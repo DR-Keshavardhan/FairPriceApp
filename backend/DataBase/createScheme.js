@@ -31,7 +31,8 @@ const createSchemaforKS = () => {
         email VARCHAR(255) NOT NULL,
         username VARCHAR(55) NOT NULL,
         password VARCHAR(55) NOT NULL,
-        role VARCHAR(55) NOT NULL
+        role VARCHAR(55) NOT NULL,
+        count int
     )`;
     db.query(query, (err, result) => {
         if (err) throw err;
@@ -129,11 +130,12 @@ const insertdatatookidsync = (filepath) => {
 };
 const insertDatatoKSAuth = () => {
     const query = `INSERT INTO KSadmin (email, username, password, role) VALUES
-    ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
-    ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
-    ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
-    ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
-    ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
+    ('ram@gmail.com', 'Thiruvallur_district', 'td123', 'district')`;
+    // ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
+    // ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
+    // ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
+    // ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
+    // ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
     db.query(query, (err, result) => {
         if (err) throw err;
         console.log("Inserted successfully");
@@ -141,12 +143,14 @@ const insertDatatoKSAuth = () => {
 };
 
 const insertDatatoSMAuth = () => {
+    // const query = `INSERT INTO SMadmin (email, username, password, role) VALUES
+    // ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
+    // ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
+    // ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
+    // ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
+    // ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
     const query = `INSERT INTO SMadmin (email, username, password, role) VALUES
-    ('ram@gmail.com', 'state_admin', 'ram123', 'state'), 
-    ('mani@gmial.com', 'chennai_district', 'mani123', 'district'),
-    ('ragavi@gmail.com', 'madurai_district', 'ragavi123', 'district'),
-    ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
-    ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
+    ('mani@gmail.com', 'avadi_taluk', 'at123', 'taluk')`;
     db.query(query, (err, result) => {
         if (err) throw err;
         console.log("Inserted successfully");
@@ -190,7 +194,7 @@ const createtableformonitor=()=>{
 // createSchemaforKS();
 // createSchemaforSM();
 // insertDatatoKSAuth();
-// insertDatatoSMAuth();
+insertDatatoSMAuth();
 // deleteEntireTable('SMdata');
 // createSchemaforFPtableAuth();
 // insertDataTOFPUser();

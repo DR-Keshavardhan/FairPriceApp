@@ -1,60 +1,157 @@
 import axios from "axios";
-import "material-icons/iconfont/material-icons.css"; 
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
+import "material-icons/iconfont/material-icons.css";
 import React, { useEffect, useState } from "react";
 import "./DistrictPage.css";
-import logo from "./tnpds.png"; 
+import logo from "./tnpds.png";
 
 const DistrictPage = () => {
-  const [districts] = useState(["Thiruvallur", "Chennai"]); 
   const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]);
-  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState(
+    sessionStorage.getItem("username").split("_")[0] || ""
+  );
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
   const fetchTableData = async () => {
-    console.log("Fetching table data for:",selectedDistrict, selectedBatch);
-    
+    if (!selectedBatch) {
+      console.warn("No batch selected, skipping fetch.");
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:5000/SMapi/fetchdata', {
-        taluk:sessionStorage.getItem('username').split('_')[0], selectedBatch});
+      const response = await axios.post("http://localhost:5000/SMapi/fetchdata", {
+        selectedDistrict,
+        selectedBatch,
+      });
       setTableData(response.data);
-    
+      console.log("Table data fetched successfully:", response.data);
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
 
-
-  // useEffect(() => {
-  //   fetchTableData();
-  // }, [selectedDistrict, selectedBatch]);
-
   const handleNotifyAll = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/notify-all`, {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
-      if (response.status === 200) {
-        console.log("Notifications sent to all shops successfully");
+      for (const data of tableData) {
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await notify(data.shop_id, data.shop_incharge, data.phone || "9360670658");
+        }
       }
     } catch (error) {
-      console.log("Error in notifying all shops:", error);
+      console.error("Error notifying all shops:", error);
     }
   };
 
-  // Handle Call All functionality
   const handleCallAll = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/call-all`, {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
-      if (response.status === 200) {
-        console.log("Calls initiated to all shops successfully");
+      for (const data of tableData) {
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await call(data.shop_id, data.shop_incharge, data.phone || "9360670658");
+        }
       }
     } catch (error) {
-      console.error("Error in calling all shops:", error);
+      console.error("Error calling all shops:", error);
+    }
+  };
+
+  const handleUploadExcel = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      alert("Please select an Excel file to upload.");
+      return;
+    }
+
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+      console.log("Excel data:", sheetData);
+
+      const response = await axios.post("http://localhost:5000/SMapi/uploadExcel", {
+        data: sheetData,
+      });
+
+      if (response.status === 200) {
+        alert("Excel file uploaded and processed successfully.");
+      } else {
+        alert("Failed to upload Excel file.");
+      }
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("An error occurred while processing the Excel file.");
+    }
+  };
+
+  const handleGenerateReport = () => {
+    const filteredData = tableData.filter(
+      (shop) => shop.status === "Closed" && (shop.remarks === "NIL" || shop.remarks === "-")
+    );
+
+    if (filteredData.length === 0) {
+      alert("No data available to generate the report.");
+      return;
+    }
+
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Closed Shops Report", 14, 20);
+    doc.setFontSize(12);
+    doc.text(`District: ${selectedDistrict}`, 14, 30);
+    doc.text(`Batch: ${selectedBatch}`, 14, 37);
+
+    const headers = [["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"]];
+    const rows = filteredData.map((shop) => [
+      shop.shop_code,
+      shop.shop_name,
+      shop.shop_incharge,
+      shop.email,
+      shop.remarks,
+      shop.status,
+    ]);
+
+    doc.autoTable({
+      startY: 45,
+      head: headers,
+      body: rows,
+      theme: "grid",
+      styles: { fontSize: 10 },
+    });
+
+    doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
+  };
+
+  const notify = async (shop_id, shop_incharge, phone) => {
+    try {
+      const response = await axios.post("http://localhost:5000/SMapi/notify", {
+        shop_id,
+        shop_incharge,
+        phone,
+      });
+      if (response.status === 200) {
+        alert(`Notification sent to ${shop_incharge} successfully.`);
+      }
+    } catch (error) {
+      console.error("Error notifying shop:", error);
+    }
+  };
+
+  const call = async (shop_id, shop_incharge, phone) => {
+    try {
+      const response = await axios.post("http://localhost:5000/SMapi/call", {
+        shop_id,
+        shop_incharge,
+        phone,
+      });
+      if (response.status === 200) {
+        alert(`Called ${shop_incharge} successfully.`);
+      }
+    } catch (error) {
+      console.error("Error calling shop:", error);
     }
   };
 
@@ -78,107 +175,45 @@ const DistrictPage = () => {
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-
-        {/* Header Dropdown Menus */}
         <nav className="district-header-right">
-          
-
-          <div className="district-dropdown">
-            <button className="district-dropdown-button">
-              <div className="district-button-content">
-                <span className="material-icons">cloud_upload</span>
-                <span className="district-button-text">Data Upload</span>
-              </div>
-            </button>
-            <div className="district-dropdown-content">
-              <a href="#">Feature X</a>
-              <a href="#">Feature Y</a>
-              <a href="#">Feature Z</a>
-            </div>
-          </div>
-
-          <div className="district-dropdown">
-            <button className="district-dropdown-button">
-              <div className="district-button-content">
-                
-                <span className="district-button-text">Log Out</span>
-              </div>
-            </button>
-            <div className="district-dropdown-content">
-              <a href="#">Option A</a>
-              <a href="#">Option B</a>
-              <a href="#">Option C</a>
-            </div>
-          </div>
+          <label className="district-file-upload">
+            <span className="material-icons">cloud_upload</span>
+            <input type="file" accept=".xlsx, .xls" onChange={handleUploadExcel} />
+            <span>Data Upload</span>
+          </label>
+          <button className="district-dropdown-button">Log Out</button>
         </nav>
       </header>
 
       {/* Main Content */}
       <section className="district-page-content">
         <h2 className="district-page-title">District Page</h2>
-
-        
-          <div className="district-dropdown-container">
-          <label htmlFor="district-select">Select District:</label>
+        <div className="district-batch-container">
+          <label htmlFor="district-batch-select">Select Batch:</label>
           <select
-            id="district-select"
-            value={selectedDistrict}
+            id="district-batch-select"
+            value={selectedBatch}
             onChange={(e) => {
-              setSelectedDistrict(e.target.value);
-              setSelectedBatch(""); // Reset batch when district changes
+              setSelectedBatch(e.target.value);
+              fetchTableData();
             }}
           >
-            <option value="">-- Select District --</option>
-            {districts.map((district, index) => (
-              <option key={index} value={district}>
-                {district}
+            <option value="">-- Select Batch --</option>
+            {batches.map((batch, index) => (
+              <option key={index} value={batch}>
+                {batch}
               </option>
             ))}
           </select>
-        </div> 
-
-        {/* Dropdown for Batch */}
-        
-          <div className="district-batch-container">
-            <label htmlFor="district-batch-select">Select Batch:</label>
-            <select
-              id="district-batch-select"
-              value={selectedBatch}
-              onChange={(e) =>{
-                 setSelectedBatch(e.target.value)
-                 fetchTableData();
-              }
-            }
-            >
-              <option value="">-- Select Batch --</option>
-              {batches.map((batch, index) => (
-                <option key={index} value={batch}>
-                  {batch}
-                </option>
-              ))}
-            </select>
-          </div>
-        
-
-        
-
-        {/* "Notify All" and "Call All" Buttons */}
+        </div>
         {selectedBatch && (
           <div className="district-action-buttons">
-            <button className="district-notify-all-button" onClick={handleNotifyAll}>
-              Notify All
-            </button>
-            <button className="district-call-all-button" onClick={handleCallAll}>
-              Call All
-            </button>
-            <button className="district-call-all-button" onClick={handleCallAll}>
-              Generate Report
-            </button>
+            <button onClick={handleNotifyAll}>Notify All</button>
+            <button onClick={handleCallAll}>Call All</button>
+            <button onClick={handleGenerateReport}>Generate Report</button>
           </div>
         )}
-
-        {/* Table Display */}
-        {selectedBatch && tableData.length > 0 && (
+        {selectedBatch && tableData.length > 0 ? (
           <div className="district-table-container">
             <table className="district-data-table">
               <thead>
@@ -213,10 +248,14 @@ const DistrictPage = () => {
                       {shop.status === "Closed" &&
                       (shop.remarks === "NIL" || shop.remarks === "-") ? (
                         <>
-                          <button className="district-message-button">
+                          <button
+                            onClick={() => notify(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
                             Send Message
                           </button>
-                          <button className="district-call-button">
+                          <button
+                            onClick={() => call(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
                             Call Incharge
                           </button>
                         </>
@@ -231,11 +270,8 @@ const DistrictPage = () => {
               </tbody>
             </table>
           </div>
-        )}
-
-        {/* No data message */}
-        {selectedBatch && tableData.length === 0 && (
-          <p className="district-no-data">No data available for the selected district and batch.</p>
+        ) : (
+          selectedBatch && <p className="district-no-data">No data available for the selected batch.</p>
         )}
       </section>
     </main>
