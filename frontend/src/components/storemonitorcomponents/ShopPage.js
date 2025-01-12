@@ -32,6 +32,7 @@ const ShopPage = () => {
   useEffect(() => {
     fetchTableData();
   }, [selectedShop, selectedBatch]);
+  
 
   return (
     <main>

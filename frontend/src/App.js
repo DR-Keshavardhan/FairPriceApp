@@ -29,17 +29,14 @@ function App() {
         <Route 
           path="/login1"
           element={
-            isAuthenticated ? (
-              role === 'district' ? (
-                <Navigate to="/KSDistrictPage" /> // Navigate to KSSdistrict if "district" role is selected
-              ) : (
-                <Navigate to="/upload" />
-              )
+            role === 'district' ? (
+              <Navigate to="/ksdistrict" /> // Navigate to KSDistrictPage if "district" role is selected
             ) : (
-              <Login1 onLogin={(selectedRole) => { setIsAuthenticated(true); setRole(selectedRole); }} />
+              <Login1 onLogin={(selectedRole) => setRole(selectedRole)} />
             )
           }
         />
+        
 
         {/* Route for Login2 page */}
         <Route
