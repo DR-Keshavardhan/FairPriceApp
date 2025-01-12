@@ -7,15 +7,17 @@ const Login2 = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (username, password, role) => {
+    console.log(username,password,role);
     try {
       const response = await axios.post('http://localhost:5000/SMapi/login', {
         username,
         password,
         role,
       });
+      console.log(response);
 
       if (response.data.role) {
-        // Store user details in session storage
+       
         sessionStorage.setItem('username', username);
         sessionStorage.setItem('role', response.data.role);
 

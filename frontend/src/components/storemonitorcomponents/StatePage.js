@@ -3,10 +3,13 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import "./StatePage.css";
+
+import * as XLSX from "xlsx";
+
 import { useNavigate } from "react-router-dom";
 
-import "material-icons/iconfont/material-icons.css"; // Material icons
-import logo from "./tnpds.png"; // Logo for header
+import "material-icons/iconfont/material-icons.css";
+import logo from "./tnpds.png"; 
 
 const StatePage = () => {
   const navigate = useNavigate();
@@ -22,7 +25,8 @@ const StatePage = () => {
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
-  const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
+  const [selectedRows, setSelectedRows] = useState({}); 
+
 
   const fetchTableData = async () => {
     try {
@@ -37,20 +41,17 @@ const StatePage = () => {
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
-  };
+  }; 
+  
 
   const handleNotifyAll = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/notify-all",
-        {
-          district: selectedDistrict,
-          batch: selectedBatch,
+      for (const data of tableData) {
+        if(data.status==='Closed' && data.remarks==='NIL'){
+        await notify(data.shop_id, data.shop_incharge, data.phone?data.phone:"9360670658");
         }
-      );
-      if (response.status === 200) {
-        alert("Notifications sent to all shops successfully.");
       }
+      
     } catch (error) {
       console.error("Error notifying all shops:", error);
     }
@@ -64,21 +65,17 @@ const StatePage = () => {
 
   const handleCallAll = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/call-all",
-        {
-          district: selectedDistrict,
-          batch: selectedBatch,
+      for (const data of tableData) {
+        if(data.status==='Closed' && data.remarks==='NIL'){
+        await call(data.shop_id, data.shop_incharge, data.phone?data.phone:"9360670658");
         }
-      );
-      if (response.status === 200) {
-        alert("Calls initiated to all shops successfully.");
       }
+      
     } catch (error) {
-      console.error("Error calling all shops:", error);
+      console.error("Error notifying all shops:", error);
     }
   };
-
+  
   const handleCheckboxChange = (shopCode) => {
     setSelectedRows((prevSelectedRows) => ({
       ...prevSelectedRows,
@@ -86,9 +83,40 @@ const StatePage = () => {
     }));
   };
 
-  const handleUploadExcel = () => {
-    alert("Upload Excel functionality not implemented yet.");
+  const handleUploadExcel = async (event) => {
+    const file = event.target.files[0];
+  
+    if (!file) {
+      alert("Please select an Excel file to upload.");
+      return;
+    }
+  
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+  
+      console.log("Excel data:", sheetData);
+
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/uploadExcel",
+        { data: sheetData }
+      );
+  
+      if (response.status === 200) {
+        alert("Excel file uploaded and processed successfully.");
+      } else {
+        alert("Failed to upload Excel file.");
+      }
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("An error occurred while processing the Excel file.");
+    }
   };
+
+
+
 
   const handleGenerateReport = () => {
     const filteredData = tableData.filter(
@@ -137,6 +165,42 @@ const StatePage = () => {
     doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
   };
 
+  const notify=async (shop_id,shop_incharege,phone)=>{
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/notify",
+        {
+          shop_id:shop_id,
+          shop_incharege:shop_incharege,
+          phone:phone
+        }
+      );
+      if (response.status === 200) {
+        alert("Notifications sent to shop incharege successfully.");
+      }
+    } catch (error) {
+      console.error("Error notifying all shops:", error);
+    }
+  }
+  const call=async (shop_id,shop_incharege,phone)=>{
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/call",
+        {
+          shop_id:shop_id,
+          shop_incharege:shop_incharege,
+          phone:phone
+        }
+      );
+      if (response.status === 200) {
+        alert("Notifications sent to shop incharege successfully.");
+      }
+    } catch (error) {
+      console.error("Error notifying all shops:", error);
+    }
+  }
+
+
   return (
     <div>
       <div className="top-panel">
@@ -158,13 +222,20 @@ const StatePage = () => {
           </div>
         </div>
         <div className="header-right">
-          <button className="header-upload" onClick={handleUploadExcel}>
-            Upload Excel
-          </button>
-          <button className="header-logout" onClick={handleLogout}>
-            Log Out
-          </button>
-        </div>
+  <label className="header-upload">
+    Upload Excel
+    <input
+      type="file"
+      accept=".xlsx, .xls"
+      style={{ display: "none" }}
+      onChange={handleUploadExcel}
+    />
+  </label>
+  <button className="header-logout" onClick={handleLogout}>
+    Log Out
+  </button>
+</div>
+
       </header>
 
       <div className="state-page">
@@ -251,6 +322,7 @@ const StatePage = () => {
                   <th>Email</th>
                   <th>Opening Time</th>
                   <th>District</th>
+                  <th>Taluk</th>
                   <th>Status</th>
                   <th>Remarks</th>
                   <th>Batch</th>
@@ -263,23 +335,24 @@ const StatePage = () => {
                     <td>
                       <input
                         type="checkbox"
-                        checked={!!selectedRows[shop.shop_code]}
-                        onChange={() => handleCheckboxChange(shop.shop_code)}
+                        checked={!!selectedRows[shop.shop_id]}
+                        onChange={() => handleCheckboxChange(shop.shop_id)}
                       />
                     </td>
-                    <td>{shop.shop_code}</td>
+                    <td>{shop.shop_id}</td>
                     <td>{shop.shop_name}</td>
                     <td>{shop.shop_incharge}</td>
                     <td>{shop.email}</td>
                     <td>{shop.opening_time}</td>
                     <td>{shop.district}</td>
+                    <td>{shop.taluk}</td>
                     <td>{shop.status}</td>
                     <td>{shop.remarks}</td>
                     <td>{shop.upload_batch}</td>
                     <td>
                       {shop.status === "Closed" &&
                       (shop.remarks === "NIL" || shop.remarks === "-") ? (
-                        <button className="action-button">Take Action</button>
+                        <button className="action-button"onClick={() => notify(shop.id, shop.shop_incharge,shop.phone ? shop.phone:"9360670658" )} >Take Action</button>
                       ) : (
                         <span>{shop.status}</span>
                       )}
