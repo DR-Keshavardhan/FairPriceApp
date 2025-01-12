@@ -10,8 +10,8 @@ const DistrictPage = () => {
   const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]);
   const [selectedDistrict, setSelectedDistrict] = useState(
     sessionStorage.getItem("username").split("_")[0] || ""
-  );useState("");
-  const [selectedBatch, setSelectedBatch] = useState("")
+  );
+  const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
   const fetchTableData = async () => {
@@ -32,57 +32,50 @@ const DistrictPage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchTableData();
-  // }, [selectedBatch]); 
-
   const handleNotifyAll = async () => {
     try {
       for (const data of tableData) {
-        if(data.status==='Closed' && data.remarks==='NIL'){
-        await notify(data.shop_id, data.shop_incharge, data.phone?data.phone:"9360670658");
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await notify(data.shop_id, data.shop_incharge, data.phone || "9360670658");
         }
       }
-      
     } catch (error) {
       console.error("Error notifying all shops:", error);
     }
   };
+
   const handleCallAll = async () => {
     try {
       for (const data of tableData) {
-        if(data.status==='Closed' && data.remarks==='NIL'){
-        await call(data.shop_id, data.shop_incharge, data.phone?data.phone:"9360670658");
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await call(data.shop_id, data.shop_incharge, data.phone || "9360670658");
         }
       }
-      
     } catch (error) {
-      console.error("Error notifying all shops:", error);
+      console.error("Error calling all shops:", error);
     }
   };
 
-
   const handleUploadExcel = async (event) => {
     const file = event.target.files[0];
-  
+
     if (!file) {
       alert("Please select an Excel file to upload.");
       return;
     }
-  
+
     try {
       const data = await file.arrayBuffer();
       const workbook = XLSX.read(data, { type: "array" });
       const sheetName = workbook.SheetNames[0];
       const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-  
+
       console.log("Excel data:", sheetData);
 
-      const response = await axios.post(
-        "http://localhost:5000/SMapi/uploadExcel",
-        { data: sheetData }
-      );
-  
+      const response = await axios.post("http://localhost:5000/SMapi/uploadExcel", {
+        data: sheetData,
+      });
+
       if (response.status === 200) {
         alert("Excel file uploaded and processed successfully.");
       } else {
@@ -96,9 +89,7 @@ const DistrictPage = () => {
 
   const handleGenerateReport = () => {
     const filteredData = tableData.filter(
-      (shop) =>
-        shop.status === "Closed" &&
-        (shop.remarks === "NIL" || shop.remarks === "-")
+      (shop) => shop.status === "Closed" && (shop.remarks === "NIL" || shop.remarks === "-")
     );
 
     if (filteredData.length === 0) {
@@ -107,18 +98,13 @@ const DistrictPage = () => {
     }
 
     const doc = new jsPDF();
-
-    // Add title to the PDF
     doc.setFontSize(18);
     doc.text("Closed Shops Report", 14, 20);
     doc.setFontSize(12);
     doc.text(`District: ${selectedDistrict}`, 14, 30);
     doc.text(`Batch: ${selectedBatch}`, 14, 37);
 
-    // Table headers and rows
-    const headers = [
-      ["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"],
-    ];
+    const headers = [["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"]];
     const rows = filteredData.map((shop) => [
       shop.shop_code,
       shop.shop_name,
@@ -128,7 +114,6 @@ const DistrictPage = () => {
       shop.status,
     ]);
 
-    // Add table to PDF
     doc.autoTable({
       startY: 45,
       head: headers,
@@ -137,45 +122,38 @@ const DistrictPage = () => {
       styles: { fontSize: 10 },
     });
 
-    // Save the PDF
     doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
   };
 
-  const notify=async (shop_id,shop_incharege,phone)=>{
+  const notify = async (shop_id, shop_incharge, phone) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/SMapi/notify",
-        {
-          shop_id:shop_id,
-          shop_incharege:shop_incharege,
-          phone:phone
-        }
-      );
+      const response = await axios.post("http://localhost:5000/SMapi/notify", {
+        shop_id,
+        shop_incharge,
+        phone,
+      });
       if (response.status === 200) {
-        alert("Notifications sent to shop incharege successfully.");
+        alert(`Notification sent to ${shop_incharge} successfully.`);
       }
     } catch (error) {
-      console.error("Error notifying all shops:", error);
+      console.error("Error notifying shop:", error);
     }
-  }
-  const call=async (shop_id,shop_incharege,phone)=>{
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/SMapi/call",
-        {
-          shop_id:shop_id,
-          shop_incharege:shop_incharege,
-          phone:phone
-        }
-      );
-      if (response.status === 200) {
-        alert("Notifications sent to shop incharege successfully.");
-      }
-    } catch (error) {
-      console.error("Error notifying all shops:", error);
-    }
-  }
+  };
 
+  const call = async (shop_id, shop_incharge, phone) => {
+    try {
+      const response = await axios.post("http://localhost:5000/SMapi/call", {
+        shop_id,
+        shop_incharge,
+        phone,
+      });
+      if (response.status === 200) {
+        alert(`Called ${shop_incharge} successfully.`);
+      }
+    } catch (error) {
+      console.error("Error calling shop:", error);
+    }
+  };
 
   return (
     <main>
@@ -197,33 +175,19 @@ const DistrictPage = () => {
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-
-        {/* Header Dropdown Menus */}
         <nav className="district-header-right">
-          <div className="district-dropdown">
-            <button className="district-dropdown-button">
-              <div className="district-button-content">
-                <span className="material-icons">cloud_upload</span>
-                <span className="district-button-text" onClick={()=>handleUploadExcel}>Data Upload</span>
-              </div>
-            </button>
-          </div>
-
-          <div className="district-dropdown">
-            <button className="district-dropdown-button">
-              <div className="district-button-content">
-                <span className="district-button-text">Log Out</span>
-              </div>
-            </button>
-          </div>
+          <label className="district-file-upload">
+            <span className="material-icons">cloud_upload</span>
+            <input type="file" accept=".xlsx, .xls" onChange={handleUploadExcel} />
+            <span>Data Upload</span>
+          </label>
+          <button className="district-dropdown-button">Log Out</button>
         </nav>
       </header>
 
       {/* Main Content */}
       <section className="district-page-content">
         <h2 className="district-page-title">District Page</h2>
-
-        {/* Dropdown for Batch */}
         <div className="district-batch-container">
           <label htmlFor="district-batch-select">Select Batch:</label>
           <select
@@ -242,22 +206,13 @@ const DistrictPage = () => {
             ))}
           </select>
         </div>
-
         {selectedBatch && (
           <div className="district-action-buttons">
-            <button className="district-notify-all-button" onClick={()=>handleNotifyAll}>
-              Notify All
-            </button>
-            <button className="district-call-all-button" onClick={()=>handleCallAll}>
-              Call All
-            </button>
-            <button className="district-call-all-button" onClick={()=>handleGenerateReport}>
-              Generate Report
-            </button>
+            <button onClick={handleNotifyAll}>Notify All</button>
+            <button onClick={handleCallAll}>Call All</button>
+            <button onClick={handleGenerateReport}>Generate Report</button>
           </div>
         )}
-
-        {/* Table Display */}
         {selectedBatch && tableData.length > 0 ? (
           <div className="district-table-container">
             <table className="district-data-table">
@@ -293,8 +248,16 @@ const DistrictPage = () => {
                       {shop.status === "Closed" &&
                       (shop.remarks === "NIL" || shop.remarks === "-") ? (
                         <>
-                          <button className="district-message-button" onClick={()=>notify(shop.shop_id,shop.shop_incharege,shop.phone ? shop.phone:"9360670658")}>Send Message</button>
-                          <button className="district-call-button" onClick={()=>call(shop.shop_id,shop.shop_incharege,shop.phone ? shop.phone:"9360670658")}>Call Incharge</button>
+                          <button
+                            onClick={() => notify(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
+                            Send Message
+                          </button>
+                          <button
+                            onClick={() => call(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
+                            Call Incharge
+                          </button>
                         </>
                       ) : shop.status === "Open" ? (
                         <span>Opened</span>
@@ -308,9 +271,7 @@ const DistrictPage = () => {
             </table>
           </div>
         ) : (
-          selectedBatch && (
-            <p className="district-no-data">No data available for the selected batch.</p>
-          )
+          selectedBatch && <p className="district-no-data">No data available for the selected batch.</p>
         )}
       </section>
     </main>

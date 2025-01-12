@@ -167,30 +167,23 @@ router.post('/fetchdata', async (req, res) => {
         res.json(results);
     });
 });
-
 router.post('/fetchtalukdata', async (req, res) => {
-    const { taluk } = req.body;
-    const query = 'SELECT * FROM SMdata WHERE taluk = ?';
+    const  taluk=req.body.taluk;
+    const batch  = req.body.batch;
+    console.log("hello taluk",taluk,batch);
+    const query = 'SELECT * FROM SMdata WHERE LOWER(taluk) = LOWER(?)';
     db.query(query, [taluk], (err, results) => {
         if (err) {
             console.error('Database query error:', err);
             return res.status(500).json({ message: 'Internal server error' });
         }
-        res.json(results);
+        console.log('hi',results);
+        return res.json(results);
     });
+
 });
 
-// router.post('/api/updateShopStatus', (req, res) => {
-//     const { shopId, status, remarks } = req.body;
-//     db.query(
-//         'UPDATE Shops SET status = ?, remarks = ? WHERE shop_id = ?',
-//         [status, remarks, shopId],
-//         (err) => {
-//             if (err) return res.status(500).send(err.message);
-//             res.send('Shop status updated.');
-//         }
-//     );
-// });
+
 router.post('/uploadExcel', async (req, res) => {
     console.log("Received request to upload Excel data");
     const data = req.body.data;

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 import "jspdf-autotable";
 import "./StatePage.css";
 
-import * as XLSX from "xlsx";
 
 import { useNavigate } from "react-router-dom";
 

@@ -150,7 +150,7 @@ const insertDatatoSMAuth = () => {
     // ('arvika@gmail.com', 'coimbatore_taluk', 'arvika123', 'taluk'),
     // ('jeya@gmail.com', 'tirunelveli_taluk', 'jeya123', 'taluk')`;
     const query = `INSERT INTO SMadmin (email, username, password, role) VALUES
-    ('ram@gmail.com', 'Thiruvallur_district', 'td123', 'district')`;
+    ('mani@gmail.com', 'avadi_taluk', 'at123', 'taluk')`;
     db.query(query, (err, result) => {
         if (err) throw err;
         console.log("Inserted successfully");
