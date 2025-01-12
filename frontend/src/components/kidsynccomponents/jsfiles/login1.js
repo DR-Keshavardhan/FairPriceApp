@@ -16,7 +16,7 @@ const Login1 = () => {
 
       if (response.data.role) {
         if (response.data.role === 'state') navigate('/KSPage');
-        else if (response.data.role === 'district') navigate('/district');
+        else if (response.data.role === 'district') navigate('/ksdistrict');
         else if (response.data.role === 'taluk') navigate('/taluk'); 
       } else {
         alert('Invalid role or login credentials.');
