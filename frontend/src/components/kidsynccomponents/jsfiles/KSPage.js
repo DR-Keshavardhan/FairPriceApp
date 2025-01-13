@@ -22,8 +22,9 @@ const StatePage = () => {
 
   const fetchTableData = async () => {
     try {
+      console.log("hello getch")
       const response = await axios.post(
-        "http://localhost:5000/SMapi/fetchdata",
+        "http://localhost:5000/KSapi/fetchdata",
         {
           selectedDistrict,
         }
@@ -136,7 +137,8 @@ const StatePage = () => {
               value={selectedDistrict}
               onChange={(e) => {
                 setSelectedDistrict(e.target.value);
-                setTableData([]); // Clear table data on district change
+                setTableData([]); 
+                fetchTableData(); // Clear table data on district change
               }}
             >
               <option value="">-- Select District --</option>
