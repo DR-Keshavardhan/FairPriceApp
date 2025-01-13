@@ -26,6 +26,7 @@ const StatePage = () => {
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); 
+  const [filterStatus, setFilterStatus] = useState("All");
 
 
   const fetchTableData = async () => {
@@ -73,6 +74,19 @@ const StatePage = () => {
       
     } catch (error) {
       console.error("Error notifying all shops:", error);
+    }
+  };
+  const handleFilterChange = (status) => {
+    setFilterStatus(status);
+    if (status === "Closed" || status === "Open") {
+      const filteredData = [...tableData].sort((a, b) => {
+        if (a.status === status && b.status !== status) return -1;
+        if (a.status !== status && b.status === status) return 1;
+        return 0;
+      });
+      setTableData(filteredData);
+    } else {
+      fetchTableData(); // Reset to original order
     }
   };
   
@@ -301,6 +315,21 @@ const StatePage = () => {
             <button className="call-all-button" onClick={handleCallAll}>
               Call All
             </button>
+            <div className="filter-container">
+              <label htmlFor="filter-select" className="filter-label">
+                Filter:
+              </label>
+              <select
+                id="filter-select"
+                className="custom-dropdown"
+                value={filterStatus}
+                onChange={(e) => handleFilterChange(e.target.value)}
+              >
+                <option value="All">All</option>
+                <option value="Closed">Closed</option>
+                <option value="Open">Open</option>
+              </select>
+            </div>
             <button
               className="generate-report-button"
               onClick={handleGenerateReport}
