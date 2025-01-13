@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./KSPage.css";
+import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
-
 import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header
 
@@ -20,14 +20,14 @@ const StatePage = () => {
   const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
+  // Fetch table data from KSapi based on the selected district
   const fetchTableData = async () => {
+    if (!selectedDistrict) return; // Avoid API call if no district is selected
+
     try {
-      console.log("hello getch")
       const response = await axios.post(
         "http://localhost:5000/KSapi/fetchdata",
-        {
-          selectedDistrict,
-        }
+        { selectedDistrict }
       );
       setTableData(response.data);
     } catch (error) {
@@ -36,12 +36,15 @@ const StatePage = () => {
   };
 
   const handleNotifyAll = async () => {
+    if (!selectedDistrict) {
+      alert("Please select a district first.");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/notify-all",
-        {
-          district: selectedDistrict,
-        }
+        "http://localhost:5000/KSapi/notify-all",
+        { district: selectedDistrict }
       );
       if (response.status === 200) {
         alert("Notifications sent to all shops successfully.");
@@ -51,22 +54,16 @@ const StatePage = () => {
     }
   };
 
-  const handleLogout = () => {
-    // Clear user authentication data (localStorage, cookies, etc.)
-    localStorage.removeItem("authToken");
-    sessionStorage.clear(); // Clear session storage if used
-
-    // Redirect to login or home page
-    navigate("/login2", { replace: true });
-  };
-
   const handleCallAll = async () => {
+    if (!selectedDistrict) {
+      alert("Please select a district first.");
+      return;
+    }
+
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/call-all",
-        {
-          district: selectedDistrict,
-        }
+        "http://localhost:5000/KSapi/call-all",
+        { district: selectedDistrict }
       );
       if (response.status === 200) {
         alert("Calls initiated to all shops successfully.");
@@ -83,15 +80,106 @@ const StatePage = () => {
     }));
   };
 
-  const handleUploadExcel = () => {
-    // Placeholder for Excel upload functionality
-    alert("Upload Excel functionality not implemented yet.");
+  const handleUploadExcel = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+  
+    try {
+      // Read the file
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+  
+      // Convert the first sheet to JSON
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet);
+  
+      // Send JSON data to backend
+      const response = await axios.post("http://localhost:5000/KSapi/upload-excel", jsonData);
+      if (response.status === 200) {
+        alert("Excel file uploaded and processed successfully.");
+      }
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("Failed to upload Excel file.");
+    }
   };
 
-  const handleGenerateReport = () => {
-    // Placeholder for report generation functionality
-    alert("Generate Report functionality not implemented yet.");
+
+  const handleGenerateReport = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/KSapi/generate-report", {
+        responseType: "blob", // Expect a file
+      });
+  
+      // Create a link to download the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "report.xlsx"); // Specify the file name
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  
+      alert("Report generated and downloaded successfully.");
+    } catch (error) {
+      console.error("Error generating report:", error);
+      alert("Failed to generate report.");
+    }
   };
+  
+
+
+  const handleNotifyIndividual = async (phone) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/notify",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Notification sent to Shop ID ${shop_id} successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error notifying Shop ID ${shop_id}:`, error);
+    }
+  };
+
+  const handleCallIndividual = async (phone) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/call",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Call initiated to Shop ID ${shop_id} successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error calling Shop ID ${shop_id}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetchTableData();
+    }
+  }, [selectedDistrict]);
+
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    sessionStorage.clear();
+    navigate("/login2", { replace: true });
+  };
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetchTableData();
+    }
+  }, [selectedDistrict]);
 
   return (
     <div>
@@ -124,7 +212,7 @@ const StatePage = () => {
       </header>
 
       <div className="state-page">
-        <h2 className="page-title"></h2>
+        <h2 className="page-title">Select a District to View Data</h2>
 
         <div className="dropdown-container">
           <label htmlFor="district-select" className="dropdown-label">
@@ -135,11 +223,7 @@ const StatePage = () => {
               id="district-select"
               className="custom-dropdown"
               value={selectedDistrict}
-              onChange={(e) => {
-                setSelectedDistrict(e.target.value);
-                setTableData([]); 
-                fetchTableData(); // Clear table data on district change
-              }}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
             >
               <option value="">-- Select District --</option>
               {districts.map((district, index) => (
@@ -160,7 +244,10 @@ const StatePage = () => {
             <button className="call-all-button" onClick={handleCallAll}>
               Call All
             </button>
-            <button className="generate-report-button" onClick={handleGenerateReport}>
+            <button
+              className="generate-report-button"
+              onClick={handleGenerateReport}
+            >
               Generate Report
             </button>
           </div>
@@ -172,7 +259,6 @@ const StatePage = () => {
               <thead>
                 <tr>
                   <th>Member ID</th>
-                  <th>RC Number</th>
                   <th>Shop No</th>
                   <th>Taluk</th>
                   <th>District</th>
@@ -183,23 +269,39 @@ const StatePage = () => {
                   <th>Mobile Number</th>
                   <th>Aadhaar Status</th>
                   <th>Aadhaar Linkage Status</th>
+                  <th>call</th>
+                  <th>notify</th>
                 </tr>
               </thead>
               <tbody>
                 {tableData.map((member, index) => (
                   <tr key={index}>
-                    <td>{member.member_id}</td>
-                    <td>{member.rc_number}</td>
+                    <td>{member.id}</td>
                     <td>{member.shop_no}</td>
                     <td>{member.taluk}</td>
                     <td>{member.district}</td>
                     <td>{member.name}</td>
                     <td>{member.gender}</td>
-                    <td>{member.date_of_birth}</td>
-                    <td>{member.family_head_name}</td>
+                    <td>{member.dob}</td>
+                    <td>{member.family_head}</td>
                     <td>{member.mobile_number}</td>
                     <td>{member.aadhaar_status}</td>
                     <td>{member.aadhaar_linkage_status}</td>
+                    <td>
+                      <button
+                        onClick={() => handleCallIndividual(member.mobile_number)}
+                      >
+                        Call
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => handleNotifyIndividual(member.mobile_number)}
+                      >
+                        Notify
+                      </button>
+                    </td>
+                    
                   </tr>
                 ))}
               </tbody>

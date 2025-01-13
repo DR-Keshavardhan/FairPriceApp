@@ -1,4 +1,3 @@
-// Import necessary modules
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -20,6 +19,14 @@ const accountSid = 'AC3ef333278f3108e82ddc4b925ed4a22d';
 const authToken = '3fd0b085da326e009668653b7ec0064e';
 const twilioPhoneNumber = '+12184844803';
 const client = twilio(accountSid, authToken);
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
+    },
+});
 
 const csvFilePath = path.resolve('C:/SeleniumApp/Data/data.csv');
 
@@ -48,7 +55,6 @@ function writeToCsv(contact, message) {
         });
 }
 
-// ✅ Utility Function: Call External Application
 function callApplication() {
     const appCommand = '/resources/SeleniumApp.exe';
 
@@ -74,264 +80,211 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ message: 'All fields are required' });
     }
 
-    const query = 'SELECT * FROM KSadmin WHERE username = ? AND role = ? and password = ?'; ;
-    db.query(query, [username, role,password], async (err, results) => {
+    const query = 'SELECT * FROM KSadmin WHERE username = ? AND role = ? AND password = ?';
+    db.query(query, [username, role, password], (err, results) => {
         if (err) {
             console.error('Database query error:', err);
             return res.status(500).json({ message: 'Internal server error' });
         }
 
         if (results.length === 0) {
-            return res.status(401).json({ message: 'Invalid username or role' });
+            return res.status(401).json({ message: 'Invalid username, password, or role' });
         }
 
-        return res.json({ role: role });
+        return res.json({ role });
     });
 });
-/*changes made by kesh and ro*/
 
+router.post('/notify-all', async (req, res) => {
+    const { district, message } = req.body;
 
+    if (!district || !message) {
+        return res.status(400).json({ message: 'District and message are required' });
+    }
 
-// router.post('/send-notifications-shopdealer', async (req, res) => {
-//     const { phone, message } = req.body;
+    const query = 'SELECT phone FROM kidsync WHERE district = ?';
+    db.query(query, [district], async (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
 
-//     try {
-//         await client.messages.create({
-//             body: message,
-//             from: twilioPhoneNumber,
-//             to: phone,
-//         });
+        for (const { phone } of results) {
+            try {
+                await client.messages.create({
+                    body: message,
+                    from: twilioPhoneNumber,
+                    to: phone,
+                });
+            } catch (error) {
+                console.error(`Error notifying phone ${phone}:`, error);
+            }
+        }
 
-//         res.status(200).send('Notification sent (SMS)!');
-//     } catch (error) {
-//         console.error('Error sending notifications:', error);
-//         res.status(500).send(`Error sending notifications: ${error.message}`);
-//     }
-// });
+        res.json({ message: 'Notifications sent successfully.' });
+    });
+});
 
-// router.post('/send-calls-shopdealer', async (req, res) => {
-//     const { phone } = req.body;
+router.post('/call-all', async (req, res) => {
+    const { district } = req.body;
 
-//     try {
-//         await client.calls.create({
-//             twiml: `<Response><Say>Kindly report as early as possible</Say></Response>`,
-//             to: phone,
-//             from: twilioPhoneNumber,
-//         });
+    if (!district) {
+        return res.status(400).json({ message: 'District is required' });
+    }
 
-//         res.status(200).send('Notification sent (Call)!');
-//     } catch (error) {
-//         console.error('Error sending notifications:', error);
-//         res.status(500).send(`Error sending notifications: ${error.message}`);
-//     }
-// });
+    const query = 'SELECT phone FROM kidsync WHERE district = ?';
+    db.query(query, [district], async (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
 
-// router.post('/send-whatsapp-notification', (req, res) => {
-//     const { phone, message } = req.body;
+        for (const { phone } of results) {
+            try {
+                await client.calls.create({
+                    twiml: '<Response><Say>Kindly report as early as possible</Say></Response>',
+                    to: phone,
+                    from: twilioPhoneNumber,
+                });
+            } catch (error) {
+                console.error(`Error calling phone ${phone}:`, error);
+            }
+        }
 
-//     if (!phone || !message) {
-//         return res.status(400).send('Contact and message are required.');
-//     }
+        res.json({ message: 'Calls initiated successfully.' });
+    });
+});
 
-//     writeToCsv(phone, message);
-//     res.status(200).send('Notification request received.');
-// });
-router.post('/notify', async (req, res) => {
-    const {shop_id,shop_incharge,phone}=req.body;
-    console.log("call came", shop_incharge);
+router.post('/fetchdata', (req, res) => {
+    console.log('Fetch data request received');
+    const { selectedDistrict } = req.body;
+
+    if (!selectedDistrict) {
+        return res.status(400).json({ message: 'District is required' });
+    }
+
+    const query = 'SELECT * FROM kidsync WHERE district = ?';
+    db.query(query, [selectedDistrict], (err, results) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+        res.json(results);
+    });
+});
+
+router.post('/generate-report', async (req, res) => {
     try {
-      await client.messages.create({
-          body: message,
-          from: twilioPhoneNumber,
-          to: phone,
+        const query = 'SELECT * FROM kidsync';
+        db.query(query, (err, results) => {
+            if (err) {
+                console.error('Database query error:', err);
+                return res.status(500).json({ message: 'Internal server error' });
+            }
+
+            const doc = new pdfkit();
+            const filePath = './reports/detailed_report.pdf';
+
+            doc.pipe(fs.createWriteStream(filePath));
+            doc.fontSize(18).text('Detailed Report for Shops:', { align: 'center' });
+
+            results.forEach((row, index) => {
+                doc.fontSize(12).text(`${index + 1}. Shop ID: ${row.shop_id}, Name: ${row.shop_name}, District: ${row.district}, Taluk: ${row.taluk}`);
+            });
+
+            doc.end();
+
+            transporter.sendMail({
+                from: process.env.GMAIL_USER,
+                to: process.env.SENDER_MAIL,
+                subject: 'Daily Report for Shops',
+                text: 'Please find the attached detailed report.',
+                attachments: [{ filename: 'detailed_report.pdf', path: filePath }],
+            }, (err, info) => {
+                if (err) {
+                    console.error('Error sending email:', err);
+                    return res.status(500).json({ message: 'Error sending email' });
+                }
+                res.json({ message: 'Report generated and sent successfully.' });
+            });
+        });
+    } catch (error) {
+        console.error('Error generating report:', error);
+        res.status(500).json({ message: 'Error generating report' });
+    }
+});
+
+router.post("/upload-excel", (req, res) => {
+    const excelData = req.body;
+  
+    try {
+      // Process the Excel data (save to database, validate, etc.)
+      console.log("Received Excel data:", excelData);
+  
+      excelData.forEach((row) => {
+        const query = "INSERT INTO your_table (column1, column2) VALUES (?, ?)";
+        db.query(query, [row.column1, row.column2], (err) => {
+          if (err) console.error("Database error:", err);
+        });
       });
   
-    return res.json({ shop_id:shop_id });
+      res.status(200).json({ message: "Excel data processed successfully." });
     } catch (error) {
-        console.error('Error generating report',error);
-        return res.json({ shop_id:shop_id });
+      console.error("Error processing Excel data:", error);
+      res.status(500).json({ message: "Failed to process Excel data." });
+    }
+  });
+
+
+router.post('/notify', async (req, res) => {
+    const { shop_id } = req.body;
+  
+    try {
+      // Fetch shop details by ID (you can query the database if needed)
+      const query = 'SELECT phone FROM SMdata WHERE shop_id = ?';
+      db.query(query, [shop_id], async (err, results) => {
+        if (err || results.length === 0) {
+          return res.status(404).json({ message: 'Shop not found' });
+        }
+  
+        const phone = results[0].phone;
+        await client.messages.create({
+          body: 'Notification message',
+          from: twilioPhoneNumber,
+          to: phone,
+        });
+  
+        res.status(200).json({ message: 'Notification sent successfully' });
+      });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      res.status(500).json({ message: 'Error sending notification' });
     }
   });
   
   router.post('/call', async (req, res) => {
-      const {shop_id,shop_incharge,phone}=req.body;
-      console.log("call came", shop_incharge);
-      try {
+    const { shop_id } = req.body;
+  
+    try {
+      const query = 'SELECT phone FROM SMdata WHERE shop_id = ?';
+      db.query(query, [shop_id], async (err, results) => {
+        if (err || results.length === 0) {
+          return res.status(404).json({ message: 'Shop not found' });
+        }
+  
+        const phone = results[0].phone;
         await client.calls.create({
           twiml: '<Response><Say>Kindly report as early as possible</Say></Response>',
-          to: phone,
           from: twilioPhoneNumber,
-      });
-      return res.json({ shop_id:shop_id });
-      } catch (error) {
-          console.error('Error generating report',error);
-          return res.json({ shop_id:shop_id });
-      }
-    });
+          to: phone,
+        });
   
-    
-  router.post('/fetchdata', async (req, res) => {
-      console.log('fetch data');
-      const { selectedDistrict } = req.body;
-      console.log(selectedDistrict,'hello');
-      const query = 'SELECT * FROM KSdata WHERE district = ?';
-      db.query(query, [selectedDistrict], (err, results) => {
-          if (err) {
-              console.error('Database query error:', err);
-              return res.status(500).json({ message: 'Internal server error' });
-          }
-          res.json(results);
+        res.status(200).json({ message: 'Call initiated successfully' });
       });
-  });
-  router.post('/fetchtalukdata', async (req, res) => {
-      const  taluk=req.body.taluk;
-      const batch  = req.body.batch;
-      console.log("hello taluk",taluk,batch);
-      const query = 'SELECT * FROM SMdata WHERE LOWER(taluk) = LOWER(?)';
-      db.query(query, [taluk], (err, results) => {
-          if (err) {
-              console.error('Database query error:', err);
-              return res.status(500).json({ message: 'Internal server error' });
-          }
-          console.log('hi',results);
-          return res.json(results);
-      });
-  
+    } catch (error) {
+      console.error('Error initiating call:', error);
+      res.status(500).json({ message: 'Error initiating call' });
+    }
   });
   
-  
-  router.post('/uploadExcel', async (req, res) => {
-      console.log("Received request to upload Excel data");
-      const data = req.body.data;
-  
-      if (!Array.isArray(data) || data.length === 0) {
-          return res.status(400).json({ message: 'Invalid or empty data received' });
-      }
-  
-      try {
-          const query = `
-              INSERT INTO SMdata (
-                  shop_id,
-                  shop_name,
-                  shop_incharge,
-                  incharge_number,
-                  email,
-                  opening_time,
-                  status,
-                  remarks,
-                  upload_batch,
-                  taluk,
-                  district
-              )
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-              ON DUPLICATE KEY UPDATE
-                  shop_name = VALUES(shop_name),
-                  shop_incharge = VALUES(shop_incharge),
-                  incharge_number = VALUES(incharge_number),
-                  email = VALUES(email),
-                  opening_time = VALUES(opening_time),
-                  status = VALUES(status),
-                  remarks = VALUES(remarks),
-                  upload_batch = VALUES(upload_batch),
-                  taluk = VALUES(taluk),
-                  district = VALUES(district);
-          `;
-  
-          for (const row of data) {
-              const {
-                  shop_id,
-                  shop_name,
-                  shop_incharge,
-                  incharge_number,
-                  email,
-                  opening_time,
-                  status,
-                  remarks,
-                  upload_batch,
-                  taluk,
-                  district
-              } = row;
-              const formattedOpeningTime = convertTo24HourFormat(opening_time);
-              const formattedUploadBatch = convertTo24HourFormat(upload_batch);
-  
-              const values = [
-                  shop_id,
-                  shop_name,
-                  shop_incharge,
-                  incharge_number,
-                  email,
-                  formattedOpeningTime,
-                  status,
-                  remarks,
-                  formattedUploadBatch,
-                  taluk,
-                  district
-              ];
-  
-               db.query(query, values, (err, result) => {
-                  if (err) {
-                    console.error('Error inserting data:', err);
-                    return;
-                  }
-                  console.log('Data inserted:', result);
-                });
-          }
-  
-          return res.json({ message: 'File uploaded and data stored successfully' });
-      } catch (error) {
-          console.error('Error processing file:', error.message);
-          return res.status(500).json({ message: 'Error processing file', error: error.message });
-      }
-  });
-  function convertTo24HourFormat(time) {
-    if (typeof time === 'number') {
-        const hours = Math.floor(time * 24);
-        const minutes = Math.round((time * 24 - hours) * 60);
-        return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:00`;
-    }
-
-    if (typeof time === 'string') {
-        const [timePart, modifier] = time.split(' ');
-        if (!timePart || !modifier) throw new Error(`Invalid time format: ${time}`);
-        let [hours, minutes] = timePart.split(':');
-        if (hours === '12') hours = '00';
-        if (modifier === 'PM' && hours !== '12') hours = parseInt(hours, 10) + 12;
-        return `${hours}:${minutes}:00`;
-    }
-
-    throw new Error(`Invalid time format: ${time}`);
-}
-
-const calculatePoints = (status, remarks) => {
-    let points = 0;
-    if (status.toLowerCase() === 'open') points += 10;
-    if (status.toLowerCase() === 'closed') {
-        points += (remarks === 'NIL' || remarks === '' || remarks === '-') ? -3 : 3;
-    }
-    return points;
-};
-  
-  router.post('/generate-report', async (req, res) => {
-      try {
-          const doc = new pdfkit();
-          const filePath = './reports/detailed_report.pdf';
-          doc.pipe(fs.createWriteStream(filePath));
-          doc.fontSize(18).text('Detailed Report for Closed Shops:', { align: 'center' });
-          doc.end();
-  
-          await transporter.sendMail({
-              from: process.env.GMAIL_USER,
-              to: process.env.SENDER_MAIL,
-              subject: 'Daily Report for Closed Shops',
-              text: 'Please find the attached detailed report.',
-              attachments: [{ filename: 'detailed_report.pdf', path: filePath }]
-          });
-  
-          res.json({ message: 'Report sent successfully' });
-      } catch (error) {
-          console.error('Error generating report');
-      }
-    });
-
-// Export Router
 module.exports = router;
