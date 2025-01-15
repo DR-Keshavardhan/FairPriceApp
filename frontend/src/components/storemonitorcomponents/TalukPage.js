@@ -1,194 +1,286 @@
-import axios from 'axios'; // Import Axios for HTTP requests
-import 'material-icons/iconfont/material-icons.css'; // Import Material Icons
-import React, { useState } from 'react';
-import * as XLSX from 'xlsx'; // Import XLSX for Excel file processing
-import './talukpage.css'; // Import the CSS for styling
-import logo from './tnpds.png'; // Import the logo properly
-
+import axios from "axios";
+import "material-icons/iconfont/material-icons.css"; 
+import React, { useEffect, useState } from "react";
+import "./talukpage.css";
+import logo from "./tnpds.png"; 
+import jsPDF from "jspdf";
+import * as XLSX from "xlsx";
 const TalukPage = () => {
-  const [file, setFile] = useState(null);
-  const [excelData, setExcelData] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [taluks] = useState(["Ambattur", "Madhavaram"]); 
+  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); 
+  const [selectedTaluk, setSelectedTaluk] =  useState(
+      sessionStorage.getItem("username").split("_")[0] || ""
+  );
+  const [selectedBatch, setSelectedBatch] = useState("");
+  const [tableData, setTableData] = useState([]);
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-  };
-
-  const convertTo24HourFormat = (time) => {
-    if (typeof time === 'number') {
-      const hours = Math.floor(time * 24);
-      const minutes = Math.round((time * 24 - hours) * 60);
-      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+  const fetchTableData = async () => {
+    try {
+      console.log(selectedTaluk);
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/fetchtalukdata",
+        {
+          taluk:selectedTaluk,
+          batch:selectedBatch
+        }
+      );
+      setTableData(response.data);
+    } catch (error) {
+      console.error("Error fetching table data:", error);
     }
-    return time;
+  }; 
+  const handleNotifyAll = async () => {
+    try {
+      for (const data of tableData) {
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await notify(data.shop_id, data.shop_incharge, data.phone || "9360670658");
+        }
+      }
+    } catch (error) {
+      console.error("Error notifying all shops:", error);
+    }
   };
 
-  const handleFileUpload = () => {
+  const handleCallAll = async () => {
+    try {
+      for (const data of tableData) {
+        if (data.status === "Closed" && data.remarks === "NIL") {
+          await call(data.shop_id, data.shop_incharge, data.phone || "9360670658");
+        }
+      }
+    } catch (error) {
+      console.error("Error calling all incharges:", error);
+    }
+  };
+
+  const handleUploadExcel = async (event) => {
+    const file = event.target.files[0];
     if (!file) {
-      setErrorMessage('Please select a file to upload');
+      alert("Please select an Excel file to upload.");
+      return;
+    }
+    try {
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+      console.log("Excel data:", sheetData);
+
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/uploadExcel",
+        { data: sheetData }
+      );
+
+      if (response.status === 200) {
+        alert("Excel file uploaded and processed successfully.");
+      } else {
+        alert("Failed to upload Excel file.");
+      }
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("An error occurred while processing the Excel file.");
+    }
+  };
+
+  const handleGenerateReport = () => {
+    const filteredData = tableData.filter(
+      (shop) =>
+        shop.status === "Closed" &&
+        (shop.remarks === "NIL" || shop.remarks === "-")
+    );
+
+    if (filteredData.length === 0) {
+      alert("No data available to generate the report.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+    const doc = new jsPDF();
 
-        const processedData = jsonData.map((row) => {
-          if (row.opening_time) {
-            row.opening_time = convertTo24HourFormat(row.opening_time);
-          }
-          if (row.upload_batch) {
-            row.upload_batch = convertTo24HourFormat(row.upload_batch);
-          }
-          return row;
-        });
+    doc.setFontSize(18);
+    doc.text("Closed Shops Report", 14, 20);
+    doc.setFontSize(12);
+    doc.text(`District: ${selectedTaluk}`, 14, 30);
+    doc.text(`Batch: ${selectedBatch}`, 14, 37);
 
-        setExcelData(processedData);
-        setErrorMessage('');
-      } catch (error) {
-        console.error('Error parsing Excel file:', error);
-        setErrorMessage('Error parsing the file. Please try again.');
-      }
-    };
+    const headers = [
+      ["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"],
+    ];
+    const rows = filteredData.map((shop) => [
+      shop.shop_code,
+      shop.shop_name,
+      shop.shop_incharge,
+      shop.email,
+      shop.remarks,
+      shop.status,
+    ]);
 
-    reader.readAsArrayBuffer(file);
+    doc.autoTable({
+      startY: 45,
+      head: headers,
+      body: rows,
+      theme: "grid",
+      styles: { fontSize: 10 },
+    });
+
+    doc.save(`Closed_Shops_Report_${selectedTaluk}_${selectedBatch}.pdf`);
   };
 
-  const sendMessage = async (phone) => {
-    const message = "kindly report as soon as possible"; 
+  const notify = async (shop_id, shop_incharge, phone) => {
     try {
-      const response = await axios.post('http://localhost:5000/send-notifications-shopdealer', {
-        phone,
-        message,
-      });
-      alert(response.data);
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/notify",
+        { shop_id, shop_incharge, phone }
+      );
+      if (response.status === 200) {
+        console.log(`Notification sent to ${shop_incharge}`);
+      }
     } catch (error) {
-      alert(`Error: ${error.response ? error.response.data : error.message}`);
+      console.error(`Error notifying shop: ${shop_id}`, error);
     }
   };
 
-  const callIncharge = async (phone) => {
-    const message = "kindly report as soon as possible"; 
+  const call = async (shop_id, shop_incharge, phone) => {
     try {
-      const response = await axios.post('http://localhost:5000/send-calls-shopdealer', {
-        phone,
-        message,
-      });
-      alert(response.data);
+      const response = await axios.post(
+        "http://localhost:5000/SMapi/call",
+        { shop_id, shop_incharge, phone }
+      );
+      if (response.status === 200) {
+        console.log(`Call initiated to ${shop_incharge}`);
+      }
     } catch (error) {
-      alert(`Error: ${error.response ? error.response.data : error.message}`);
+      console.error(`Error calling shop: ${shop_id}`, error);
     }
   };
 
   return (
-    <div>
-      {/* Top Panel */}
-      <div className="top-panel">
-        <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
-        <button className="panel-button">Translate</button>
-      </div>
-
-      {/* Header below the panel */}
-      <header className="page-header">
-        <div className="header-left">
+    <main>
+      <section className="taluk-top-panel">
+        <span className="taluk-panel-text">📞 1967 (or) 1800-425-5901</span>
+        <button className="taluk-panel-button">Translate</button>
+      </section>
+      <header className="taluk-page-header">
+        <div className="taluk-header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
-              OFFICIAL WEBSITE OF CIVIL SUPPLIES AND CONSUMER PROTECTION 
+              OFFICIAL WEBSITE OF CIVIL SUPPLIES AND CONSUMER PROTECTION
               DEPARTMENT, GOVERNMENT OF TAMILNADU
             </p>
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-
-        {/* Dropdown menu buttons */}
-        <div className="header-right">
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
-                <span className="material-icons">home</span>
-                <span className="button-text">Home</span>
+        <nav className="taluk-header-right">
+          <div className="taluk-dropdown">
+            <button className="taluk-dropdown-button">
+              <div className="taluk-button-content">
+                <span className="taluk-button-text">
+                  <input type="file" accept=".xlsx" onChange={handleUploadExcel} />
+                  Upload Excel
+                </span>
               </div>
             </button>
-            <div className="dropdown-content">
-              <a href="#">Option 1</a>
-              <a href="#">Option 2</a>
-              <a href="#">Option 3</a>
-            </div>
           </div>
-
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
-                <span className="material-icons">cloud_upload</span>
-                <span className="button-text">Data Upload</span>
+          <div className="taluk-dropdown">
+            <button className="taluk-dropdown-button">
+              <div className="taluk-button-content">
+                <span className="taluk-button-text">Log Out</span>
               </div>
             </button>
-            <div className="dropdown-content">
-              <a href="#">Feature X</a>
-              <a href="#">Feature Y</a>
-              <a href="#">Feature Z</a>
-            </div>
           </div>
-
-          <div className="dropdown">
-            <button className="dropdown-button">
-              <div className="button-content">
-                <span className="material-icons">help_outline</span>
-                <span className="button-text">FAQ</span>
-              </div>
-            </button>
-            <div className="dropdown-content">
-              <a href="#">Option A</a>
-              <a href="#">Option B</a>
-              <a href="#">Option C</a>
-            </div>
-          </div>
-        </div>
+        </nav>
       </header>
+      <section className="taluk-page-content">
+        <h2 className="taluk-page-title">Taluk Page</h2>
 
-      {/* Main Content */}
-      {/* Excel Upload Section */}
-      <div className="upload-container">
-        <h2 className="title">Upload Excel File</h2>
-        <input type="file" onChange={handleFileChange} className="file-input" accept=".xlsx, .xls" />
-        <button onClick={handleFileUpload} className="upload-button">
-          Upload and View
-        </button>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="taluk-batch-container">
+          <label htmlFor="taluk-batch-select">Select Batch:</label>
+          <select
+            id="taluk-batch-select"
+            value={selectedBatch}
+            onChange={(e) => {
+              setSelectedBatch(e.target.value);
+              fetchTableData();
+            }}
+          >
+            <option value="">-- Select Batch --</option>
+            {batches.map((batch, index) => (
+              <option key={index} value={batch}>
+                {batch}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        {excelData.length > 0 && (
-          <div className="table-container">
-            <h3 className="subtitle">Uploaded Excel Data</h3>
-            <table className="excel-table">
+        <div className="taluk-button-container">
+          {selectedBatch && (
+            <>
+              <button className="taluk-message-button" onClick={handleNotifyAll}>
+                Send Message
+              </button>
+              <button className="taluk-call-button" onClick={handleCallAll}>
+                Call Incharge
+              </button>
+              <button className="taluk-call-button" onClick={handleGenerateReport}>
+                Generate Report
+              </button>
+            </>
+          )}
+        </div>
+
+        {selectedBatch && tableData.length > 0 && (
+          <div className="taluk-table-container">
+            <table className="taluk-data-table">
               <thead>
                 <tr>
-                  {Object.keys(excelData[0]).map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
+                  <th>Shop Code</th>
+                  <th>Shop Name</th>
+                  <th>Incharge</th>
+                  <th>Email</th>
+                  <th>Opening Time</th>
+                  <th>Taluk</th>
+                  <th>District</th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                  <th>Batch</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {excelData.map((row, index) => (
+                {tableData.map((shop, index) => (
                   <tr key={index}>
-                    {Object.values(row).map((value, i) => (
-                      <td key={i}>{value}</td>
-                    ))}
+                    <td>{shop.shop_code}</td>
+                    <td>{shop.shop_name}</td>
+                    <td>{shop.shop_incharge}</td>
+                    <td>{shop.email}</td>
+                    <td>{shop.opening_time}</td>
+                    <td>{shop.taluk}</td>
+                    <td>{shop.district}</td>
+                    <td>{shop.status}</td>
+                    <td>{shop.remarks}</td>
+                    <td>{shop.upload_batch}</td>
                     <td>
-                      {row.status === 'Closed' && row.remarks === 'NIL' ? (
-                        <div className="action-buttons">
-                          <button onClick={() => sendMessage(row['incharge_number'])} className="action-button send">Send Message</button>
-                          <button onClick={() => callIncharge(row['incharge_number'])} className="action-button call">Call Incharge</button>
-                        </div>
+                      {shop.status === "Closed" &&
+                      (shop.remarks === "NIL" || shop.remarks === "-") ? (
+                        <>
+                          <button
+                            className="taluk-message-button"
+                            onClick={() => notify(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
+                            Send Message
+                          </button>
+                          <button
+                            className="taluk-call-button"
+                            onClick={() => call(shop.shop_id, shop.shop_incharge, shop.phone || "9360670658")}
+                          >
+                            Call Incharge
+                          </button>
+                        </>
+                      ) : shop.status === "Open" ? (
+                        <span>Opened</span>
                       ) : (
-                        'N/A'
+                        <span>{shop.remarks}</span>
                       )}
                     </td>
                   </tr>
@@ -197,9 +289,11 @@ const TalukPage = () => {
             </table>
           </div>
         )}
-      </div>
-    </div>
+        {selectedBatch && tableData.length === 0 && (
+          <p className="taluk-no-data">No data available for the selected taluk and batch.</p>
+        )}
+      </section>
+    </main>
   );
 };
-
 export default TalukPage;

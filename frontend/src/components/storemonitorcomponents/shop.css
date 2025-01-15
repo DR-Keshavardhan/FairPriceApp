@@ -1,4 +1,4 @@
-/* General Body Styling */
+/* General Body Styling for Shop */
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #f7f7f7;
@@ -8,20 +8,20 @@ body {
     overflow: hidden; /* Prevent body overflow */
     display: flex;
     flex-direction: column; /* Flexbox layout to allow scrolling */
-  }
-  
-  /* Container Box around Entire Content */
-  .taluk-content-container {
+}
+
+/* Container Box around Entire Content for Shop */
+.shop-content-container {
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
     margin: 20px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Top Panel */
-  .taluk-top-panel {
+}
+
+/* Shop Top Panel */
+.shop-top-panel {
     background-color: #333;
     color: white;
     padding: 10px 20px;
@@ -33,27 +33,27 @@ body {
     left: 0;
     right: 0;
     z-index: 1000;
-  }
-  
-  .taluk-panel-text {
+}
+
+.shop-panel-text {
     font-size: 16px;
-  }
-  
-  .taluk-panel-button {
+}
+
+.shop-panel-button {
     padding: 8px 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
-  }
-  
-  .taluk-panel-button:hover {
+}
+
+.shop-panel-button:hover {
     background-color: #45a049;
-  }
-  
-  /* Page Header */
-  .taluk-page-header {
+}
+
+/* Shop Page Header */
+.shop-page-header {
     background-color: #f8f8f8;
     padding: 20px;
     display: flex;
@@ -65,42 +65,42 @@ body {
     right: 0;
     z-index: 900;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .taluk-header-left {
+}
+
+.shop-header-left {
     display: flex;
     align-items: center;
-  }
-  
-  .taluk-header-left img {
+}
+
+.shop-header-left img {
     width: 100px;
     height: auto;
     margin-right: 20px;
-  }
-  
-  .taluk-header-left p {
+}
+
+.shop-header-left p {
     font-size: 14px;
     color: #555;
     margin: 0;
-  }
-  
-  .taluk-header-left h1 {
+}
+
+.shop-header-left h1 {
     font-size: 24px;
     margin-top: 10px;
-  }
-  
-  .taluk-header-right {
+}
+
+.shop-header-right {
     display: flex;
     gap: 15px;
-  }
-  
-  /* Dropdown Styles */
-  .taluk-dropdown {
+}
+
+/* Shop Dropdown Styles */
+.shop-dropdown {
     position: relative;
     display: inline-block;
-  }
-  
-  .taluk-dropdown-button {
+}
+
+.shop-dropdown-button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -112,23 +112,23 @@ body {
     cursor: pointer;
     border-radius: 4px;
     gap: 10px;
-  }
-  
-  .taluk-dropdown-button:hover {
+}
+
+.shop-dropdown-button:hover {
     background-color: #45a049;
-  }
-  
-  .taluk-button-content {
+}
+
+.shop-button-content {
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-  
-  .taluk-button-content .material-icons {
+}
+
+.shop-button-content .material-icons {
     font-size: 20px;
-  }
-  
-  .taluk-dropdown-content {
+}
+
+.shop-dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
@@ -139,110 +139,110 @@ body {
     overflow: hidden;
     border: 1px solid #ddd;
     margin-top: 5px;
-  }
-  
-  .taluk-dropdown-content a {
+}
+
+.shop-dropdown-content a {
     color: black;
     padding: 10px 15px;
     text-decoration: none;
     display: block;
-  }
-  
-  .taluk-dropdown-content a:hover {
+}
+
+.shop-dropdown-content a:hover {
     background-color: #ddd;
-  }
-  
-  .taluk-dropdown:hover .dropdown-content {
+}
+
+.shop-dropdown:hover .shop-dropdown-content {
     display: block;
-  }
-  
-  /* Main Content */
-  .taluk-page {
+}
+
+/* Main Shop Content */
+.shop-page {
     background-color: white;
     padding: 20px;
     margin-top: 120px; /* Adjust to avoid overlap with fixed top panel */
     flex: 1; /* Allow this section to take remaining space */
     overflow-y: auto; /* Ensure it scrolls if the content exceeds viewport height */
-  }
-  
-  .taluk-page h2 {
+}
+
+.shop-page h2 {
     font-size: 28px;
     margin-bottom: 20px;
-  }
-  
-  /* Dropdown Container */
-  .taluk-dropdown-container {
+}
+
+/* Shop Dropdown Container */
+.shop-dropdown-container {
     margin-bottom: 20px;
-  }
-  
-  /* Button Styling */
-  .taluk-button-container {
+}
+
+/* Button Styling for Shop */
+.shop-button-container {
     margin-top: 20px;
     display: flex;
     gap: 10px;
-  }
-  
-  .taluk-action-buttons {
+}
+
+.shop-action-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
     padding: 0 15px;
-  }
-  
-  .taluk-notify-all-button,
-  .taluk-call-all-button {
+}
+
+.shop-notify-all-button,
+.shop-call-all-button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
-  }
-  
-  .taluk-notify-all-button:hover,
-  .taluk-call-all-button:hover {
+}
+
+.shop-notify-all-button:hover,
+.shop-call-all-button:hover {
     background-color: #45a049;
-  }
-  
-  .taluk-upload-button-container {
+}
+
+.shop-upload-button-container {
     margin-top: 20px;
     text-align: center;
-  }
-  
-  /* Style for the Taluk Page Content */
-  .taluk-page-content {
+}
+
+/* Style for the Shop Page Content */
+.shop-page-content {
     margin: 20px auto;
     padding: 20px;
     max-width: 1200px;
     background: #f8f9fa;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .taluk-page-title {
+}
+
+.shop-page-title {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
     color: #343a40;
     margin-bottom: 20px;
-  }
-  
-  .taluk-dropdown-container,
-  .taluk-batch-container {
+}
+
+.shop-dropdown-container,
+.shop-batch-container {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-  }
-  
-  label {
+}
+
+label {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 8px;
     color: #495057;
-  }
-  
-  select {
+}
+
+select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ced4da;
@@ -250,14 +250,14 @@ body {
     font-size: 14px;
     background: #ffffff;
     color: #495057;
-  }
-  
-  .taluk-upload-button-container {
+}
+
+.shop-upload-button-container {
     margin-top: 20px;
     text-align: center;
-  }
-  
-  .taluk-upload-button {
+}
+
+.shop-upload-button {
     padding: 10px 20px;
     background: #007bff;
     color: #ffffff;
@@ -266,21 +266,21 @@ body {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .taluk-upload-button:hover {
+}
+
+.shop-upload-button:hover {
     background: #0056b3;
-  }
-  
-  .taluk-action-buttons {
+}
+
+.shop-action-buttons {
     margin-top: 20px;
     display: flex;
     gap: 15px;
     justify-content: center;
-  }
-  
-  .taluk-notify-all-button,
-  .taluk-call-all-button {
+}
+
+.shop-notify-all-button,
+.shop-call-all-button {
     padding: 10px 20px;
     font-size: 16px;
     color: #ffffff;
@@ -288,53 +288,53 @@ body {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .taluk-notify-all-button {
+}
+
+.shop-notify-all-button {
     background: #28a745;
-  }
-  
-  .taluk-notify-all-button:hover {
+}
+
+.shop-notify-all-button:hover {
     background: #218838;
-  }
-  
-  .taluk-call-all-button {
+}
+
+.shop-call-all-button {
     background: #ffc107;
-  }
-  
-  .taluk-call-all-button:hover {
+}
+
+.shop-call-all-button:hover {
     background: #e0a800;
-  }
-  
-  .taluk-table-container {
+}
+
+.shop-table-container {
     margin-top: 30px;
     overflow-x: auto;
-  }
-  
-  .taluk-data-table {
+}
+
+.shop-data-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
-  }
-  
-  .taluk-data-table th,
-  .taluk-data-table td {
+}
+
+.shop-data-table th,
+.shop-data-table td {
     padding: 10px;
     text-align: center;
     border: 1px solid #dee2e6;
-  }
-  
-  .taluk-data-table th {
+}
+
+.shop-data-table th {
     background: #343a40;
     color: #ffffff;
-  }
-  
-  .taluk-data-table tr:nth-child(even) {
+}
+
+.shop-data-table tr:nth-child(even) {
     background: #f8f9fa;
-  }
-  
-  .taluk-message-button,
-  .taluk-call-button {
+}
+
+.shop-message-button,
+.shop-call-button {
     margin: 0 5px;
     padding: 8px 12px;
     font-size: 14px;
@@ -343,33 +343,33 @@ body {
     cursor: pointer;
     color: #ffffff;
     transition: background-color 0.3s;
-  }
-  
-  .taluk-message-button {
+}
+
+.shop-message-button {
     background: #17a2b8;
-  }
-  
-  .taluk-message-button:hover {
+}
+
+.shop-message-button:hover {
     background: #138496;
-  }
-  
-  .taluk-call-button {
+}
+
+.shop-call-button {
     background: #ffc107;
-  }
-  
-  .taluk-call-button:hover {
+}
+
+.shop-call-button:hover {
     background: #e0a800;
-  }
-  
-  .taluk-no-data {
+}
+
+.shop-no-data {
     text-align: center;
     color: #6c757d;
     margin-top: 20px;
     font-size: 16px;
-  }
-  
-  /* Footer Styles */
-  .taluk-footer {
+}
+
+/* Footer Styles for Shop */
+.shop-footer {
     background-color: #333;
     color: white;
     text-align: center;
@@ -377,50 +377,29 @@ body {
     width: 100%;
     position: relative; /* Keep relative to stay at the bottom of the content */
     margin-top: auto;
-  }
-  
-  .taluk-footer-content {
+}
+
+.shop-footer-content {
     font-size: 14px;
-  }
-  
-  .taluk-footer p {
+}
+
+.shop-footer p {
     margin: 0;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .taluk-dropdown-container {
-      flex-direction: column;
-      align-items: flex-start;
+}
+
+/* Responsive Design for Shop */
+@media (max-width: 768px) {
+    .shop-dropdown-container {
+        flex-direction: column;
+        align-items: flex-start;
     }
-  
-    .taluk-table th, .taluk-table td {
-      font-size: 14px;
+
+    .shop-table th, .shop-table td {
+        font-size: 14px;
     }
-  
+
     button {
-      padding: 8px 12px;
-      font-size: 12px;
+        padding: 8px 15px;
+        font-size: 14px;
     }
-  
-    .taluk-page-header {
-      position: relative;
-      top: auto; /* Change to relative for smaller screens */
-      margin-top: 80px; /* Ensure no overlap */
-    }
-  
-    .taluk-page {
-      margin-top: 140px; /* Adjust for mobile layout */
-    }
-    
-    .taluk-dropdown-button {
-      padding: 8px 15px;
-      font-size: 14px;
-    }
-    
-    .taluk-panel-button {
-      padding: 6px 12px;
-      font-size: 14px;
-    }
-  }
-  
+}

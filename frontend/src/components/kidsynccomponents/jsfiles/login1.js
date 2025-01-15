@@ -1,31 +1,23 @@
-import React, { useState } from 'react';
-import './login2.css';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link for Forgot Password navigation
+import './login1.css';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Login2 = () => {
+const Login1 = () => { 
   const navigate = useNavigate();
 
   const handleLogin = async (username, password, role) => {
-    console.log(username,password,role);
     try {
-      const response = await axios.post('http://localhost:5000/SMapi/login', {
+      const response = await axios.post('http://localhost:5000/KSapi/login', {
         username,
         password,
         role,
       });
-      console.log(response);
 
       if (response.data.role) {
-       
-        sessionStorage.setItem('username', username);
-        sessionStorage.setItem('role', response.data.role);
-
-        // Navigate based on role
-        if (response.data.role === 'state') navigate('/state');
-        else if (response.data.role === 'district') navigate('/district');
+        if (response.data.role === 'state') navigate('/KSPage');
+        else if (response.data.role === 'district') navigate('/ksdistrict');
         else if (response.data.role === 'taluk') navigate('/taluk'); 
-        else if (response.data.role ==='shop') navigate('/shop')
       } else {
         alert('Invalid role or login credentials.');
       }
@@ -38,13 +30,13 @@ const Login2 = () => {
   return (
     <div className="app">
       <Header />
-      <LoginForm onLogin={handleLogin} />
+      <Login1Form onLogin={handleLogin} />
       <Footer />
     </div>
   );
 };
 
-const LoginForm = ({ onLogin }) => {
+const Login1Form = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
@@ -60,7 +52,7 @@ const LoginForm = ({ onLogin }) => {
   };
 
   return (
-    <form className="login-form" onSubmit={handleSubmit}>
+    <form className="login1-form" onSubmit={handleSubmit}>
       <h2>Login</h2>
       <label htmlFor="username">Username</label>
       <input
@@ -71,7 +63,6 @@ const LoginForm = ({ onLogin }) => {
         onChange={(e) => setUsername(e.target.value)}
         required
       />
-
       <label htmlFor="password">Password</label>
       <div className="password-wrapper">
         <input
@@ -86,10 +77,8 @@ const LoginForm = ({ onLogin }) => {
           className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}
           onClick={() => setShowPassword(!showPassword)}
           aria-hidden="true"
-          title="Toggle Password Visibility"
         />
       </div>
-
       <label htmlFor="role">Role</label>
       <select
         id="role"
@@ -103,7 +92,6 @@ const LoginForm = ({ onLogin }) => {
         <option value="taluk">Taluk</option>
         <option value="shop">Shop</option>
       </select>
-
       <button type="submit">Login</button>
       <div className="forgot-password">
         <Link to="/forgot-password">Forgot Password?</Link>
@@ -133,4 +121,4 @@ const Footer = () => (
   </footer>
 );
 
-export default Login2;
+export default Login1;

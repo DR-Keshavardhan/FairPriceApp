@@ -11,6 +11,7 @@
     "frontend": "file:",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
+    "material-icons": "^1.13.12",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",

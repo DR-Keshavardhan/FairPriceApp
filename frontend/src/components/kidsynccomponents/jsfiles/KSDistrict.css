@@ -11,7 +11,7 @@ body {
   }
   
   /* Container Box around Entire Content */
-  .taluk-content-container {
+  .Ksdistrict-content-container {
     border: 1px solid #ddd;
     border-radius: 8px;
     background-color: #fff;
@@ -21,7 +21,7 @@ body {
   }
   
   /* Top Panel */
-  .taluk-top-panel {
+  .Ksdistrict-top-panel {
     background-color: #333;
     color: white;
     padding: 10px 20px;
@@ -35,11 +35,11 @@ body {
     z-index: 1000;
   }
   
-  .taluk-panel-text {
+  .Ksdistrict-panel-text {
     font-size: 16px;
   }
   
-  .taluk-panel-button {
+  .Ksdistrict-panel-button {
     padding: 8px 15px;
     background-color: #4CAF50;
     color: white;
@@ -48,12 +48,12 @@ body {
     border-radius: 4px;
   }
   
-  .taluk-panel-button:hover {
+  .Ksdistrict-panel-button:hover {
     background-color: #45a049;
   }
   
   /* Page Header */
-  .taluk-page-header {
+  .Ksdistrict-page-header {
     background-color: #f8f8f8;
     padding: 20px;
     display: flex;
@@ -67,40 +67,40 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  .taluk-header-left {
+  .Ksdistrict-header-left {
     display: flex;
     align-items: center;
   }
   
-  .taluk-header-left img {
+  .Ksdistrict-header-left img {
     width: 100px;
     height: auto;
     margin-right: 20px;
   }
   
-  .taluk-header-left p {
+  .Ksdistrict-header-left p {
     font-size: 14px;
     color: #555;
     margin: 0;
   }
   
-  .taluk-header-left h1 {
+  .Ksdistrict-header-left h1 {
     font-size: 24px;
     margin-top: 10px;
   }
   
-  .taluk-header-right {
+  .Ksdistrict-header-right {
     display: flex;
     gap: 15px;
   }
   
   /* Dropdown Styles */
-  .taluk-dropdown {
+  .Ksdistrict-dropdown {
     position: relative;
     display: inline-block;
   }
   
-  .taluk-dropdown-button {
+  .Ksdistrict-dropdown-button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -114,21 +114,21 @@ body {
     gap: 10px;
   }
   
-  .taluk-dropdown-button:hover {
+  .Ksdistrict-dropdown-button:hover {
     background-color: #45a049;
   }
   
-  .taluk-button-content {
+  .Ksdistrict-button-content {
     display: flex;
     align-items: center;
     gap: 8px;
   }
   
-  .taluk-button-content .material-icons {
+  .Ksdistrict-button-content .material-icons {
     font-size: 20px;
   }
   
-  .taluk-dropdown-content {
+  .Ksdistrict-dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
@@ -141,23 +141,23 @@ body {
     margin-top: 5px;
   }
   
-  .taluk-dropdown-content a {
+  .Ksdistrict-dropdown-content a {
     color: black;
     padding: 10px 15px;
     text-decoration: none;
     display: block;
   }
   
-  .taluk-dropdown-content a:hover {
+  .Ksdistrict-dropdown-content a:hover {
     background-color: #ddd;
   }
   
-  .taluk-dropdown:hover .dropdown-content {
+  .Ksdistrict-dropdown:hover .dropdown-content {
     display: block;
   }
   
   /* Main Content */
-  .taluk-page {
+  .Ksdistrict-district-page {
     background-color: white;
     padding: 20px;
     margin-top: 120px; /* Adjust to avoid overlap with fixed top panel */
@@ -165,32 +165,30 @@ body {
     overflow-y: auto; /* Ensure it scrolls if the content exceeds viewport height */
   }
   
-  .taluk-page h2 {
+  .Ksdistrict-district-page h2 {
     font-size: 28px;
     margin-bottom: 20px;
   }
   
   /* Dropdown Container */
-  .taluk-dropdown-container {
+  .Ksdistrict-dropdown-container {
     margin-bottom: 20px;
   }
   
   /* Button Styling */
-  .taluk-button-container {
+  .Ksdistrict-button-container {
     margin-top: 20px;
     display: flex;
     gap: 10px;
   }
-  
-  .taluk-action-buttons {
+  .Ksdistrict-action-buttons {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
     padding: 0 15px;
   }
-  
-  .taluk-notify-all-button,
-  .taluk-call-all-button {
+  .Ksdistrict-notify-all-button,
+  .Ksdistrict-call-all-button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
@@ -199,18 +197,17 @@ body {
     border-radius: 4px;
   }
   
-  .taluk-notify-all-button:hover,
-  .taluk-call-all-button:hover {
+  .Ksdistrict-notify-all-button:hover,
+  .Ksdistrict-call-all-button:hover {
     background-color: #45a049;
   }
   
-  .taluk-upload-button-container {
+  .Ksdistrict-upload-button-container {
     margin-top: 20px;
     text-align: center;
   }
-  
-  /* Style for the Taluk Page Content */
-  .taluk-page-content {
+  /* Style for the District Page Content */
+  .Ksdistrict-page-content {
     margin: 20px auto;
     padding: 20px;
     max-width: 1200px;
@@ -219,7 +216,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  .taluk-page-title {
+  .Ksdistrict-page-title {
     text-align: center;
     font-size: 24px;
     font-weight: bold;
@@ -227,8 +224,8 @@ body {
     margin-bottom: 20px;
   }
   
-  .taluk-dropdown-container,
-  .taluk-batch-container {
+  .Ksdistrict-dropdown-container,
+  .Ksdistrict-batch-container {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -252,12 +249,12 @@ body {
     color: #495057;
   }
   
-  .taluk-upload-button-container {
+  .Ksdistrict-upload-button-container {
     margin-top: 20px;
     text-align: center;
   }
   
-  .taluk-upload-button {
+  .Ksdistrict-upload-button {
     padding: 10px 20px;
     background: #007bff;
     color: #ffffff;
@@ -268,19 +265,19 @@ body {
     transition: background-color 0.3s;
   }
   
-  .taluk-upload-button:hover {
+  .Ksdistrict-upload-button:hover {
     background: #0056b3;
   }
   
-  .taluk-action-buttons {
+  .Ksdistrict-action-buttons {
     margin-top: 20px;
     display: flex;
     gap: 15px;
     justify-content: center;
   }
   
-  .taluk-notify-all-button,
-  .taluk-call-all-button {
+  .Ksdistrict-notify-all-button,
+  .Ksdistrict-call-all-button {
     padding: 10px 20px;
     font-size: 16px;
     color: #ffffff;
@@ -290,51 +287,51 @@ body {
     transition: background-color 0.3s;
   }
   
-  .taluk-notify-all-button {
+  .Ksdistrict-notify-all-button {
     background: #28a745;
   }
   
-  .taluk-notify-all-button:hover {
+  .Ksdistrict-notify-all-button:hover {
     background: #218838;
   }
   
-  .taluk-call-all-button {
+  .Ksdistrict-call-all-button {
     background: #ffc107;
   }
   
-  .taluk-call-all-button:hover {
+  .Ksdistrict-call-all-button:hover {
     background: #e0a800;
   }
   
-  .taluk-table-container {
+  .Ksdistrict-table-container {
     margin-top: 30px;
     overflow-x: auto;
   }
   
-  .taluk-data-table {
+  .Ksdistrict-data-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
   }
   
-  .taluk-data-table th,
-  .taluk-data-table td {
+  .Ksdistrict-data-table th,
+  .Ksdistrict-data-table td {
     padding: 10px;
     text-align: center;
     border: 1px solid #dee2e6;
   }
   
-  .taluk-data-table th {
+  .Ksdistrict-data-table th {
     background: #343a40;
     color: #ffffff;
   }
   
-  .taluk-data-table tr:nth-child(even) {
+  .Ksdistrict-data-table tr:nth-child(even) {
     background: #f8f9fa;
   }
   
-  .taluk-message-button,
-  .taluk-call-button {
+  .Ksdistrict-message-button,
+  .Ksdistrict-call-button {
     margin: 0 5px;
     padding: 8px 12px;
     font-size: 14px;
@@ -345,31 +342,67 @@ body {
     transition: background-color 0.3s;
   }
   
-  .taluk-message-button {
+  .Ksdistrict-message-button {
     background: #17a2b8;
   }
   
-  .taluk-message-button:hover {
+  .Ksdistrict-message-button:hover {
     background: #138496;
   }
   
-  .taluk-call-button {
+  .Ksdistrict-call-button {
     background: #ffc107;
   }
   
-  .taluk-call-button:hover {
+  .Ksdistrict-call-button:hover {
     background: #e0a800;
   }
   
-  .taluk-no-data {
+  .Ksdistrict-no-data {
     text-align: center;
     color: #6c757d;
     margin-top: 20px;
     font-size: 16px;
   }
   
+  .Ksdistrict-upload-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .Ksdistrict-upload-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Table Container with Scrolling */
+  .Ksdistrict-table-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid #ddd;
+  }
+  
+  .Ksdistrict-table th, .Ksdistrict-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .Ksdistrict-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
   /* Footer Styles */
-  .taluk-footer {
+  .Ksdistrict-footer {
     background-color: #333;
     color: white;
     text-align: center;
@@ -379,22 +412,22 @@ body {
     margin-top: auto;
   }
   
-  .taluk-footer-content {
+  .Ksdistrict-footer-content {
     font-size: 14px;
   }
   
-  .taluk-footer p {
+  .Ksdistrict-footer p {
     margin: 0;
   }
   
   /* Responsive Design */
   @media (max-width: 768px) {
-    .taluk-dropdown-container {
+    .Ksdistrict-dropdown-container {
       flex-direction: column;
       align-items: flex-start;
     }
   
-    .taluk-table th, .taluk-table td {
+    .Ksdistrict-table th, .Ksdistrict-table td {
       font-size: 14px;
     }
   
@@ -403,24 +436,19 @@ body {
       font-size: 12px;
     }
   
-    .taluk-page-header {
+    .Ksdistrict-page-header {
       position: relative;
       top: auto; /* Change to relative for smaller screens */
       margin-top: 80px; /* Ensure no overlap */
     }
   
-    .taluk-page {
+    .Ksdistrict-page {
       margin-top: 140px; /* Adjust for mobile layout */
     }
     
-    .taluk-dropdown-button {
-      padding: 8px 15px;
-      font-size: 14px;
-    }
-    
-    .taluk-panel-button {
-      padding: 6px 12px;
-      font-size: 14px;
+    .Ksdistrict-content-container {
+      padding: 10px;
+      margin: 10px;
     }
   }
   
