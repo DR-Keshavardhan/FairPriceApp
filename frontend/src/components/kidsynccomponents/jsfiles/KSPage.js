@@ -276,18 +276,18 @@ const StatePage = () => {
           </div>
         )}
 
-        {selectedDistrict && tableData.length > 0 && (
-          <div className="table-container">
-            <table className="state-table">
-              <thead>
-                <tr>
-                  <th>Member ID</th>
-                  <th>Shop No</th>
-                  <th>Taluk</th>
-                  <th>District</th>
-                  <th>Name</th>
-                  <th>Gender</th>
-                  <th>
+{selectedDistrict && tableData.length > 0 && (
+  <div className="table-container">
+    <table className="state-table">
+      <thead>
+        <tr>
+          <th>Member ID</th>
+          <th>Shop No</th>
+          <th>Taluk</th>
+          <th>District</th>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>
             Date of Birth
             <button
               onClick={handleSortByDOB}
@@ -303,49 +303,55 @@ const StatePage = () => {
               </span>
             </button>
           </th>
-                  <th>Family Head Name</th>
-                  <th>Mobile Number</th>
-                  <th>Aadhaar Status</th>
-                  <th>Aadhaar Linkage Status</th>
-                  <th>call</th>
-                  <th>notify</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedTableData.map((member, index) => (
-                  <tr key={index}>
-                    <td>{member.id}</td>
-                    <td>{member.shop_no}</td>
-                    <td>{member.taluk}</td>
-                    <td>{member.district}</td>
-                    <td>{member.name}</td>
-                    <td>{member.gender}</td>
-                    <td>{member.dob}</td>
-                    <td>{member.family_head}</td>
-                    <td>{member.mobile_number}</td>
-                    <td>{member.aadhaar_status}</td>
-                    <td>{member.aadhaar_linkage_status}</td>
-                    <td>
-                      <button
-                        onClick={() => handleCallIndividual(member.mobile_number)}
-                      >
-                        Call
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        onClick={() => handleNotifyIndividual(member.mobile_number)}
-                      >
-                        Notify
-                      </button>
-                    </td>
-                    
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+          <th>Family Head Name</th>
+          <th>Address</th>
+          <th>Age</th>
+          <th>Mobile Number</th>
+          <th>Aadhaar Status</th>
+          <th>Aadhaar Linkage Status</th>
+          <th>No. of Notifications</th>
+          <th>Call</th>
+          <th>Notify</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedTableData.map((member, index) => (
+          <tr key={index}>
+            <td>{member.id}</td>
+            <td>{member.shop_no}</td>
+            <td>{member.taluk}</td>
+            <td>{member.district}</td>
+            <td>{member.name}</td>
+            <td>{member.gender}</td>
+            <td>{member.dob}</td>
+            <td>{member.family_head}</td>
+            <td>{member.address}</td>
+            <td>{member.age}</td>
+            <td>{member.mobile_number}</td>
+            <td>{member.aadhaar_status}</td>
+            <td>{member.aadhaar_linkage_status}</td>
+            <td>{member.notifications_count || 0}</td>
+            <td>
+              <button
+                onClick={() => handleCallIndividual(member.mobile_number)}
+              >
+                Call
+              </button>
+            </td>
+            <td>
+              <button
+                onClick={() => handleNotifyIndividual(member.mobile_number)}
+              >
+                Notify
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
 
         {selectedDistrict && tableData.length === 0 && (
           <p>No data available for the selected district.</p>

@@ -269,57 +269,98 @@ body::-webkit-scrollbar-thumb {
   .table-container {
     padding: 10px;
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: auto;
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: auto;
-    border: 1px solid #ddd;
+    max-height: 350px; /* Limit vertical height for overflow */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    border: 1px solid #ccc;
+    direction: rtl; /* Ensure right-to-left scroll direction */
   }
   
   .table-container table {
     border-spacing: 0;
-    min-width: 800px; /* Adjust based on content */
-    width: 100%; /* Ensure it fits within the container */
+    min-width: 1200px; /* Ensure the table is wider than the container */
+    width: auto; /* Allow natural width to trigger scrolling */
+    direction: ltr; /* Maintain left-to-right text direction */
   }
   
   .table-container th,
   .table-container td {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ccc;
     text-align: left;
-    padding: 8px; /* Reduced padding */
-    font-size: 14px; /* Reduced font size */
+    padding: 8px;
+    font-size: 13px;
   }
   
   .table-container th {
     background-color: #4CAF50;
     color: white;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    white-space: nowrap; /* Prevent header text wrapping */
+    letter-spacing: 0.4px;
+    white-space: nowrap; /* Prevent wrapping for headers */
   }
   
   .table-container td {
-    white-space: normal; /* Allow data to wrap */
-    word-wrap: break-word; /* Ensure long text wraps */
+    white-space: nowrap; /* Prevent wrapping for cells */
+    word-wrap: normal;
   }
   
   .table-container tr:hover {
-    background-color: #f1f1f1;
+    background-color: #f9f9f9;
+  }
+  
+  /* Ensure visibility of scrollbars on all platforms */
+  .table-container::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  
+  .table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
   
   @media (max-width: 768px) {
+    .table-container {
+      padding: 8px;
+      max-height: 300px;
+    }
+  
     .table-container table {
-      min-width: 600px; /* Further reduce width for small screens */
+      min-width: 900px; /* Adjust for smaller screens */
     }
   
     .table-container th,
     .table-container td {
-      font-size: 12px; /* Smaller font size for better fit */
-      padding: 5px; /* Compact spacing */
+      font-size: 11px;
+      padding: 6px;
     }
   }
+  
+  @media (max-width: 480px) {
+    .table-container {
+      padding: 5px;
+      max-height: 250px;
+    }
+  
+    .table-container table {
+      min-width: 700px;
+    }
+  
+    .table-container th,
+    .table-container td {
+      font-size: 10px;
+      padding: 4px;
+    }
+  }
+  
+  
+  
   
   
 
