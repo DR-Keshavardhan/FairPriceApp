@@ -8,9 +8,11 @@ import * as XLSX from "xlsx";
 const TalukPage = () => {
   const [taluks] = useState(["Ambattur", "Madhavaram"]); 
   const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]); 
-  const [selectedTaluk, setSelectedTaluk] =  useState(
-      sessionStorage.getItem("username").split("_")[0] || ""
-  );
+  const [selectedTaluk, setSelectedTaluk] = useState(() => {
+    const username = sessionStorage.getItem("username");
+    return username ? username.split("_")[0] : ""; // Fallback to an empty string if null
+  });
+  
   const [selectedBatch, setSelectedBatch] = useState("");
   const [tableData, setTableData] = useState([]);
 
@@ -172,16 +174,24 @@ const TalukPage = () => {
           </div>
         </div>
         <nav className="taluk-header-right">
-          <div className="taluk-dropdown">
-            <button className="taluk-dropdown-button">
-              <div className="taluk-button-content">
-                <span className="taluk-button-text">
-                  <input type="file" accept=".xlsx" onChange={handleUploadExcel} />
-                  Upload Excel
-                </span>
-              </div>
-            </button>
-          </div>
+        <div className="taluk-dropdown">
+  <button
+    className="taluk-dropdown-button"
+    onClick={() => document.getElementById("upload-excel-input").click()}
+  >
+    <div className="taluk-button-content">
+      <span className="taluk-button-text">Upload Excel</span>
+    </div>
+  </button>
+  <input
+    id="upload-excel-input"
+    type="file"
+    accept=".xlsx"
+    onChange={handleUploadExcel}
+    style={{ display: "none" }}
+  />
+</div>
+
           <div className="taluk-dropdown">
             <button className="taluk-dropdown-button">
               <div className="taluk-button-content">
@@ -193,6 +203,24 @@ const TalukPage = () => {
       </header>
       <section className="taluk-page-content">
         <h2 className="taluk-page-title">Taluk Page</h2>
+        <div className="taluk-select-container">
+  <label htmlFor="taluk-select">Select Taluk:</label>
+  <select
+    id="taluk-select"
+    value={selectedTaluk}
+    onChange={(e) => {
+      setSelectedTaluk(e.target.value);
+      fetchTableData(); // Fetch data when taluk is changed
+    }}
+  >
+    <option value="">-- Select Taluk --</option>
+    {taluks.map((taluk, index) => (
+      <option key={index} value={taluk}>
+        {taluk}
+      </option>
+    ))}
+  </select>
+</div>
 
         <div className="taluk-batch-container">
           <label htmlFor="taluk-batch-select">Select Batch:</label>

@@ -206,6 +206,57 @@ body {
   margin-top: 20px;
   text-align: center;
 }
+.filter-container {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  padding: 10px;
+  background-color: #e33838;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-container:hover {
+  background-color: #eaeaea;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.filter-label {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 12px;
+  color: #222;
+}
+
+#filter-select {
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.3s ease;
+  background-color: #dce78f;
+  color: #333;
+  cursor: pointer;
+}
+
+#filter-select:hover {
+  border-color: #555;
+  background-color: #f0f0f0;
+}
+
+#filter-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+#filter-select option {
+  padding: 8px;
+  background-color: #e8efeb;
+  color: #822121;
+}
 /* Style for the District Page Content */
 .district-page-content {
   margin: 20px auto;
