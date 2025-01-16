@@ -1,5 +1,8 @@
 /* General Body Styling */
 body {
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
+
     font-family: 'Poppins', sans-serif;
     background-color: #f7f7f7;
     margin: 0;
@@ -7,9 +10,30 @@ body {
     height: 100%;
     overflow: hidden;
   }
-  
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+/* Scrollbar Styling */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #4CAF50;
+  border-radius: 10px;
+}
+
   /* Top Panel */
-  .top-panel {
+  .kspage-top-panel {
     background-color: #333;
     color: white;
     padding: 10px 20px;
@@ -17,34 +41,40 @@ body {
     justify-content: space-between;
     align-items: center;
     position: fixed;
+    border-bottom: 2px solid #4CAF50;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
   }
   
-  .panel-text {
+  .kspage-panel-text {
     font-size: 16px;
   }
   
-  .panel-button {
-    padding: 8px 15px;
+  .kspage-panel-button {
+    padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+
   }
   
-  .panel-button:hover {
+  .kspage-panel-button:hover {
+    transform: scale(1.05);
     background-color: #45a049;
   }
   
   /* Page Header */
-  .page-header {
+  .kspage-page-header {
     background-color: #f8f8f8;
     padding: 20px;
     display: flex;
+    border-bottom: 2px solid #ddd;
     justify-content: space-between;
     align-items: center;
     position: absolute;
@@ -54,41 +84,64 @@ body {
     z-index: 900;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-  
-  .header-left {
+  .kspage-header-upload {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
+}
+  .kspage-header-logout {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
+  }
+  .kspage-header-left {
     display: flex;
     align-items: center;
   }
   
-  .header-left img {
+  .kspage-header-left img {
     width: 100px;
     height: auto;
     margin-right: 20px;
+    border-radius: 50%;
+    transition: transform 0.3s;
   }
-  
-  .header-left p {
+.kspage-header-left img:hover {
+  transform: rotate(10deg);
+}
+  .kspage-header-left p {
     font-size: 14px;
     color: #555;
     margin: 0;
   }
   
-  .header-left h1 {
+  .kspage-header-left h1 {
     font-size: 24px;
     margin-top: 10px;
   }
   
-  .header-right {
+  .kspage-header-right {
     display: flex;
     gap: 15px;
   }
   
   /* Dropdown Styles */
-  .dropdown {
+  .kspage-dropdown {
     position: relative;
     display: inline-block;
   }
   
-  .dropdown-button {
+  .kspage-dropdown-button {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -100,19 +153,50 @@ body {
     cursor: pointer;
     border-radius: 4px;
     gap: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s;
   }
   
-  .dropdown-button:hover {
+  .kspage-dropdown-button:hover {
     background-color: #45a049;
+    transform: scale(1.5);
+
   }
-  
-  .button-content {
+  @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Enhanced Welcome Heading */
+.welcome-heading {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  animation: slideIn 1s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+  .kspage-button-content {
     display: flex;
     align-items: center;
     gap: 8px;
   }
   
-  .button-content .material-icons {
+  .kspage-button-content .material-icons {
     font-size: 20px;
   }
   
@@ -125,8 +209,20 @@ body {
     z-index: 1;
     border-radius: 4px;
     overflow: hidden;
+    animation: fadeIn 0.3s ease-in-out;
+
   }
-  
+  @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   .dropdown-content a {
     color: black;
     padding: 10px 15px;
@@ -152,7 +248,18 @@ body {
     font-size: 22px;
     color: #333;
   }
-  
+   .welcome-heading-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .welcome-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50; /* Green color for emphasis */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
   p {
     font-size: 16px;
     color: #666;
@@ -169,10 +276,85 @@ body {
     overflow-y: auto;
     overflow-x: auto;
     border: 1px solid #ddd;
+    border: 2px solid #4CAF50;
+    background-image: linear-gradient(to bottom, #ffffff, #f9f9f9);
   }
-  
+  .table-container::-webkit-scrollbar-thumb {
+  background-color: #45a049;
+}
+.table-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-container table {
+  border-spacing: 0;
+  width: 100%;
+}
+.table-container th, 
+.table-container td {
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  padding: 10px;
+}
+.table-container th {
+  background-color: #4CAF50;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.table-container tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Enhanced Buttons */
+button {
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+h2 {
+  animation: fadeIn 1s ease-in-out;
+}
+
+p {
+  animation: slideUp 1s ease-in-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
   /* Responsive Design */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
+  .kspage-header-left img {
+    width: 80px;
+  }
+
+  .kspage-page-header {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  button {
+    margin-top: 5px;
+  }
+
+  .table-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+}  @media (max-width: 768px) {
     .dropdown-container {
       flex-direction: column;
       align-items: flex-start;

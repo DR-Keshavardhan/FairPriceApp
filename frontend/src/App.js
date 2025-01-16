@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainApp from './App';
 import ButtonPage from './buttonPage';
+import KSDistrictPage from './components/kidsynccomponents/jsfiles/KSDistrict.js'; // Import the new page
 import KSStatePage from './components/kidsynccomponents/jsfiles/KSPage.js';
 import Login1 from './components/kidsynccomponents/jsfiles/login1.js';
 import UploadExcel from './components/kidsynccomponents/jsfiles/UploadExcel1.js';
@@ -10,7 +11,6 @@ import Login2 from './components/storemonitorcomponents/login2.js';
 import ShopPage from './components/storemonitorcomponents/ShopPage.js';
 import SMStatePage from './components/storemonitorcomponents/StatePage.js';
 import SMTalukPage from './components/storemonitorcomponents/TalukPage.js';
-import KSDistrictPage from './components/kidsynccomponents/jsfiles/KSDistrict.js'; // Import the new page
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
@@ -53,7 +53,7 @@ function App() {
         {/* Route for DistrictPage */}
         <Route
           path="/district"
-          element={isAuthenticated ? <Navigate to="/districtpage" /> : <DistrictPage />}
+          element={isAuthenticated ? <Navigate to="/districtpage" /> : <KSDistrictPage />}
         />
 
         {/* Route for KSSdistrict */}

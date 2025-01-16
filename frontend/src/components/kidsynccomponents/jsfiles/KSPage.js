@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./KSPage.css";
-import * as XLSX from "xlsx";
-import { useNavigate } from "react-router-dom";
 import "material-icons/iconfont/material-icons.css"; // Material icons
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import "./KSPage.css";
 import logo from "./tnpds.png"; // Logo for header
 
 const StatePage = () => {
@@ -131,8 +131,25 @@ const StatePage = () => {
     }
   };
   
+  const [sortedTableData, setSortedTableData] = useState([]);
 
-
+  useEffect(() => {
+    setSortedTableData(tableData); // Initialize sortedTableData with tableData when it changes
+  }, [tableData]);
+  
+  const [isDOBAscending, setIsDOBAscending] = useState(true);
+  
+  const handleSortByDOB = () => {
+    const sortedData = [...sortedTableData].sort((a, b) => {
+      const dateA = new Date(a.dob);
+      const dateB = new Date(b.dob);
+      return isDOBAscending ? dateA - dateB : dateB - dateA;
+    });
+  
+    setSortedTableData(sortedData);
+    setIsDOBAscending(!isDOBAscending); // Toggle sorting order
+  };
+  
   const handleNotifyIndividual = async (phone) => {
     try {
       const response = await axios.post(
@@ -140,10 +157,10 @@ const StatePage = () => {
         { phone }
       );
       if (response.status === 200) {
-        alert(`Notification sent to Shop ID ${shop_id} successfully.`);
+        alert(`Notification sent to Shop ID  successfully.`);
       }
     } catch (error) {
-      console.error(`Error notifying Shop ID ${shop_id}:`, error);
+      console.error(`Error notifying Shop ID`, error);
     }
   };
 
@@ -154,10 +171,10 @@ const StatePage = () => {
         { phone }
       );
       if (response.status === 200) {
-        alert(`Call initiated to Shop ID ${shop_id} successfully.`);
+        alert(`Call initiated to Shop ID  successfully.`);
       }
     } catch (error) {
-      console.error(`Error calling Shop ID ${shop_id}:`, error);
+      console.error(`Error calling Shop ID `, error);
     }
   };
 
@@ -183,15 +200,15 @@ const StatePage = () => {
 
   return (
     <div>
-      <div className="top-panel">
-        <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
-        <div className="panel-buttons">
-          <button className="panel-button">Translate</button>
+      <div className="kspage-top-panel">
+        <span className="kspage-panel-text">📞 1967 (or) 1800-425-5901</span>
+        <div className="kspage-panel-buttons">
+          <button className="kspage-panel-button">Translate</button>
         </div>
       </div>
 
-      <header className="page-header">
-        <div className="header-left">
+      <header className="kspage-page-header">
+        <div className="kspage-header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
@@ -201,15 +218,21 @@ const StatePage = () => {
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-        <div className="header-right">
-          <button className="header-upload" onClick={handleUploadExcel}>
+        <div className="kspage-header-right">
+          <button className="kspage-header-upload" onClick={handleUploadExcel}>
             Upload Excel
           </button>
-          <button className="header-logout" onClick={handleLogout}>
+          <button className="kspage-header-logout" onClick={handleLogout}>
             Log Out
           </button>
         </div>
       </header>
+      <div className="welcome-heading-container">
+        <h2 className="welcome-heading">
+          🌟 Welcome, This handles the State Data 🌟
+        </h2>
+      </div>
+
 
       <div className="state-page">
         <h2 className="page-title">Select a District to View Data</h2>
@@ -264,7 +287,22 @@ const StatePage = () => {
                   <th>District</th>
                   <th>Name</th>
                   <th>Gender</th>
-                  <th>Date of Birth</th>
+                  <th>
+            Date of Birth
+            <button
+              onClick={handleSortByDOB}
+              style={{
+                marginLeft: "5px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <span className="material-icons">
+                {isDOBAscending ? "arrow_upward" : "arrow_downward"}
+              </span>
+            </button>
+          </th>
                   <th>Family Head Name</th>
                   <th>Mobile Number</th>
                   <th>Aadhaar Status</th>
@@ -274,7 +312,7 @@ const StatePage = () => {
                 </tr>
               </thead>
               <tbody>
-                {tableData.map((member, index) => (
+                {sortedTableData.map((member, index) => (
                   <tr key={index}>
                     <td>{member.id}</td>
                     <td>{member.shop_no}</td>

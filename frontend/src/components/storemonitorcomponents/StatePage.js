@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import * as XLSX from "xlsx";
 import "jspdf-autotable";
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
 import "./StatePage.css";
 
 
 import { useNavigate } from "react-router-dom";
 
 import "material-icons/iconfont/material-icons.css";
-import logo from "./tnpds.png"; 
+import logo from "./tnpds.png";
 
 const StatePage = () => {
   const navigate = useNavigate();
@@ -138,21 +138,33 @@ const StatePage = () => {
         shop.status === "Closed" &&
         (shop.remarks === "NIL" || shop.remarks === "-")
     );
-
+  
     if (filteredData.length === 0) {
       alert("No data available to generate the report.");
       return;
     }
-
+  
     const doc = new jsPDF();
+  
+    // Add logo (Ensure you have a logo image available in your project)
 
-    // Add title to the PDF
+  
+    // Add title and date to the PDF
     doc.setFontSize(18);
-    doc.text("Closed Shops Report", 14, 20);
+    doc.text("Closed Shops Report", 60, 20); // Adjust text position as per logo
     doc.setFontSize(12);
-    doc.text(`District: ${selectedDistrict}`, 14, 30);
-    doc.text(`Batch: ${selectedBatch}`, 14, 37);
-
+    doc.text(`District: ${selectedDistrict}`, 14, 40);
+    doc.text(`Batch: ${selectedBatch}`, 14, 47);
+    doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 54);
+  
+    // Add analytics or summary (e.g., total number of closed shops)
+    doc.setFontSize(12);
+    doc.text(`Total Closed Shops: ${filteredData.length}`, 14, 61);
+  
+    // Add a line separator
+    doc.setLineWidth(0.5);
+    doc.line(14, 65, 200, 65); // Line after analytics
+  
     // Table headers and rows
     const headers = [
       ["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"],
@@ -165,20 +177,20 @@ const StatePage = () => {
       shop.remarks,
       shop.status,
     ]);
-
-    // Add table to PDF
+  
+    // Add table to PDF with autoTable
     doc.autoTable({
-      startY: 45,
+      startY: 70, // Adjust startY position after the heading
       head: headers,
       body: rows,
       theme: "grid",
       styles: { fontSize: 10 },
+      margin: { top: 10, left: 14, right: 14 }, // Adjust margins if necessary
     });
-
+  
     // Save the PDF
     doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
   };
-
   const notify=async (shop_id,shop_incharege,phone)=>{
     try {
       const response = await axios.post(
