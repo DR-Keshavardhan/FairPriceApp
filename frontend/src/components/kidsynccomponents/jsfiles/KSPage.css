@@ -267,7 +267,7 @@ body::-webkit-scrollbar-thumb {
   
   /* Table Container with Scrolling */
   .table-container {
-    padding: 20px;
+    padding: 10px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -276,35 +276,52 @@ body::-webkit-scrollbar-thumb {
     overflow-y: auto;
     overflow-x: auto;
     border: 1px solid #ddd;
-    border: 2px solid #4CAF50;
-    background-image: linear-gradient(to bottom, #ffffff, #f9f9f9);
   }
-  .table-container::-webkit-scrollbar-thumb {
-  background-color: #45a049;
-}
-.table-container::-webkit-scrollbar {
-  height: 6px;
-}
-
-.table-container table {
-  border-spacing: 0;
-  width: 100%;
-}
-.table-container th, 
-.table-container td {
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-  padding: 10px;
-}
-.table-container th {
-  background-color: #4CAF50;
-  color: white;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.table-container tr:hover {
-  background-color: #f1f1f1;
-}
+  
+  .table-container table {
+    border-spacing: 0;
+    min-width: 800px; /* Adjust based on content */
+    width: 100%; /* Ensure it fits within the container */
+  }
+  
+  .table-container th,
+  .table-container td {
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+    padding: 8px; /* Reduced padding */
+    font-size: 14px; /* Reduced font size */
+  }
+  
+  .table-container th {
+    background-color: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap; /* Prevent header text wrapping */
+  }
+  
+  .table-container td {
+    white-space: normal; /* Allow data to wrap */
+    word-wrap: break-word; /* Ensure long text wraps */
+  }
+  
+  .table-container tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  @media (max-width: 768px) {
+    .table-container table {
+      min-width: 600px; /* Further reduce width for small screens */
+    }
+  
+    .table-container th,
+    .table-container td {
+      font-size: 12px; /* Smaller font size for better fit */
+      padding: 5px; /* Compact spacing */
+    }
+  }
+  
+  
 
 /* Enhanced Buttons */
 button {

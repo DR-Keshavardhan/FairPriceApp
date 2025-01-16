@@ -391,13 +391,44 @@ const StatePage = () => {
                     <td>{shop.remarks}</td>
                     <td>{shop.upload_batch}</td>
                     <td>
-                      {shop.status === "Closed" &&
-                      (shop.remarks === "NIL" || shop.remarks === "-") ? (
-                        <button className="action-button"onClick={() => notify(shop.id, shop.shop_incharge,shop.phone ? shop.phone:"9360670658" )} >Take Action</button>
-                      ) : (
-                        <span>{shop.status}</span>
-                      )}
-                    </td>
+  {shop.status === "Closed" ? (
+    <>
+      {shop.remarks === "NIL" || shop.remarks === "-" ? (
+        <button
+          className="action-button"
+          onClick={() =>
+            notify(
+              shop.id,
+              shop.shop_incharge,
+              shop.phone ? shop.phone : "9360670658"
+            )
+          }
+        >
+          Take Action
+        </button>
+      ) : (
+        <>
+          <span>{shop.status}/</span>
+          <button
+            className="action-button"
+            onClick={() =>
+              notify(
+                shop.id,
+                shop.shop_incharge,
+                shop.phone ? shop.phone : "9360670658"
+              )
+            }
+          >
+            Take Action
+          </button>
+        </>
+      )}
+    </>
+  ) : (
+    <span>{shop.status}</span>
+  )}
+</td>
+
                   </tr>
                 ))}
               </tbody>
