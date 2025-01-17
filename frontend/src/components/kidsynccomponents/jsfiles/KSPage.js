@@ -1,12 +1,14 @@
-import axios from "axios";
-import "material-icons/iconfont/material-icons.css"; // Material icons
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
+import axios from "axios";
 import "./KSPage.css";
-import logo from "./tnpds.png"; // Logo for header
+import * as XLSX from "xlsx";
+import { useNavigate } from "react-router-dom";
+import "material-icons/iconfont/material-icons.css"; // Material icons
+import logo from "./tnpds.png"; // Logo for header]
+import { translatePage } from "../../../translate";
 
 const StatePage = () => {
+  const shop_id = "";
   const navigate = useNavigate();
 
   const [states] = useState(["Tamil Nadu", "Kerala"]);
@@ -131,38 +133,39 @@ const StatePage = () => {
     }
   };
   
-  const [sortedTableData, setSortedTableData] = useState([]);
 
-  useEffect(() => {
-    setSortedTableData(tableData); // Initialize sortedTableData with tableData when it changes
-  }, [tableData]);
-  
-  const [isDOBAscending, setIsDOBAscending] = useState(true);
-  
-  const handleSortByDOB = () => {
-    const sortedData = [...sortedTableData].sort((a, b) => {
-      const dateA = new Date(a.dob);
-      const dateB = new Date(b.dob);
-      return isDOBAscending ? dateA - dateB : dateB - dateA;
-    });
-  
-    setSortedTableData(sortedData);
-    setIsDOBAscending(!isDOBAscending); // Toggle sorting order
-  };
-  
+
+  // const handleNotifyIndividual = async (phone) => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:5000/KSapi/notify",
+  //       { phone }
+  //     );
+  //     if (response.status === 200) {
+  //       alert(`Notification sent to Shop ID ${shop_id} successfully.`);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error notifying Shop ID ${shop_id}:`, error);
+  //   }
+  // };
+
+
   const handleNotifyIndividual = async (phone) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/KSapi/notify",
-        { phone }
-      );
-      if (response.status === 200) {
-        alert(`Notification sent to Shop ID  successfully.`);
-      }
+        console.log("Hello");
+        const response = await axios.post(
+            "http://localhost:5000/KSapi/notify",
+            { phone }
+        );
+        if (response.status === 200) {
+            alert(`Notification sent to ${phone} successfully.`);
+        }
     } catch (error) {
-      console.error(`Error notifying Shop ID`, error);
+        console.error(`Error notifying ${phone}`, error);
+        alert(`Failed to send notification to ${phone}.`);
     }
-  };
+};
+
 
   const handleCallIndividual = async (phone) => {
     try {
@@ -171,12 +174,42 @@ const StatePage = () => {
         { phone }
       );
       if (response.status === 200) {
-        alert(`Call initiated to Shop ID  successfully.`);
+        alert(`Call initiated to Shop ID ${shop_id} successfully.`);
       }
     } catch (error) {
-      console.error(`Error calling Shop ID `, error);
+      console.error(`Error calling Shop ID ${shop_id}:`, error);
     }
   };
+  const googleTranslateElementInit = () => {
+    console.log("Initializing Google Translate...");
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        includedLanguages: "en,ta",
+        autoDisplay: false,
+      },
+      "google_translate_element"
+    );
+  };
+  
+  useEffect(() => {
+    const addScript = document.createElement("script");
+    addScript.setAttribute(
+      "src",
+      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+    );
+    addScript.onload = () => console.log("Google Translate script loaded successfully.");
+    addScript.onerror = () => console.error("Failed to load Google Translate script.");
+    document.body.appendChild(addScript);
+    window.googleTranslateElementInit = googleTranslateElementInit;
+  }, []);
+  
+  
+  const handleTranslate = () => { 
+    console.log("Translating...");
+    translatePage('ta');
+  };
+  
 
   useEffect(() => {
     if (selectedDistrict) {
@@ -200,15 +233,16 @@ const StatePage = () => {
 
   return (
     <div>
-      <div className="kspage-top-panel">
-        <span className="kspage-panel-text">📞 1967 (or) 1800-425-5901</span>
-        <div className="kspage-panel-buttons">
-          <button className="kspage-panel-button">Translate</button>
+      <div className="top-panel">
+        <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
+        <div className="panel-buttons">
+          <div id="google_translate_element" style={{ display: 'none' }}></div>
+        <button className="panel-button" onClick={handleTranslate}>Translate</button>
         </div>
       </div>
 
-      <header className="kspage-page-header">
-        <div className="kspage-header-left">
+      <header className="page-header">
+        <div className="header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
@@ -218,21 +252,15 @@ const StatePage = () => {
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-        <div className="kspage-header-right">
-          <button className="kspage-header-upload" onClick={handleUploadExcel}>
+        <div className="header-right">
+          <button className="header-upload" onClick={handleUploadExcel}>
             Upload Excel
           </button>
-          <button className="kspage-header-logout" onClick={handleLogout}>
+          <button className="header-logout" onClick={handleLogout}>
             Log Out
           </button>
         </div>
       </header>
-      <div className="welcome-heading-container">
-        <h2 className="welcome-heading">
-          🌟 Welcome, This handles the State Data 🌟
-        </h2>
-      </div>
-
 
       <div className="state-page">
         <h2 className="page-title">Select a District to View Data</h2>
@@ -287,22 +315,7 @@ const StatePage = () => {
                   <th>District</th>
                   <th>Name</th>
                   <th>Gender</th>
-                  <th>
-            Date of Birth
-            <button
-              onClick={handleSortByDOB}
-              style={{
-                marginLeft: "5px",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-              }}
-            >
-              <span className="material-icons">
-                {isDOBAscending ? "arrow_upward" : "arrow_downward"}
-              </span>
-            </button>
-          </th>
+                  <th>Date of Birth</th>
                   <th>Family Head Name</th>
                   <th>Mobile Number</th>
                   <th>Aadhaar Status</th>
@@ -312,7 +325,7 @@ const StatePage = () => {
                 </tr>
               </thead>
               <tbody>
-                {sortedTableData.map((member, index) => (
+                {tableData.map((member, index) => (
                   <tr key={index}>
                     <td>{member.id}</td>
                     <td>{member.shop_no}</td>
