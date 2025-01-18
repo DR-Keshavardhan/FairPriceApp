@@ -1,4 +1,5 @@
 import axios from "axios";
+import Chart from 'chart.js/auto';
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import React, { useState } from "react";
@@ -97,6 +98,106 @@ const StatePage = () => {
     }));
   };
 
+
+const handleGenerateReport = () => {
+  // Filter the data for the report
+  const filteredData = tableData.filter(
+    (shop) =>
+      shop.status === "Closed" &&
+      (shop.remarks === "NIL" || shop.remarks === "-")
+  );
+
+  if (filteredData.length === 0) {
+    alert("No data available to generate the report.");
+    return;
+  }
+
+  const doc = new jsPDF();
+  const totalClosedShops = filteredData.length;
+
+  // Add title and metadata
+  doc.setFontSize(18);
+  doc.text("Closed Shops Report", 70, 20); // Adjust position
+  doc.setFontSize(12);
+  doc.text(`District: ${selectedDistrict}`, 14, 40);
+  doc.text(`Batch: ${selectedBatch}`, 14, 47);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 54);
+
+  // Add analytics
+  doc.setFontSize(12);
+  doc.text(`Total Closed Shops: ${totalClosedShops}`, 14, 61);
+
+  // Add a horizontal line separator
+  doc.setLineWidth(0.5);
+  doc.line(14, 65, 200, 65);
+
+  // Create the canvas for the chart
+  const canvas = document.createElement("canvas");
+  canvas.width = 400;
+  canvas.height = 200;
+
+  const ctx = canvas.getContext("2d");
+
+  // Generate the chart with Chart.js
+  const shopNames = filteredData.map((shop) => shop.shop_name);
+  const shopCounts = filteredData.map(() => 1); // Replace with relevant data if needed
+
+  const chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: shopNames,
+      datasets: [
+        {
+          label: "Closed Shops",
+          data: shopCounts,
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: false, // Disable responsiveness for consistent rendering
+      maintainAspectRatio: false,
+    },
+  });
+
+  // Wait for the chart to render
+  setTimeout(() => {
+    const chartImage = canvas.toDataURL("image/png");
+    doc.addImage(chartImage, "PNG", 14, 70, 180, 90); // Adjust chart position
+
+    // Add table headers and rows
+    const headers = [
+      ["Shop Code", "Shop Name", "Incharge", "Number", "Remarks", "Status"],
+    ];
+    const rows = filteredData.map((shop) => [
+      shop.shop_code,
+      shop.shop_name,
+      shop.shop_incharge,
+      shop.incharge_number,
+      shop.remarks,
+      shop.status,
+    ]);
+
+    // Add table to PDF
+    doc.autoTable({
+      startY: 170, // Adjust startY position after the chart
+      head: headers,
+      body: rows,
+      theme: "grid",
+      styles: { fontSize: 10 },
+      margin: { top: 10, left: 14, right: 14 },
+    });
+
+    // Save the PDF
+    doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
+  }, 500); // Allow time for the chart to render
+};
+
+
+
+
   const handleUploadExcel = async (event) => {
     const file = event.target.files[0];
   
@@ -132,65 +233,7 @@ const StatePage = () => {
 
 
 
-  const handleGenerateReport = () => {
-    const filteredData = tableData.filter(
-      (shop) =>
-        shop.status === "Closed" &&
-        (shop.remarks === "NIL" || shop.remarks === "-")
-    );
   
-    if (filteredData.length === 0) {
-      alert("No data available to generate the report.");
-      return;
-    }
-  
-    const doc = new jsPDF();
-  
-    // Add logo (Ensure you have a logo image available in your project)
-
-  
-    // Add title and date to the PDF
-    doc.setFontSize(18);
-    doc.text("Closed Shops Report", 60, 20); // Adjust text position as per logo
-    doc.setFontSize(12);
-    doc.text(`District: ${selectedDistrict}`, 14, 40);
-    doc.text(`Batch: ${selectedBatch}`, 14, 47);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 54);
-  
-    // Add analytics or summary (e.g., total number of closed shops)
-    doc.setFontSize(12);
-    doc.text(`Total Closed Shops: ${filteredData.length}`, 14, 61);
-  
-    // Add a line separator
-    doc.setLineWidth(0.5);
-    doc.line(14, 65, 200, 65); // Line after analytics
-  
-    // Table headers and rows
-    const headers = [
-      ["Shop Code", "Shop Name", "Incharge", "Email", "Remarks", "Status"],
-    ];
-    const rows = filteredData.map((shop) => [
-      shop.shop_code,
-      shop.shop_name,
-      shop.shop_incharge,
-      shop.email,
-      shop.remarks,
-      shop.status,
-    ]);
-  
-    // Add table to PDF with autoTable
-    doc.autoTable({
-      startY: 70, // Adjust startY position after the heading
-      head: headers,
-      body: rows,
-      theme: "grid",
-      styles: { fontSize: 10 },
-      margin: { top: 10, left: 14, right: 14 }, // Adjust margins if necessary
-    });
-  
-    // Save the PDF
-    doc.save(`Closed_Shops_Report_${selectedDistrict}_${selectedBatch}.pdf`);
-  };
   const notify=async (shop_id,shop_incharege,phone)=>{
     try {
       const response = await axios.post(
