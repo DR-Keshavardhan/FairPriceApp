@@ -3,68 +3,212 @@ import "material-icons/iconfont/material-icons.css";
 import React, { useEffect, useState } from "react";
 import "./KSDistrict.css";
 import logo from "./tnpds.png"; 
+import * as XLSX from "xlsx";
+import { useNavigate } from "react-router-dom";
 
 const KSDistrictPage = () => {
-  const [districts] = useState(["Thiruvallur", "Chennai"]); 
-  const [batches] = useState(["10:00:00", "10:30:00", "11:00:00"]);
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedBatch, setSelectedBatch] = useState("");
-  const [tableData, setTableData] = useState([]);
+  const navigate = useNavigate();
 
+  const [states] = useState(["Tamil Nadu", "Kerala"]);
+  const [districts] = useState([
+    "Chennai",
+    "Tiruvannamalai",
+    "Vellore",
+    "Thiruvallur",
+  ]);
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [tableData, setTableData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
+
+  // Fetch table data from KSapi based on the selected district
   const fetchTableData = async () => {
-    console.log("Fetching table data for:", selectedDistrict, selectedBatch);
-    
+    if (!selectedDistrict) return; // Avoid API call if no district is selected
+
     try {
-      const response = await axios.post('http://localhost:5000/SMapi/fetchdata', {
-        taluk: sessionStorage.getItem('username').split('_')[0], selectedBatch
-      });
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/fetchdata",
+        { selectedDistrict }
+      );
       setTableData(response.data);
-    
     } catch (error) {
       console.error("Error fetching table data:", error);
     }
   };
 
   const handleNotifyAll = async () => {
+    if (!selectedDistrict) {
+      alert("Please select a district first.");
+      return;
+    }
+
     try {
-      const response = await axios.post(`http://localhost:5000/api/notify-all`, {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/notify-all",
+        { district: selectedDistrict }
+      );
       if (response.status === 200) {
-        console.log("Notifications sent to all shops successfully");
+        alert("Notifications sent to all shops successfully.");
       }
     } catch (error) {
-      console.log("Error in notifying all shops:", error);
+      console.error("Error notifying all shops:", error);
     }
   };
 
-  // Handle Call All functionality
   const handleCallAll = async () => {
+    if (!selectedDistrict) {
+      alert("Please select a district first.");
+      return;
+    }
+
     try {
-      const response = await axios.post(`http://localhost:5000/api/call-all`, {
-        district: selectedDistrict,
-        batch: selectedBatch,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/call-all",
+        { district: selectedDistrict }
+      );
       if (response.status === 200) {
-        console.log("Calls initiated to all shops successfully");
+        alert("Calls initiated to all shops successfully.");
       }
     } catch (error) {
-      console.error("Error in calling all shops:", error);
+      console.error("Error calling all shops:", error);
     }
   };
+
+  const handleCheckboxChange = (shopCode) => {
+    setSelectedRows((prevSelectedRows) => ({
+      ...prevSelectedRows,
+      [shopCode]: !prevSelectedRows[shopCode], // Toggle the selection
+    }));
+  };
+
+  const handleUploadExcel = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+  
+    try {
+      // Read the file
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data, { type: "array" });
+  
+      // Convert the first sheet to JSON
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet);
+  
+      // Send JSON data to backend
+      const response = await axios.post("http://localhost:5000/KSapi/upload-excel", jsonData);
+      if (response.status === 200) {
+        alert("Excel file uploaded and processed successfully.");
+      }
+    } catch (error) {
+      console.error("Error uploading Excel file:", error);
+      alert("Failed to upload Excel file.");
+    }
+  };
+
+
+  const handleGenerateReport = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/KSapi/generate-report", {
+        responseType: "blob", // Expect a file
+      });
+  
+      // Create a link to download the file
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "report.xlsx"); // Specify the file name
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  
+      alert("Report generated and downloaded successfully.");
+    } catch (error) {
+      console.error("Error generating report:", error);
+      alert("Failed to generate report.");
+    }
+  };
+  
+  const [sortedTableData, setSortedTableData] = useState([]);
+
+  useEffect(() => {
+    setSortedTableData(tableData); // Initialize sortedTableData with tableData when it changes
+  }, [tableData]);
+  
+  const [isDOBAscending, setIsDOBAscending] = useState(true);
+  
+  const handleSortByDOB = () => {
+    const sortedData = [...sortedTableData].sort((a, b) => {
+      const dateA = new Date(a.dob);
+      const dateB = new Date(b.dob);
+      return isDOBAscending ? dateA - dateB : dateB - dateA;
+    });
+  
+    setSortedTableData(sortedData);
+    setIsDOBAscending(!isDOBAscending); // Toggle sorting order
+  };
+  
+  const handleNotifyIndividual = async (phone) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/notify",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Notification sent to Shop ID  successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error notifying Shop ID`, error);
+    }
+  };
+
+  const handleCallIndividual = async (phone) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/call",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Call initiated to Shop ID  successfully.`);
+      }
+    } catch (error) {
+      console.error(`Error calling Shop ID `, error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetchTableData();
+    }
+  }, [selectedDistrict]);
+
+
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    sessionStorage.clear();
+    navigate("/login2", { replace: true });
+  };
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetchTableData();
+    }
+  }, [selectedDistrict]);
 
   return (
-    <main>
-      {/* Top Panel */}
-      <section className="Ksdistrict-top-panel">
-        <span className="Ksdistrict-panel-text">📞 1967 (or) 1800-425-5901</span>
-        <button className="Ksdistrict-panel-button">Translate</button>
-      </section>
+    <div>
+      <div className="kspage-top-panel">
+        <span className="kspage-panel-text">📞 1967 (or) 1800-425-5901</span>
+        <div className="kspage-panel-buttons">
+          <button className="kspage-panel-button">Translate</button>
+        </div>
+      </div>
 
-      {/* Header Section */}
-      <header className="Ksdistrict-page-header">
-        <div className="Ksdistrict-header-left">
+      <header className="kspage-page-header">
+        <div className="kspage-header-left">
           <img src={logo} alt="Tamil Nadu Government Logo" />
           <div>
             <p>
@@ -74,159 +218,148 @@ const KSDistrictPage = () => {
             <h1>PUBLIC DISTRIBUTION SYSTEM</h1>
           </div>
         </div>
-
-        {/* Header Dropdown Menus */}
-        <nav className="Ksdistrict-header-right">
-          <div className="Ksdistrict-dropdown">
-            <button className="Ksdistrict-dropdown-button">
-              <div className="Ksdistrict-button-content">
-                <span className="material-icons">cloud_upload</span>
-                <span className="Ksdistrict-button-text">Data Upload</span>
-              </div>
-            </button>
-            <div className="Ksdistrict-dropdown-content">
-              <a href="#">Feature X</a>
-              <a href="#">Feature Y</a>
-              <a href="#">Feature Z</a>
-            </div>
-          </div>
-
-          <div className="Ksdistrict-dropdown">
-            <button className="Ksdistrict-dropdown-button">
-              <div className="Ksdistrict-button-content">
-                <span className="Ksdistrict-button-text">Log Out</span>
-              </div>
-            </button>
-            <div className="Ksdistrict-dropdown-content">
-              <a href="#">Option A</a>
-              <a href="#">Option B</a>
-              <a href="#">Option C</a>
-            </div>
-          </div>
-        </nav>
+        <div className="kspage-header-right">
+          <button className="kspage-header-upload" onClick={handleUploadExcel}>
+            Upload Excel
+          </button>
+          <button className="kspage-header-logout" onClick={handleLogout}>
+            Log Out
+          </button>
+        </div>
       </header>
+      <div className="welcome-heading-container">
+        <h2 className="welcome-heading">
+          🌟 Welcome, This handles the State Data 🌟
+        </h2>
+      </div>
 
-      {/* Main Content */}
-      <section className="Ksdistrict-page-content">
-        <h2 className="Ksdistrict-page-title">District Page</h2>
 
-        {/* Select District */}
-        <div className="Ksdistrict-dropdown-container">
-          <label htmlFor="district-select">Select District:</label>
-          <select
-            id="district-select"
-            value={selectedDistrict}
-            onChange={(e) => {
-              setSelectedDistrict(e.target.value);
-              setSelectedBatch(""); // Reset batch when district changes
-            }}
-          >
-            <option value="">-- Select District --</option>
-            {districts.map((district, index) => (
-              <option key={index} value={district}>
-                {district}
-              </option>
-            ))}
-          </select>
+      <div className="state-page">
+        <h2 className="page-title">Select a District to View Data</h2>
+
+        <div className="dropdown-container">
+          <label htmlFor="district-select" className="dropdown-label">
+            Select District:
+          </label>
+          <div className="dropdown-wrapper">
+            <select
+              id="district-select"
+              className="custom-dropdown"
+              value={selectedDistrict}
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+            >
+              <option value="">-- Select District --</option>
+              {districts.map((district, index) => (
+                <option key={index} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
+            <span className="dropdown-icon material-icons">arrow_drop_down</span>
+          </div>
         </div>
 
-        {/* Dropdown for Batch */}
-        <div className="Ksdistrict-batch-container">
-          <label htmlFor="district-batch-select">Select Batch:</label>
-          <select
-            id="district-batch-select"
-            value={selectedBatch}
-            onChange={(e) => {
-              setSelectedBatch(e.target.value);
-              fetchTableData();
-            }}
-          >
-            <option value="">-- Select Batch --</option>
-            {batches.map((batch, index) => (
-              <option key={index} value={batch}>
-                {batch}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* "Notify All" and "Call All" Buttons */}
-        {selectedBatch && (
-          <div className="Ksdistrict-action-buttons">
-            <button className="Ksdistrict-notify-all-button" onClick={handleNotifyAll}>
+        {selectedDistrict && (
+          <div className="button-container">
+            <button className="notify-all-button" onClick={handleNotifyAll}>
               Notify All
             </button>
-            <button className="Ksdistrict-call-all-button" onClick={handleCallAll}>
+            <button className="call-all-button" onClick={handleCallAll}>
               Call All
             </button>
-            <button className="Ksdistrict-call-all-button" onClick={handleCallAll}>
+            <button
+              className="generate-report-button"
+              onClick={handleGenerateReport}
+            >
               Generate Report
             </button>
           </div>
         )}
 
-        {/* Table Display */}
-        {selectedBatch && tableData.length > 0 && (
-          <div className="Ksdistrict-table-container">
-            <table className="Ksdistrict-data-table">
-              <thead>
-                <tr>
-                  <th>Shop Code</th>
-                  <th>Shop Name</th>
-                  <th>Incharge</th>
-                  <th>Email</th>
-                  <th>Opening Time</th>
-                  <th>Taluk</th>
-                  <th>District</th>
-                  <th>Status</th>
-                  <th>Remarks</th>
-                  <th>Batch</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableData.map((shop, index) => (
-                  <tr key={index}>
-                    <td>{shop.shop_code}</td>
-                    <td>{shop.shop_name}</td>
-                    <td>{shop.shop_incharge}</td>
-                    <td>{shop.email}</td>
-                    <td>{shop.opening_time}</td>
-                    <td>{shop.taluk}</td>
-                    <td>{shop.district}</td>
-                    <td>{shop.status}</td>
-                    <td>{shop.remarks}</td>
-                    <td>{shop.upload_batch}</td>
-                    <td>
-                      {shop.status === "Closed" && (shop.remarks === "NIL" || shop.remarks === "-") ? (
-                        <>
-                          <button className="Ksdistrict-message-button">
-                            Send Message
-                          </button>
-                          <button className="Ksdistrict-call-button">
-                            Call Incharge
-                          </button>
-                        </>
-                      ) : shop.status === "Open" ? (
-                        <span>Opened</span>
-                      ) : (
-                        <span>{shop.remarks}</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+{selectedDistrict && tableData.length > 0 && (
+  <div className="table-container">
+    <table className="state-table">
+      <thead>
+        <tr>
+          <th>Member ID</th>
+          <th>Shop No</th>
+          <th>Taluk</th>
+          <th>District</th>
+          <th>Name</th>
+          <th>Gender</th>
+          <th>
+            Date of Birth
+            <button
+              onClick={handleSortByDOB}
+              style={{
+                marginLeft: "5px",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              <span className="material-icons">
+                {isDOBAscending ? "arrow_upward" : "arrow_downward"}
+              </span>
+            </button>
+          </th>
+          <th>Family Head Name</th>
+          <th>Address</th>
+          <th>Age</th>
+          <th>Mobile Number</th>
+          <th>Aadhaar Status</th>
+          <th>Aadhaar Linkage Status</th>
+          <th>No. of Notifications</th>
+          <th>Call</th>
+          <th>Notify</th>
+        </tr>
+      </thead>
+      <tbody>
+        {sortedTableData.map((member, index) => (
+          <tr key={index}>
+            <td>{member.id}</td>
+            <td>{member.shop_no}</td>
+            <td>{member.taluk}</td>
+            <td>{member.district}</td>
+            <td>{member.name}</td>
+            <td>{member.gender}</td>
+            <td>{member.dob}</td>
+            <td>{member.family_head}</td>
+            <td>{member.address}</td>
+            <td>{member.age}</td>
+            <td>{member.mobile_number}</td>
+            <td>{member.aadhaar_status}</td>
+            <td>{member.aadhaar_linkage_status}</td>
+            <td>{member.notifications_count || 0}</td>
+            <td>
+              <button
+                onClick={() => handleCallIndividual(member.mobile_number)}
+              >
+                Call
+              </button>
+            </td>
+            <td>
+              <button
+                onClick={() => handleNotifyIndividual(member.mobile_number)}
+              >
+                Notify
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
 
-        {/* No data message */}
-        {selectedBatch && tableData.length === 0 && (
-          <p className="Ksdistrict-no-data">No data available for the selected district and batch.</p>
+
+        {selectedDistrict && tableData.length === 0 && (
+          <p>No data available for the selected district.</p>
         )}
-      </section>
-    </main>
+      </div>
+    </div>
   );
 };
+
 
 export default KSDistrictPage;

@@ -7,8 +7,7 @@ import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header]
 import { translatePage } from "../../../translate";
 
-const StatePage = () => {
-  const shop_id = "";
+const KSState = () => {
   const navigate = useNavigate();
 
   const [states] = useState(["Tamil Nadu", "Kerala"]);
@@ -389,4 +388,4 @@ const StatePage = () => {
   );
 };
 
-export default StatePage;
+export default KSState;
