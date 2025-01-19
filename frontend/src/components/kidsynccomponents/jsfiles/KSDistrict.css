@@ -1,454 +1,431 @@
 /* General Body Styling */
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f7f7f7;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden; /* Prevent body overflow */
-    display: flex;
-    flex-direction: column; /* Flexbox layout to allow scrolling */
+/* General Body Styling */
+body, html {
+  min-width: 100%;
+  overflow-x: auto;
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling */
+}
+
+@keyframes gradientShift {
+0% {
+  background-position: 0% 50%;
+}
+50% {
+  background-position: 100% 50%;
+}
+100% {
+  background-position: 0% 50%;
+}
+}
+/* Scrollbar Styling */
+body::-webkit-scrollbar {
+width: 8px;
+}
+
+body::-webkit-scrollbar-thumb {
+background-color: #4CAF50;
+border-radius: 10px;
+}
+
+/* Top Panel */
+.kspage-top-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 10px 20px;
+  border-bottom: 2px solid #4CAF50;
+  background-color: #333;
+}
+
+.kspage-panel-text {
+  font-size: 16px;
+}
+
+.kspage-panel-button {
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+
+}
+
+.kspage-panel-button:hover {
+  transform: scale(1.05);
+  background-color: #45a049;
+}
+
+/* Page Header */
+.kspage-page-header {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.kspage-header-upload {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, background-color 0.3s;
+}
+.kspage-header-logout {
+  padding: 8px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, background-color 0.3s;
+}
+.kspage-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.kspage-header-left img {
+  width: 100px;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.kspage-header-left img:hover {
+transform: rotate(10deg);
+}
+.kspage-header-left p {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.kspage-header-left h1 {
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.kspage-header-right {
+  display: flex;
+  gap: 15px;
+}
+
+/* Dropdown Styles */
+.kspage-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.kspage-dropdown-button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.kspage-dropdown-button:hover {
+  background-color: #45a049;
+  transform: scale(1.5);
+
+}
+@keyframes fadeIn {
+from {
+  opacity: 0;
+  transform: translateY(-10%);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+/* Enhanced Welcome Heading */
+.welcome-heading {
+text-transform: uppercase;
+letter-spacing: 1.5px;
+animation: slideIn 1s ease-in-out;
+}
+
+@keyframes slideIn {
+from {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+to {
+  opacity: 1;
+  transform: translateX(0);
+}
+}
+
+.kspage-button-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kspage-button-content .material-icons {
+  font-size: 20px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 150px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+
+}
+@keyframes fadeIn {
+from {
+  opacity: 0;
+  transform: translateY(-10%);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Main Content */
+.main-content {
+  padding: 20px;
+  margin-top: 160px;
+  min-width: 100%;
+}
+
+h2 {
+  font-size: 22px;
+  color: #333;
+}
+ .welcome-heading-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.welcome-heading {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50; /* Green color for emphasis */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Table Container with Scrolling */
+.table-container {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: auto;
+  max-height: 350px; /* Limit vertical height for overflow */
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  border: 1px solid #ccc;
+  direction: rtl; /* Ensure right-to-left scroll direction */
+}
+
+.table-container table {
+  border-spacing: 0;
+  min-width: 1200px; /* Ensure the table is wider than the container */
+  width: auto; /* Allow natural width to trigger scrolling */
+  direction: ltr; /* Maintain left-to-right text direction */
+}
+
+.table-container th,
+.table-container td {
+  border-bottom: 1px solid #ccc;
+  text-align: left;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.table-container th {
+  background-color: #4CAF50;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap; /* Prevent wrapping for headers */
+}
+
+.table-container td {
+  white-space: nowrap; /* Prevent wrapping for cells */
+  word-wrap: normal;
+}
+
+.table-container tr:hover {
+  background-color: #f9f9f9;
+}
+
+/* Ensure visibility of scrollbars on all platforms */
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    padding: 8px;
+    max-height: 300px;
   }
-  
-  /* Container Box around Entire Content */
-  .Ksdistrict-content-container {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #fff;
-    margin: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .table-container table {
+    min-width: 900px; /* Adjust for smaller screens */
   }
-  
-  /* Top Panel */
-  .Ksdistrict-top-panel {
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
+
+  .table-container th,
+  .table-container td {
+    font-size: 11px;
+    padding: 6px;
   }
-  
-  .Ksdistrict-panel-text {
-    font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .kspage-header-left img {
+    width: 60px;
   }
-  
-  .Ksdistrict-panel-button {
-    padding: 8px 15px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
+  .table-container table {
+    font-size: 12px;
   }
-  
-  .Ksdistrict-panel-button:hover {
-    background-color: #45a049;
+  .kspage-header-right {
+    flex-direction: column;
+    gap: 5px;
   }
-  
-  /* Page Header */
-  .Ksdistrict-page-header {
-    background-color: #f8f8f8;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    right: 0;
-    z-index: 900;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .table-container {
+    padding: 5px;
+    max-height: 250px;
   }
-  
-  .Ksdistrict-header-left {
-    display: flex;
-    align-items: center;
+
+  .table-container table {
+    width: 10;
+    min-width: 700px;
   }
-  
-  .Ksdistrict-header-left img {
-    width: 100px;
-    height: auto;
-    margin-right: 20px;
+
+  .table-container th,
+  .table-container td {
+    font-size: 10px;
+    padding: 4px;
   }
-  
-  .Ksdistrict-header-left p {
-    font-size: 14px;
-    color: #555;
-    margin: 0;
+}
+
+
+
+
+
+
+/* Enhanced Buttons */
+button {
+box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+transition: transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+transform: scale(1.05);
+box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+h2 {
+animation: fadeIn 1s ease-in-out;
+}
+
+p {
+animation: slideUp 1s ease-in-out;
+}
+
+@keyframes slideUp {
+from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+to {
+  opacity: 1;
+  transform: translateY(0);
+}
+}
+
+/* Responsive Design */
+
+@media (max-width: 480px) {
+  .kspage-header-left img {
+    width: 60px; /* Smaller image */
   }
-  
-  .Ksdistrict-header-left h1 {
-    font-size: 24px;
-    margin-top: 10px;
+
+  .table-container table {
+    font-size: 10px;
   }
-  
-  .Ksdistrict-header-right {
-    display: flex;
-    gap: 15px;
-  }
-  
-  /* Dropdown Styles */
-  .Ksdistrict-dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .Ksdistrict-dropdown-button {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-    gap: 10px;
-  }
-  
-  .Ksdistrict-dropdown-button:hover {
-    background-color: #45a049;
-  }
-  
-  .Ksdistrict-button-content {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .Ksdistrict-button-content .material-icons {
-    font-size: 20px;
-  }
-  
-  .Ksdistrict-dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 150px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid #ddd;
-    margin-top: 5px;
-  }
-  
-  .Ksdistrict-dropdown-content a {
-    color: black;
-    padding: 10px 15px;
-    text-decoration: none;
-    display: block;
-  }
-  
-  .Ksdistrict-dropdown-content a:hover {
-    background-color: #ddd;
-  }
-  
-  .Ksdistrict-dropdown:hover .dropdown-content {
-    display: block;
-  }
-  
-  /* Main Content */
-  .Ksdistrict-district-page {
-    background-color: white;
-    padding: 20px;
-    margin-top: 120px; /* Adjust to avoid overlap with fixed top panel */
-    flex: 1; /* Allow this section to take remaining space */
-    overflow-y: auto; /* Ensure it scrolls if the content exceeds viewport height */
-  }
-  
-  .Ksdistrict-district-page h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-  }
-  
-  /* Dropdown Container */
-  .Ksdistrict-dropdown-container {
-    margin-bottom: 20px;
-  }
-  
-  /* Button Styling */
-  .Ksdistrict-button-container {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-  }
-  .Ksdistrict-action-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-    padding: 0 15px;
-  }
-  .Ksdistrict-notify-all-button,
-  .Ksdistrict-call-all-button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .Ksdistrict-notify-all-button:hover,
-  .Ksdistrict-call-all-button:hover {
-    background-color: #45a049;
-  }
-  
-  .Ksdistrict-upload-button-container {
-    margin-top: 20px;
-    text-align: center;
-  }
-  /* Style for the District Page Content */
-  .Ksdistrict-page-content {
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 1200px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .Ksdistrict-page-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #343a40;
-    margin-bottom: 20px;
-  }
-  
-  .Ksdistrict-dropdown-container,
-  .Ksdistrict-batch-container {
-    margin-bottom: 20px;
-    display: flex;
+
+  .kspage-header-right {
+    flex-direction: column;
+    gap: 5px; 
+  }/* Stack items */
+  .dropdown-container {
     flex-direction: column;
     align-items: flex-start;
   }
-  
-  label {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: #495057;
-  }
-  
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 14px;
-    background: #ffffff;
-    color: #495057;
-  }
-  
-  .Ksdistrict-upload-button-container {
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .Ksdistrict-upload-button {
-    padding: 10px 20px;
-    background: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .Ksdistrict-upload-button:hover {
-    background: #0056b3;
-  }
-  
-  .Ksdistrict-action-buttons {
-    margin-top: 20px;
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-  }
-  
-  .Ksdistrict-notify-all-button,
-  .Ksdistrict-call-all-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .Ksdistrict-notify-all-button {
-    background: #28a745;
-  }
-  
-  .Ksdistrict-notify-all-button:hover {
-    background: #218838;
-  }
-  
-  .Ksdistrict-call-all-button {
-    background: #ffc107;
-  }
-  
-  .Ksdistrict-call-all-button:hover {
-    background: #e0a800;
-  }
-  
-  .Ksdistrict-table-container {
-    margin-top: 30px;
-    overflow-x: auto;
-  }
-  
-  .Ksdistrict-data-table {
-    width: 100%;
-    border-collapse: collapse;
+
+  .district-table th, .district-table td {
     font-size: 14px;
   }
-  
-  .Ksdistrict-data-table th,
-  .Ksdistrict-data-table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #dee2e6;
-  }
-  
-  .Ksdistrict-data-table th {
-    background: #343a40;
-    color: #ffffff;
-  }
-  
-  .Ksdistrict-data-table tr:nth-child(even) {
-    background: #f8f9fa;
-  }
-  
-  .Ksdistrict-message-button,
-  .Ksdistrict-call-button {
-    margin: 0 5px;
+
+  button {
     padding: 8px 12px;
-    font-size: 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #ffffff;
-    transition: background-color 0.3s;
+    font-size: 12px;
   }
-  
-  .Ksdistrict-message-button {
-    background: #17a2b8;
-  }
-  
-  .Ksdistrict-message-button:hover {
-    background: #138496;
-  }
-  
-  .Ksdistrict-call-button {
-    background: #ffc107;
-  }
-  
-  .Ksdistrict-call-button:hover {
-    background: #e0a800;
-  }
-  
-  .Ksdistrict-no-data {
-    text-align: center;
-    color: #6c757d;
-    margin-top: 20px;
-    font-size: 16px;
-  }
-  
-  .Ksdistrict-upload-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .Ksdistrict-upload-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Table Container with Scrolling */
-  .Ksdistrict-table-container {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: auto;
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: auto;
-    border: 1px solid #ddd;
-  }
-  
-  .Ksdistrict-table th, .Ksdistrict-table td {
-    padding: 10px;
-    text-align: left;
-  }
-  
-  .Ksdistrict-table th {
-    background-color: #f0f0f0;
-    font-weight: bold;
-  }
-  
-  /* Footer Styles */
-  .Ksdistrict-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    position: relative; /* Keep relative to stay at the bottom of the content */
-    margin-top: auto;
-  }
-  
-  .Ksdistrict-footer-content {
-    font-size: 14px;
-  }
-  
-  .Ksdistrict-footer p {
-    margin: 0;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .Ksdistrict-dropdown-container {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .Ksdistrict-table th, .Ksdistrict-table td {
-      font-size: 14px;
-    }
-  
-    button {
-      padding: 8px 12px;
-      font-size: 12px;
-    }
-  
-    .Ksdistrict-page-header {
-      position: relative;
-      top: auto; /* Change to relative for smaller screens */
-      margin-top: 80px; /* Ensure no overlap */
-    }
-  
-    .Ksdistrict-page {
-      margin-top: 140px; /* Adjust for mobile layout */
-    }
-    
-    .Ksdistrict-content-container {
-      padding: 10px;
-      margin: 10px;
-    }
-  }
-  
+}
