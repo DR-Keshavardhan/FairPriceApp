@@ -8,8 +8,29 @@ import logo from "./tnpds.png"; // Logo for header]
 import { translatePage } from "../../../translate";
 
 const KSState = () => {
-  const navigate = useNavigate();
+  const shop_id="";
+  const [tableData, setTableData] = useState([]);
 
+  
+  const [sortedTableData, setSortedTableData] = useState([]);
+
+  useEffect(() => {
+    setSortedTableData(tableData); // Initialize sortedTableData with tableData when it changes
+  }, [tableData]);
+  
+  const [isDOBAscending, setIsDOBAscending] = useState(true);
+  
+  const handleSortByDOB = () => {
+    const sortedData = [...sortedTableData].sort((a, b) => {
+      const dateA = new Date(a.dob);
+      const dateB = new Date(b.dob);
+      return isDOBAscending ? dateA - dateB : dateB - dateA;
+    });
+  
+    setSortedTableData(sortedData);
+    setIsDOBAscending(!isDOBAscending); // Toggle sorting order
+  };
+  const navigate = useNavigate();
   const [states] = useState(["Tamil Nadu", "Kerala"]);
   const [districts] = useState([
     "Chennai",
@@ -18,7 +39,6 @@ const KSState = () => {
     "Thiruvallur",
   ]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
   // Fetch table data from KSapi based on the selected district
@@ -134,36 +154,36 @@ const KSState = () => {
   
 
 
-  // const handleNotifyIndividual = async (phone) => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5000/KSapi/notify",
-  //       { phone }
-  //     );
-  //     if (response.status === 200) {
-  //       alert(`Notification sent to Shop ID ${shop_id} successfully.`);
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error notifying Shop ID ${shop_id}:`, error);
-  //   }
-  // };
-
-
   const handleNotifyIndividual = async (phone) => {
     try {
-        console.log("Hello");
-        const response = await axios.post(
-            "http://localhost:5000/KSapi/notify",
-            { phone }
-        );
-        if (response.status === 200) {
-            alert(`Notification sent to ${phone} successfully.`);
-        }
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/notify",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Notification sent to Shop ID ${shop_id} successfully.`);
+      }
     } catch (error) {
-        console.error(`Error notifying ${phone}`, error);
-        alert(`Failed to send notification to ${phone}.`);
+      console.error(`Error notifying Shop ID ${shop_id}:`, error);
     }
-};
+  };
+
+
+//   const handleNotifyIndividual = async (phone) => {
+//     try {
+//         console.log("Hello");
+//         const response = await axios.post(
+//             "http://localhost:5000/KSapi/notify",
+//             { phone }
+//         );
+//         if (response.status === 200) {
+//             alert(`Notification sent to ${phone} successfully.`);
+//         }
+//     } catch (error) {
+//         console.error(`Error notifying ${phone}`, error);
+//         alert(`Failed to send notification to ${phone}.`);
+//     }
+// };
 
 
   const handleCallIndividual = async (phone) => {
@@ -222,7 +242,7 @@ const KSState = () => {
     localStorage.removeItem("authToken");
     sessionStorage.clear();
     navigate("/login2", { replace: true });
-  };
+  };  
 
   useEffect(() => {
     if (selectedDistrict) {
