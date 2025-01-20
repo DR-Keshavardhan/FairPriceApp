@@ -6,7 +6,7 @@ import * as XLSX from "xlsx";
 import "./KSPage.css";
 import logo from "./tnpds.png"; // Logo for header
 
-const StatePage = () => {
+const KSState = () => {
   const navigate = useNavigate();
 
   const [states] = useState(["Tamil Nadu", "Kerala"]);
@@ -361,4 +361,4 @@ const StatePage = () => {
   );
 };
 
-export default StatePage;
+export default KSState;
