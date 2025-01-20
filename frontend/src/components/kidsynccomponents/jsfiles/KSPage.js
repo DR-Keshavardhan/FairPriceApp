@@ -305,6 +305,7 @@ const KSState = () => {
       </header>
 
       <div className="state-page">
+      <h2 className="page-title">Welcome to Kidsync State Page</h2>
         <h2 className="page-title">Select a District to View Data</h2>
 
         <div className="dropdown-container">
