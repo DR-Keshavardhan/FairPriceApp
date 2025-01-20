@@ -178,23 +178,33 @@ const createtableforkidsync=()=>{
     })
     
 }
+const alterTableForKidSync = () => {
+  const query = `ALTER TABLE kidsync ADD COLUMN age INT, ADD COLUMN address VARCHAR(100)`;
+  db.query(query,(err,result)=>{
+    if(err) throw err;
+    console.log("table altered for kidsync");
+})
+}
+
 
 const createtableformonitor=()=>{
     const query=`create table shopmonitorstates
     )`
 }
 
+// alterTableForKidSync();
+
 // createtableforkidsync();
 // insertdatatookidsync();
 
 // createSchemaforSMtable();
-// insertdatatoSMTable('shops2_11am.xlsx');
+insertdatatoSMTable('shop_1030am.xlsx');
 
 // createSchema();
 // createSchemaforKS();
 // createSchemaforSM();
 // insertDatatoKSAuth();
-insertDatatoSMAuth();
+// insertDatatoSMAuth();
 // deleteEntireTable('SMdata');
 // createSchemaforFPtableAuth();
 // insertDataTOFPUser();
