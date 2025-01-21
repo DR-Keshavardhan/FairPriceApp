@@ -201,34 +201,34 @@ const KSState = () => {
       console.error(`Error calling Shop ID ${shop_id}:`, error);
     }
   };
-  const googleTranslateElementInit = () => {
-    console.log("Initializing Google Translate...");
-    new window.google.translate.TranslateElement(
-      {
-        pageLanguage: "en",
-        includedLanguages: "en,ta",
-        autoDisplay: false,
-      },
-      "google_translate_element"
-    );
-  };
+  // const googleTranslateElementInit = () => {
+  //   console.log("Initializing Google Translate...");
+  //   new window.google.translate.TranslateElement(
+  //     {
+  //       pageLanguage: "en",
+  //       includedLanguages: "en,ta",
+  //       autoDisplay: false,
+  //     },
+  //     "google_translate_element"
+  //   );
+  // };
   
-  useEffect(() => {
-    const addScript = document.createElement("script");
-    addScript.setAttribute(
-      "src",
-      "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-    );
-    addScript.onload = () => console.log("Google Translate script loaded successfully.");
-    addScript.onerror = () => console.error("Failed to load Google Translate script.");
-    document.body.appendChild(addScript);
-    window.googleTranslateElementInit = googleTranslateElementInit;
-  }, []);
+  // useEffect(() => {
+  //   const addScript = document.createElement("script");
+  //   addScript.setAttribute(
+  //     "src",
+  //     "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+  //   );
+  //   addScript.onload = () => console.log("Google Translate script loaded successfully.");
+  //   addScript.onerror = () => console.error("Failed to load Google Translate script.");
+  //   document.body.appendChild(addScript);
+  //   window.googleTranslateElementInit = googleTranslateElementInit;
+  // }, []);
   
   
   const handleTranslate = () => { 
     console.log("Translating...");
-    translatePage('ta');
+    //translatePage('ta');
   };
   
 
