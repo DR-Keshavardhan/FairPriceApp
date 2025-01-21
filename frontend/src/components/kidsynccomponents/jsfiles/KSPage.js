@@ -6,10 +6,33 @@ import { useNavigate } from "react-router-dom";
 import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header]
 import { translatePage } from "../../../translate";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const KSState = () => {
-  const navigate = useNavigate();
+  const shop_id="";
+  const [tableData, setTableData] = useState([]);
 
+  
+  const [sortedTableData, setSortedTableData] = useState([]);
+
+  useEffect(() => {
+    setSortedTableData(tableData); // Initialize sortedTableData with tableData when it changes
+  }, [tableData]);
+  
+  const [isDOBAscending, setIsDOBAscending] = useState(true);
+  
+  const handleSortByDOB = () => {
+    const sortedData = [...sortedTableData].sort((a, b) => {
+      const dateA = new Date(a.dob);
+      const dateB = new Date(b.dob);
+      return isDOBAscending ? dateA - dateB : dateB - dateA;
+    });
+  
+    setSortedTableData(sortedData);
+    setIsDOBAscending(!isDOBAscending); // Toggle sorting order
+  };
+  const navigate = useNavigate();
   const [states] = useState(["Tamil Nadu", "Kerala"]);
   const [districts] = useState([
     "Chennai",
@@ -18,7 +41,6 @@ const KSState = () => {
     "Thiruvallur",
   ]);
   const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [tableData, setTableData] = useState([]);
   const [selectedRows, setSelectedRows] = useState({}); // State to track selected rows
 
   // Fetch table data from KSapi based on the selected district
@@ -134,36 +156,36 @@ const KSState = () => {
   
 
 
-  // const handleNotifyIndividual = async (phone) => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:5000/KSapi/notify",
-  //       { phone }
-  //     );
-  //     if (response.status === 200) {
-  //       alert(`Notification sent to Shop ID ${shop_id} successfully.`);
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error notifying Shop ID ${shop_id}:`, error);
-  //   }
-  // };
-
-
   const handleNotifyIndividual = async (phone) => {
     try {
-        console.log("Hello");
-        const response = await axios.post(
-            "http://localhost:5000/KSapi/notify",
-            { phone }
-        );
-        if (response.status === 200) {
-            alert(`Notification sent to ${phone} successfully.`);
-        }
+      const response = await axios.post(
+        "http://localhost:5000/KSapi/notify",
+        { phone }
+      );
+      if (response.status === 200) {
+        alert(`Notification sent to Shop ID ${shop_id} successfully.`);
+      }
     } catch (error) {
-        console.error(`Error notifying ${phone}`, error);
-        alert(`Failed to send notification to ${phone}.`);
+      console.error(`Error notifying Shop ID ${shop_id}:`, error);
     }
-};
+  };
+
+
+//   const handleNotifyIndividual = async (phone) => {
+//     try {
+//         console.log("Hello");
+//         const response = await axios.post(
+//             "http://localhost:5000/KSapi/notify",
+//             { phone }
+//         );
+//         if (response.status === 200) {
+//             alert(`Notification sent to ${phone} successfully.`);
+//         }
+//     } catch (error) {
+//         console.error(`Error notifying ${phone}`, error);
+//         alert(`Failed to send notification to ${phone}.`);
+//     }
+// };
 
 
   const handleCallIndividual = async (phone) => {
@@ -217,12 +239,33 @@ const KSState = () => {
   }, [selectedDistrict]);
 
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Kidsync Page", 14, 15);
+    doc.setFontSize(14);
+    doc.text(`District: ${selectedDistrict}`, 14, 25);
+
+    const tableColumn = ["Shop No", "Name", "Family Head", "Age", "Mobile", "Aadhaar Status", "Linkage Status"];
+    const tableRows = sortedTableData.map(item => [
+      item.shop_no, item.name, item.family_head, item.age,
+      item.mobile_number, item.aadhaar_status, item.aadhaar_linkage_status
+    ]);
+
+    doc.autoTable({
+      startY: 30,
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save(`Kidsync_Report_${selectedDistrict}.pdf`);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     sessionStorage.clear();
     navigate("/login2", { replace: true });
-  };
+  };  
 
   useEffect(() => {
     if (selectedDistrict) {
@@ -262,6 +305,7 @@ const KSState = () => {
       </header>
 
       <div className="state-page">
+      <h2 className="page-title">Welcome to Kidsync State Page</h2>
         <h2 className="page-title">Select a District to View Data</h2>
 
         <div className="dropdown-container">
@@ -296,7 +340,7 @@ const KSState = () => {
             </button>
             <button
               className="generate-report-button"
-              onClick={handleGenerateReport}
+              onClick={handleGeneratePDF}
             >
               Generate Report
             </button>

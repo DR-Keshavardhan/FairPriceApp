@@ -271,7 +271,9 @@ const handleGenerateReport = () => {
 
 
   return (
+    
     <div>
+
       <div className="top-panel">
         <span className="panel-text">📞 1967 (or) 1800-425-5901</span>
         <div className="panel-buttons">
@@ -291,58 +293,64 @@ const handleGenerateReport = () => {
           </div>
         </div>
         <div className="header-right">
-  <label className="header-upload">
-    Upload Excel
-    <input
-      type="file"
-      accept=".xlsx, .xls"
-      style={{ display: "none" }}
-      onChange={handleUploadExcel}
-    />
-  </label>
-  <button className="header-logout" onClick={handleLogout}>
-    Log Out
-  </button>
-</div>
+        <label className="header-upload">
+          Upload Excel
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            style={{ display: "none" }}
+            onChange={handleUploadExcel}
+          />
+        </label>
+        <button className="header-logout" onClick={handleLogout}>
+          Log Out
+        </button>
+      </div>
+    
 
       </header>
+    
 
       <div className="state-page">
         <h2 className="page-title"></h2>
 
+      <div>
+      <div className="dropdown-header">
+      <h2 className="welcome-message">Welcome to the Fair Price State Page!</h2>
+      <p className="page-title">Select a district to view the data</p>
+    </div>
         <div className="dropdown-container">
-          <label htmlFor="district-select" className="dropdown-label">
-            Select District:
+        <label htmlFor="district-select" className="dropdown-label">
+          Select District:
+        </label>
+        <div className="dropdown-wrapper">
+          <select
+            id="district-select"
+            className="custom-dropdown"
+            value={selectedDistrict}
+            onChange={(e) => {
+              setSelectedDistrict(e.target.value);
+              setSelectedBatch("");
+              setTableData([]);
+            }}
+          >
+            <option value="">-- Select District --</option>
+            {districts.map((district, index) => (
+              <option key={index} value={district}>
+                {district}
+              </option>
+            ))}
+          </select>
+          <span className="dropdown-icon material-icons">arrow_drop_down</span>
+        </div>
+      </div>
+
+      {selectedDistrict && (
+        <div className="dropdown-container">
+          <label htmlFor="batch-select" className="dropdown-label">
+            Select Batch:
           </label>
           <div className="dropdown-wrapper">
-            <select
-              id="district-select"
-              className="custom-dropdown"
-              value={selectedDistrict}
-              onChange={(e) => {
-                setSelectedDistrict(e.target.value);
-                setSelectedBatch("");
-                setTableData([]);
-              }}
-            >
-              <option value="">-- Select District --</option>
-              {districts.map((district, index) => (
-                <option key={index} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-            <span className="dropdown-icon material-icons">
-              arrow_drop_down
-            </span>
-          </div>
-        </div>
-
-        {selectedDistrict && (
-          <div className="dropdown-container">
-            <label htmlFor="batch-select" className="dropdown-label">
-              Select Batch:
-            </label>
             <select
               id="batch-select"
               className="custom-dropdown"
@@ -359,8 +367,11 @@ const handleGenerateReport = () => {
                 </option>
               ))}
             </select>
+            <span className="dropdown-icon material-icons">arrow_drop_down</span>
           </div>
-        )}
+        </div>
+      )}
+    </div>
 
         {selectedBatch && (
           <div className="button-container">
