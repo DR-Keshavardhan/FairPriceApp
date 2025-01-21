@@ -386,38 +386,51 @@ const KSState = () => {
         </tr>
       </thead>
       <tbody>
-        {sortedTableData.map((member, index) => (
-          <tr key={index}>
-            <td>{member.id}</td>
-            <td>{member.shop_no}</td>
-            <td>{member.taluk}</td>
-            <td>{member.district}</td>
-            <td>{member.name}</td>
-            <td>{member.gender}</td>
-            <td>{member.dob}</td>
-            <td>{member.family_head}</td>
-            <td>{member.address}</td>
-            <td>{member.age}</td>
-            <td>{member.mobile_number}</td>
-            <td>{member.aadhaar_status}</td>
-            <td>{member.aadhaar_linkage_status}</td>
-            <td>{member.notifications_count || 0}</td>
-            <td>
-              <button
-                onClick={() => handleCallIndividual(member.mobile_number)}
-              >
-                Call
-              </button>
-            </td>
-            <td>
-              <button
-                onClick={() => handleNotifyIndividual(member.mobile_number)}
-              >
-                Notify
-              </button>
-            </td>
-          </tr>
-        ))}
+      {sortedTableData.map((member, index) => {
+  const calculateAge = (dob) => {
+    if (!dob) return ""; 
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+    const dayDifference = today.getDate() - birthDate.getDate();
+
+    if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
+      age--;
+    }
+    return age;
+  };
+
+  return (
+    <tr key={index}>
+      <td>{member.id}</td>
+      <td>{member.shop_no}</td>
+      <td>{member.taluk}</td>
+      <td>{member.district}</td>
+      <td>{member.name}</td>
+      <td>{member.gender}</td>
+      <td>{member.dob}</td>
+      <td>{member.family_head}</td>
+      <td>{member.address}</td>
+      <td>{calculateAge(member.dob)}</td>
+      <td>{member.mobile_number}</td>
+      <td>{member.aadhaar_status}</td>
+      <td>{member.aadhaar_linkage_status}</td>
+      <td>{member.notifications_count || 0}</td>
+      <td>
+        <button onClick={() => handleCallIndividual(member.mobile_number)}>
+          Call
+        </button>
+      </td>
+      <td>
+        <button onClick={() => handleNotifyIndividual(member.mobile_number)}>
+          Notify
+        </button>
+      </td>
+    </tr>
+  );
+})}
+
       </tbody>
     </table>
   </div>
