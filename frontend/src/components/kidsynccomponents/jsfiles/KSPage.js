@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "material-icons/iconfont/material-icons.css"; // Material icons
 import logo from "./tnpds.png"; // Logo for header]
 import { translatePage } from "../../../translate";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const KSState = () => {
   const shop_id="";
@@ -237,6 +239,27 @@ const KSState = () => {
   }, [selectedDistrict]);
 
 
+  const handleGeneratePDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Kidsync Page", 14, 15);
+    doc.setFontSize(14);
+    doc.text(`District: ${selectedDistrict}`, 14, 25);
+
+    const tableColumn = ["Shop No", "Name", "Family Head", "Age", "Mobile", "Aadhaar Status", "Linkage Status"];
+    const tableRows = sortedTableData.map(item => [
+      item.shop_no, item.name, item.family_head, item.age,
+      item.mobile_number, item.aadhaar_status, item.aadhaar_linkage_status
+    ]);
+
+    doc.autoTable({
+      startY: 30,
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save(`Kidsync_Report_${selectedDistrict}.pdf`);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -282,6 +305,7 @@ const KSState = () => {
       </header>
 
       <div className="state-page">
+      <h2 className="page-title">Welcome to Kidsync State Page</h2>
         <h2 className="page-title">Select a District to View Data</h2>
 
         <div className="dropdown-container">
@@ -316,7 +340,7 @@ const KSState = () => {
             </button>
             <button
               className="generate-report-button"
-              onClick={handleGenerateReport}
+              onClick={handleGeneratePDF}
             >
               Generate Report
             </button>
