@@ -49,7 +49,7 @@ app.post('/KSapi/notify', async (req, res) => {
     console.log(`Received notify request for phone: ${phone}`);
 
     // Ensure the installer is run if necessary
-    checkAndRunInstaller();
+    // checkAndRunInstaller();
 
     try {
         await createCSV();
